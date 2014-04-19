@@ -1,5 +1,5 @@
 <?php
-  if (!isset($_POST['submit']) == "Submit") 
+  if (!isset($_POST['submit']) == "Visualize") 
   {
     $errorMessage = "";
  
@@ -36,7 +36,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
 <html>
 <head>
-	<title>Even Steven</title>
+	<title>Visualize Equality</title>
 </head>
 
 <body>
@@ -49,15 +49,25 @@
 	?>
 <form action="evensteven.php" method="post">  
 
-<p>The conference or session name: <input type="text" name="Name" maxlength="50" value="<?=$varName;?>"></p>
+<p>Wait! Where are the women?</p>
 
-<p>The number of male speakers: <input type="text" name="Male" value="<?=$varMale;?>"></p>
+<p>No women on a panel. Just a few on the agenda. Women missing from a book of ideas, or absent from a cultural event.</p>
 
-<p>The number of female speakers: <input type="text" name="Female" value="<?=$varFemale;?>"></p>
+<p>Stop being annoyed. Act.</p>
 
-<p>The conference or session hashtag: <input type="text" name="Hashtag" value="<?=$varHashtag;?>"></p>
+<p>Count up the speakers on the agenda, or on the panel you are attending. Or among the authors in an anthology, or on media lists of the “Top 30 This” or "Top 30 That".</p>
 
-<p><input type="submit" name="submit" value="Submit"></p>
+<p>Enter the numbers here and generate a graphic to amplify your voice:</p>
+
+<p>What is the name of the conference or session? <input type="text" name="Name" maxlength="50" value="<?=$varName;?>"></p>
+
+<p>How many male speakers or selectees? <input type="text" name="Male" value="<?=$varMale;?>"></p>
+
+<p>How many female speakers or selectees? <input type="text" name="Female" value="<?=$varFemale;?>"></p>
+
+<p>What is the hashtag? <input type="text" name="Hashtag" value="<?=$varHashtag;?>"></p>
+
+<p><input type="submit" name="submit" value="Visualize"></p>
 </form>
 </body>
 </html>
