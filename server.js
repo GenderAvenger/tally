@@ -22,7 +22,7 @@ app.configure(function () {
 
 app.get('/', routes.index);
 app.get('/report', routes.report);
-app.get('/submit', routes.submit);
+app.post('/submit', routes.submit);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

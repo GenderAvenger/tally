@@ -12,6 +12,7 @@
     "express": "3.x",
     "jade": "~1.1.5",
     "imgur-upload":"*",
+    "request":"*",
     "quiche":"*"
   }
 }
