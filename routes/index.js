@@ -16,8 +16,9 @@ exports.report = function (req, res) {
 
 ///// SUBMIT FORM TO THIS PAGE
 exports.submit = function (req, res) {
- var men = req.body.men,
-     women = req.body.women;
+ var men        = req.body.men,
+     women      = req.body.women,
+     label_text = req.body.label_text;
  
   // TODO: Add Validation and response
 
@@ -57,7 +58,8 @@ exports.submit = function (req, res) {
     response.on('end', function () {
 
       //ADD OUR BRANDING TO DOWNLOADED IMAGE
-      im.convert(['-page', '+0+0', 'assets/genderavenger_sample_template.png', '-page', '+100+150', chart_filename, '-layers', 'flatten', card_filename], 
+     // convert -gravity north -stroke '#4444' -font Helvetica-bold -pointsize 60 -strokewidth 2 -annotate +0+55 'Faerie Dragon' -page +0+0 assets/genderavenger_sample_template.png -page +100+150 assets/chartgen/da6cf241-feeb-4730-90b8-f36755a2028a_chart.png -layers flatten card.png
+      im.convert(['-gravity', 'north', '-stroke', '#444444', '-font', 'Helvetica-bold', '-pointsize', '60', '-strokewidth', '2', '-annotate', '+0+55', label_text, '-page', '+0+0', 'assets/genderavenger_sample_template.png', '-page', '+100+150', chart_filename, '-layers', 'flatten', card_filename], 
       function(err, stdout){
         if (err){
           throw err;
@@ -65,7 +67,7 @@ exports.submit = function (req, res) {
           console.log('stdout:', stdout);
 
           //upload that local file to  imgur
-          imgur.setClientID("FILL IN");
+          imgur.setClientID("ADD YOUR IMGUR ID");
           if(uploaded==false){
             imgur.upload(path.join(__dirname, '../' + card_filename),function(error, response){
               uploaded=true;
