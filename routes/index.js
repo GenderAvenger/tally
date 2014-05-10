@@ -1,9 +1,10 @@
 var quiche = require('quiche'),
-    http = require('http'),
-    //https = require('https'),
-    fs = require('fs'),
-    imgur = require('imgur-upload'),
-    path = require('path');
+    http   = require('http'),
+    fs     = require('fs'),
+    imgur  = require('imgur-upload'),
+    path   = require('path'),
+    im     = require('node-imagemagick'),
+    uuid   = require('node-uuid');
 
 exports.index = function (req, res) {
   res.render('index', { title: 'Homepage'});
@@ -17,15 +18,22 @@ exports.report = function (req, res) {
 exports.submit = function (req, res) {
  var men = req.body.men,
      women = req.body.women;
+ 
+  // TODO: Add Validation and response
+
+  //generate UUID for filenames
+  file_id = uuid.v4();
 
   // generate pie chart from google charts API
   var pie = new quiche('pie');
   pie.setTransparentBackground(); // Make background transparent
-  pie.setWidth(400);
-  pie.setHeight(265);
-  pie.addData(men, 'men', 'FF0000');
-  pie.addData(women, 'women', '0000FF');
-  pie.addData(2, 'cats', '00FF00');
+  pie.setLegendSize(40);
+  pie.setLegendColor("444444");
+  pie.setWidth(600);
+  pie.setHeight(400);
+  pie.addData(women, women + ' women', 'f44820');
+  pie.addData(men, men + ' men', '7fc8b4');
+  pie.addData(2, '2 cats', '444444');
 
   var uploaded=false;
 
@@ -35,7 +43,9 @@ exports.submit = function (req, res) {
 /*      res.render('submit', { title: 'Submit',
                              pie: pie_url});*/
   //download the pie chart to a local file
-  var file = fs.createWriteStream("tmp.png");
+  var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
+  var card_filename = "assets/chartgen/" + file_id + "_card.png";
+  var file = fs.createWriteStream(chart_filename);
   var request = http.get(pie.getUrl(true).replace("https","http"), function(response) {
     try{
       response.pipe(file);
@@ -46,21 +56,28 @@ exports.submit = function (req, res) {
     // ONCE THE IMAGE IS DOWNLOADED
     response.on('end', function () {
 
-      //TODO: ADD OUR BRANDING TO DOWNLOADED IMAGE
+      //ADD OUR BRANDING TO DOWNLOADED IMAGE
+      im.convert(['-page', '+0+0', 'assets/genderavenger_sample_template.png', '-page', '+100+150', chart_filename, '-layers', 'flatten', card_filename], 
+      function(err, stdout){
+        if (err){
+          throw err;
+        }else{
+          console.log('stdout:', stdout);
 
-
-      //upload that local file to  imgur
-      imgur.setClientID("");
-      if(uploaded==false){
-        imgur.upload(path.join(__dirname, '../tmp.png'),function(error, response){
-          uploaded=true;
-          pie_url = response.data.link
-          console.log("YEP");
-          console.log(pie_url);
-          res.render('submit', { title: 'Submit',
-                                 pie: pie_url});
-        });
-      }
+          //upload that local file to  imgur
+          imgur.setClientID("FILL IN");
+          if(uploaded==false){
+            imgur.upload(path.join(__dirname, '../' + card_filename),function(error, response){
+              uploaded=true;
+              pie_url = response.data.link
+              console.log("YEP");
+              console.log(pie_url);
+              res.render('submit', { title: 'Submit',
+                                     pie: pie_url});
+            });
+          }
+        }
+      });
     });
   });
 };

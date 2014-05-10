@@ -13,6 +13,8 @@
     "jade": "~1.1.5",
     "imgur-upload":"*",
     "request":"*",
+    "node-imagemagick":"*",
+    "node-uuid": "*",
     "quiche":"*"
   }
 }
