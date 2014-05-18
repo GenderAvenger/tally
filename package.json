@@ -10,11 +10,12 @@
   "license": "MIT",
   "dependencies": {
     "express": "3.x",
+    "imgur-upload": "*",
     "jade": "~1.1.5",
-    "imgur-upload":"*",
-    "request":"*",
-    "node-imagemagick":"*",
+    "node-imagemagick": "*",
     "node-uuid": "*",
-    "quiche":"*"
+    "quiche": "*",
+    "request": "*",
+    "yamljs": "^0.1.5"
   }
 }
