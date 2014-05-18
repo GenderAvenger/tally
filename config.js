@@ -6,5 +6,8 @@ function set(name, value) {
   }
 }
 
-var creds = yaml.load('creds.yaml');
-set('IMGUR_API_KEY', creds['imgurApiKey'])
+set('NODE_ENV', 'localDevelopment');
+if (process.env.NODE_ENV == 'localDevelopment') {
+  var creds = yaml.load('creds.yaml');
+  set('IMGUR_API_KEY', creds['imgurApiKey'])
+}
