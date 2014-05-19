@@ -7,17 +7,19 @@ var quiche = require('quiche'),
     uuid   = require('node-uuid');
 
 exports.index = function (req, res) {
-  res.render('report', { title: 'Report'});
+  res.render('report.html', {title: 'Report'});
 };
 
 exports.report = function (req, res) {
-  res.render('report', { title: 'Report'});
+  res.render('report.html', { title: 'Report'});
 };
 
 exports.pie = function (req, res, next) {
   var pie_url = req.query.pie_url;
-  res.render('submit', { title: 'Submit',
-                         pie: pie_url});
+  res.render('submit.html', {
+    title: 'Submit',
+    pie: pie_url
+  });
 };
 
 ///// SUBMIT FORM TO THIS PAGE
