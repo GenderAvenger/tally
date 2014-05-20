@@ -8,11 +8,11 @@
   <h1>Gender Avenger Report</h1>
   <form action="submit" method="post">
     <label>Event Name</label>
-    <input type="text" name="label_text" />
+    <input type="text" name="label_text" {% if label_text %} value="{{ label_text }}" {% endif %} />
     <label>Men</label>
-    <input type="text" name="men" />
+    <input type="text" name="men" {% if men %} value="{{ men }}" {% endif %} />
     <label>Women</label>
-    <input type="text" name="women" />
+    <input type="text" name="women" {% if women %} value="{{ women }}" {% endif %} />
     <hr/>
     <input type="submit" name="submit" />
   </form>

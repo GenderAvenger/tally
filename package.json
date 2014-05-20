@@ -12,6 +12,7 @@
     "express": "3.x",
     "firebase": "^1.0.15-3",
     "imgur-upload": "*",
+    "lodash": "^2.4.1",
     "node-imagemagick": "*",
     "node-uuid": "*",
     "nunjucks": "^1.0.5",

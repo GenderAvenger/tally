@@ -1,5 +1,6 @@
 var quiche = require('quiche'),
     http   = require('http'),
+    _      = require('lodash'),
     fs     = require('fs'),
     imgur  = require('imgur-upload'),
     path   = require('path'),
@@ -52,11 +53,23 @@ exports.pie = function (req, res, next) {
 
 ///// SUBMIT FORM TO THIS PAGE
 exports.submit = function (req, res, next) {
- var men        = req.body.men,
-     women      = req.body.women,
-     label_text = req.body.label_text;
- 
-  // TODO: Add Validation and response
+  var isInt = function (n) {
+    return typeof n === 'number' && n % 1 == 0;
+  }
+
+  // Validate input
+  var men        = parseInt(req.body.men, 10),
+      women      = parseInt(req.body.women, 10),
+      label_text = req.body.label_text;
+
+  if (!isInt(men) || !isInt(women) || !_.isString(label_text)) {
+    // Send the report page back down
+    return res.render('report.html', {
+      men: req.body.men,
+      women: req.body.women,
+      label_text: req.body.label_text
+    })
+  }
 
   // Default to zero individuals with a non-binary gender
   var pie = generatePieChart(men, women, 0);
