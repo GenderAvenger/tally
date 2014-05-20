@@ -4,6 +4,8 @@ var express = require('express')
   , path = require('path')
   , connect = require('./node_modules/express/node_modules/connect');
 
+// Set up config credentials
+require('./config');
 var app = express();
 
 app.configure(function () {

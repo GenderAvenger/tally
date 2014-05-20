@@ -67,7 +67,7 @@ exports.submit = function (req, res) {
           console.log('stdout:', stdout);
 
           //upload that local file to  imgur
-          imgur.setClientID("ADD YOUR IMGUR ID");
+          imgur.setClientID(process.env['IMGUR_API_KEY']);
           if(uploaded==false){
             imgur.upload(path.join(__dirname, '../' + card_filename),function(error, response){
               uploaded=true;
