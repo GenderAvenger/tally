@@ -30,7 +30,7 @@ app.configure(function () {
 
 app.get('/', routes.index);
 app.get('/report', routes.report);
-app.get('/plot', routes.pie);
+app.get('/plot/:id', routes.pie);
 app.post('/submit', routes.submit);
 
 http.createServer(app).listen(app.get('port'), function(){
