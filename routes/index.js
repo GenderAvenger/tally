@@ -7,11 +7,19 @@ var quiche = require('quiche'),
     uuid   = require('node-uuid');
 
 exports.index = function (req, res) {
-  res.render('index', { title: 'Homepage'});
+  res.render('report.html', {title: 'Report'});
 };
 
 exports.report = function (req, res) {
-  res.render('report', { title: 'Report'});
+  res.render('report.html', { title: 'Report'});
+};
+
+exports.pie = function (req, res, next) {
+  var pie_url = req.query.pie_url;
+  res.render('submit.html', {
+    title: 'Submit',
+    pie: pie_url
+  });
 };
 
 ///// SUBMIT FORM TO THIS PAGE
@@ -64,18 +72,13 @@ exports.submit = function (req, res) {
         if (err){
           throw err;
         }else{
-          console.log('stdout:', stdout);
-
           //upload that local file to  imgur
           imgur.setClientID(process.env['IMGUR_API_KEY']);
           if(uploaded==false){
             imgur.upload(path.join(__dirname, '../' + card_filename),function(error, response){
               uploaded=true;
               pie_url = response.data.link
-              console.log("YEP");
-              console.log(pie_url);
-              res.render('submit', { title: 'Submit',
-                                     pie: pie_url});
+              res.redirect('/plot?pie_url='+pie_url);
             });
           }
         }
