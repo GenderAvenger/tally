@@ -1,5 +1,4 @@
 var express = require('express')
-  , routes = require('./routes')
   , http = require('http')
   , path = require('path')
   , nunjucks = require('nunjucks')
@@ -8,6 +7,7 @@ var express = require('express')
 // Set up config credentials
 require('./config');
 var app = express();
+module.exports = app;
 
 nunjucks.configure(__dirname + '/views', {
     autoescape: true,
@@ -23,15 +23,13 @@ app.configure(function () {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
 
+    // Prepare the routes
+    require('./routes')
+
     //items beneath here may not be loaded
     app.use(app.router);
     app.use("/", express.static(path.join(__dirname, 'public')));
 });
-
-app.get('/', routes.index);
-app.get('/report', routes.report);
-app.get('/plot/:id', routes.pie);
-app.post('/submit', routes.submit);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
