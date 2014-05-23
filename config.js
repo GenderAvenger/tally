@@ -10,4 +10,6 @@ set('NODE_ENV', 'localDevelopment');
 if (process.env.NODE_ENV == 'localDevelopment') {
   var creds = yaml.load('creds.yaml');
   set('IMGUR_API_KEY', creds['imgurApiKey'])
+  set('RECAPTCHA_PUBLIC_KEY', creds['recaptchaPublicKey'])
+  set('RECAPTCHA_PRIVATE_KEY', creds['recaptchaPrivateKey'])
 }
