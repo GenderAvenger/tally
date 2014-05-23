@@ -34,12 +34,14 @@ app.configure(function () {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
 
+    // Load static files from /public
+    app.use(express.static(__dirname + '/public'));
+
     // Prepare the routes
     require('./routes')
 
     //items beneath here may not be loaded
     app.use(app.router);
-    app.use("/", express.static(path.join(__dirname, 'public')));
 });
 
 http.createServer(app).listen(app.get('port'), function(){
