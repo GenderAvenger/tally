@@ -124,14 +124,14 @@ app.get('/plot/:id', function (req, res, next) {
         // Update the pie_url to the newly created plot
         var pie_url = data.link;
         plotRef.child('pie_url').set(pie_url);
-        return res.render('submit.html', {
-          title: 'Submit',
+        return res.render('thankyou.html', {
+          title: 'Thank You',
           pie: pie_url
         })
       });
     } else {
-      return res.render('submit.html', {
-        title: 'Submit',
+      return res.render('thankyou.html', {
+        title: 'Thank You',
         pie: pie_url
       });
     }
