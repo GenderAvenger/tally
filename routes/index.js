@@ -5,6 +5,7 @@ var quiche = require('quiche'),
     imgur  = require('imgur-upload'),
     path   = require('path'),
     im     = require('node-imagemagick'),
+    simple_recaptcha = require('simple-recaptcha'),
     uuid   = require('node-uuid'),
     Firebase = require('firebase'),
     app = require('../server');
@@ -13,14 +14,20 @@ var firebaseDatastore = new Firebase('https://even-steven.firebaseio.com/');
 
 // Main route
 app.get('/', function (req, res, next) {
-  res.render('report.html', {title: 'Report'});
+  res.render('report.html', {
+    title: 'Report'
+  });
 });
 
 app.get('/report', function (req, res, next) {
-  res.render('report.html', {title: 'Report'});
+  res.render('report.html', {
+    title: 'Report'
+  });
 });
 
 app.post('/report', function (req, res, next) {
+
+  // Helper function
   var isInt = function (n) {
     return typeof n === 'number' && n % 1 == 0;
   }
@@ -42,27 +49,55 @@ app.post('/report', function (req, res, next) {
     })
   }
 
-  // Default to zero individuals with a non-binary gender
-  var pie = generatePieChart(men, women, 0);
+  // Handle Recaptcha
+  // See https://github.com/zeMirco/simple-recaptcha for instructions / steps
+  // You need to set this value yourself in a file called 'creds.yaml' in the root folder
+  // The form of that file is
+  /*
+    imgurApiKey: "YOUR_IMGUR_KEY"
+    recaptchaPublicKey: "YOUR_PUBLIC_KEY"
+    recaptchaPrivateKey: "YOUR_PRIVATE_KEY"
+  */
+  var privateKey = process.env['RECAPTCHA_PRIVATE_KEY'];
+  var ip = req.ip;
+  var challenge = req.body.recaptcha_challenge_field;
+  var response = req.body.recaptcha_response_field;
 
-  // set initial pie url for redundancy's sake
-  var pie_url = pie.getUrl(true).replace("https","http");
-
-  // Pass in a callback since we need a way to hear back from the implicit network call
-  getMagickedImage(pie, label_text, function (error, data) {
-
-    // the 'next' method passes this on to the next route, which should be a 404 or 500
-    if (error) {
-      return next(error);
+  simple_recaptcha(privateKey, ip, challenge, response, function(err) {
+    if (err) {
+      console.log("Recaptcha Fail");
+      // Re-render the page
+      return res.render('report.html', {
+        men: req.body.men,
+        women: req.body.women,
+        label_text: req.body.label_text
+      });
     }
 
-    pie_id = data.id;
-    pie_url = data.link;
-    // Create a database entry for this pie_id
-    var plotRef = firebaseDatastore.child('plots/'+pie_id);
-    // And store the data in it
-    plotRef.set({label_text: label_text, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
-    return res.redirect('/plot/' + pie_id);  
+    // Since we're all good, generate and show the pie chart
+
+    // Default to zero individuals with a non-binary gender
+    var pie = generatePieChart(men, women, 0);
+
+    // set initial pie url for redundancy's sake
+    var pie_url = pie.getUrl(true).replace("https","http");
+
+    // Pass in a callback since we need a way to hear back from the implicit network call
+    getMagickedImage(pie, label_text, function (error, data) {
+
+      // the 'next' method passes this on to the next route, which should be a 404 or 500
+      if (error) {
+        return next(error);
+      }
+
+      pie_id = data.id;
+      pie_url = data.link;
+      // Create a database entry for this pie_id
+      var plotRef = firebaseDatastore.child('plots/'+pie_id);
+      // And store the data in it
+      plotRef.set({label_text: label_text, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
+      return res.redirect('/plot/' + pie_id);  
+    });
   });
 });
 
@@ -89,14 +124,14 @@ app.get('/plot/:id', function (req, res, next) {
         // Update the pie_url to the newly created plot
         var pie_url = data.link;
         plotRef.child('pie_url').set(pie_url);
-        return res.render('submit.html', {
-          title: 'Submit',
+        return res.render('thankyou.html', {
+          title: 'Thank You',
           pie: pie_url
         })
       });
     } else {
-      return res.render('submit.html', {
-        title: 'Submit',
+      return res.render('thankyou.html', {
+        title: 'Thank You',
         pie: pie_url
       });
     }
@@ -137,7 +172,11 @@ function getMagickedImage (pie, label_text, callback) {
 
     // ONCE THE IMAGE IS DOWNLOADED
     response.on('end', function () {
-      // convert -gravity north -stroke '#4444' -font Helvetica-bold -pointsize 60 -strokewidth 2 -annotate +0+55 'Faerie Dragon' -page +0+0 assets/genderavenger_sample_template.png -page +100+150 assets/chartgen/da6cf241-feeb-4730-90b8-f36755a2028a_chart.png -layers flatten card.png
+      // convert -gravity north -stroke '#4444' \
+      // -font Helvetica-bold -pointsize 60 -strokewidth 2 \
+      // -annotate +0+55 'Faerie Dragon' -page +0+0 \
+      // assets/genderavenger_sample_template.png -page +100+150 \
+      // assets/chartgen/da6cf241-feeb-4730-90b8-f36755a2028a_chart.png -layers flatten card.png
       im.convert(['-gravity', 'north',
                   '-stroke', '#444444',
                   '-font', 'Helvetica-bold',
@@ -156,7 +195,9 @@ function getMagickedImage (pie, label_text, callback) {
             // You need to set this value yourself in a file called 'creds.yaml' in the root folder
             // The form of that file is
             /*
-              imgurApiKey: "YOUR_API_KEY"
+              imgurApiKey: "YOUR_IMGUR_KEY"
+              recaptchaPublicKey: "YOUR_PUBLIC_KEY"
+              recaptchaPrivateKey: "YOUR_PRIVATE_KEY"
             */
             imgur.setClientID(process.env['IMGUR_API_KEY']);
             imgur.upload(path.join(__dirname, '../' + card_filename),function(error, response){
