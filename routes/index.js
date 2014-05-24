@@ -45,7 +45,12 @@ app.post('/report', function (req, res, next) {
     return res.render('report.html', {
       men: req.body.men,
       women: req.body.women,
-      label_text: req.body.label_text
+      label_text: req.body.label_text,
+      error: {
+        men: !isInt(men),
+        women: !isInt(women),
+        label_text: !_.isString(label_text)
+      }
     })
   }
 
@@ -70,7 +75,8 @@ app.post('/report', function (req, res, next) {
       return res.render('report.html', {
         men: req.body.men,
         women: req.body.women,
-        label_text: req.body.label_text
+        label_text: req.body.label_text,
+        error: {recaptcha: true}
       });
     }
 
