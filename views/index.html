@@ -57,6 +57,10 @@ img.grayscale {
     -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
 }
 
+input.error {
+  border: 1px solid red;
+}
+
 .icon-bar {
    background-color:#ffffff;
 }
@@ -283,13 +287,20 @@ footer {
       </script>
         <form action="report" method="post">
             <label>Event Name</label>
-            <input type="text" name="label_text" {% if label_text %} value="{{ label_text }}" {% endif %} />
+            <input type="text" name="label_text"
+              class="{% if error.label_text %} error {% endif %}"
+              {% if label_text %} value="{{ label_text }}" {% endif %} />
             <br>
             <label>Men</label>
-            <input type="text" name="men" {% if men %} value="{{ men }}" {% endif %} />
+            <input type="text" name="men"
+              class="{% if error.men %} error {% endif %}"
+              {% if men %} value="{{ men }}" {% endif %} />
             <br>
             <label>Women</label>
-            <input type="text" name="women" {% if women %} value="{{ women }}" {% endif %} />
+            <input type="text" name="women"
+              class="{% if error.women %} error {% endif %}"
+              {% if women %} value="{{ women }}" {% endif %} />
+            {% if error.recaptcha %}<div class="error"><h3 style="color:red;">Please Try Again</h3></div> {% endif %}
             <script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k={{recaptcha_public_key}}"></script>
             <noscript>
                 <iframe src="http://www.google.com/recaptcha/api/noscript?k={{recaptcha_public_key}}" height="300" width="500" frameborder="0">
