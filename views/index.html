@@ -287,9 +287,14 @@ footer {
       </script>
         <form action="report" method="post">
             <label>Event Name</label>
-            <input type="text" name="label_text"
+            <input type="text" name="label_text" placeholder="Conference 2014"
               class="{% if error.label_text %} error {% endif %}"
               {% if label_text %} value="{{ label_text }}" {% endif %} />
+            <br>
+            <label>Event Hashtag (optional)</label>
+            <input type="text" name="hashtag" placeholder="#conference2014"
+              class="{% if error.hashtag %} error {% endif %}"
+              {% if hashtag %} value="{{ hashtag }}" {% endif %} />
             <br>
             <label>Men</label>
             <input type="text" name="men"
