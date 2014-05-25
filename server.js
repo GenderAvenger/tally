@@ -2,7 +2,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , nunjucks = require('nunjucks')
-  , connect = require('./node_modules/express/node_modules/connect');
+  , connect = require('./node_modules/express/node_modules/connect')
+  , Firebase = require('firebase');
 
 // Set up config credentials
 require('./config');
@@ -22,8 +23,18 @@ var njglobals = require('nunjucks/src/globals');
   imgurApiKey: "YOUR_IMGUR_KEY"
   recaptchaPublicKey: "YOUR_PUBLIC_KEY"
   recaptchaPrivateKey: "YOUR_PRIVATE_KEY"
+  firebaseSecret: "FIREBASE_SECRET"
 */
 njglobals.recaptcha_public_key = process.env['RECAPTCHA_PUBLIC_KEY'];
+
+var firebaseDatastore = new Firebase('https://even-steven.firebaseio.com/');
+firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
+  if(error) {
+    console.log("Login Failed!", error);
+  } else {
+    console.log("Login Succeeded!");
+  }
+});
 
 app.configure(function () {
     app.set('port', process.env.PORT || 3000);
