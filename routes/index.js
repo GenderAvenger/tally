@@ -88,8 +88,10 @@ app.post('/report', function (req, res, next) {
     // set initial pie url for redundancy's sake
     var pie_url = pie.getUrl(true).replace("https","http");
 
+    var isEquitable = isEquitableHelper(men, women);
+
     // Pass in a callback since we need a way to hear back from the implicit network call
-    getMagickedImage(pie, label_text, function (error, data) {
+    getMagickedImage(pie, label_text, isEquitable, function (error, data) {
 
       // the 'next' method passes this on to the next route, which should be a 404 or 500
       if (error) {
@@ -102,7 +104,7 @@ app.post('/report', function (req, res, next) {
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
       // And store the data in it
       plotRef.set({label_text: label_text, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
-      return res.redirect('/plot/' + pie_id);  
+      return res.redirect('/plot/' + pie_id);
     });
   });
 });
@@ -123,7 +125,8 @@ app.get('/plot/:id', function (req, res, next) {
     // and delete the pie_url. Then the next person to visit the url will cause the chart to be regenerated
     if (!pie_url) {
       var pie = generatePieChart(refVal.men, refVal.women, refVal.other);
-      getMagickedImage(pie, refVal.label_text, function (error, data) {
+      var isEquitable = isEquitableHelper(men, women);
+      getMagickedImage(pie, refVal.label_text, isEquitable, function (error, data) {
         if (error) {
           return next(error);
         }
@@ -160,7 +163,7 @@ function generatePieChart (men, women, other) {
   return pie;
 };
 
-function getMagickedImage (pie, label_text, callback) {
+function getMagickedImage (pie, label_text, isEquitable, callback) {
   // Callback parameters are (error, data)
   callback = callback || function () {}; // Null callback
   //generate UUID for filenames
@@ -168,6 +171,7 @@ function getMagickedImage (pie, label_text, callback) {
   //download the pie chart to a local file
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
+  var background_asset = isEquitable ? 'genderavenger_sample_template.png' : 'genderavenger_sample_bad.png';
   var file = fs.createWriteStream(chart_filename);
   var request = http.get(pie.getUrl(true).replace("https","http"), function(response) {
     try{
@@ -190,9 +194,9 @@ function getMagickedImage (pie, label_text, callback) {
                   '-strokewidth', '2',
                   '-annotate', '+0+55', label_text,
                   '-page', '+0+0',
-                  'assets/genderavenger_sample_template.png',
+                  'assets/'+background_asset,
                   '-page', '+100+150', chart_filename,
-                  '-layers', 'flatten', card_filename], 
+                  '-layers', 'flatten', card_filename],
         function (err, stdout) {
           if (err) {
             return callback(err, null);
@@ -213,4 +217,9 @@ function getMagickedImage (pie, label_text, callback) {
         });
     });
   });
+}
+
+function isEquitableHelper(men, women, threshold) {
+  threshold = threshold || 0.4; // default threshold
+  return (women / (men + women)) > threshold;
 }
