@@ -35,9 +35,10 @@ app.post('/report', function (req, res, next) {
   // Validate input
   var men        = parseInt(req.body.men, 10),
       women      = parseInt(req.body.women, 10),
-      label_text = req.body.label_text;
+      label_text = req.body.label_text,
+      hashtag = req.body.hashtag;
 
-  if (!isInt(men) || !isInt(women) || !_.isString(label_text)) {
+  if (!isInt(men) || !isInt(women) || !_.isString(label_text) || (hashtag.length > 0 && hashtag.substr(0,1) != '#')) {
     // Send the report page back down
     // Really, this should be handled directly by javascript in the page
     // Put by posting to /report teh user at least doesn't see a URL change
@@ -46,9 +47,11 @@ app.post('/report', function (req, res, next) {
       men: req.body.men,
       women: req.body.women,
       label_text: req.body.label_text,
+      hashtag: req.body.hashtag,
       error: {
         men: !isInt(men),
         women: !isInt(women),
+        hashtag: (hashtag.length > 0 && hashtag.substr(0,1) != '#'),
         label_text: !_.isString(label_text)
       }
     })
@@ -76,6 +79,7 @@ app.post('/report', function (req, res, next) {
         men: req.body.men,
         women: req.body.women,
         label_text: req.body.label_text,
+        hashtag: req.body.hashtag,
         error: {recaptcha: true}
       });
     }
@@ -103,7 +107,7 @@ app.post('/report', function (req, res, next) {
       // Create a database entry for this pie_id
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
       // And store the data in it
-      plotRef.set({label_text: label_text, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
+      plotRef.set({label_text: label_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
       return res.redirect('/plot/' + pie_id);
     });
   });
@@ -135,13 +139,17 @@ app.get('/plot/:id', function (req, res, next) {
         plotRef.child('pie_url').set(pie_url);
         return res.render('thankyou.html', {
           title: 'Thank You',
-          pie: pie_url
+          pie: pie_url,
+          hashtag: refVal.hashtag,
+          event_name: refVal.label_text
         })
       });
     } else {
       return res.render('thankyou.html', {
         title: 'Thank You',
-        pie: pie_url
+        pie: pie_url,
+        hashtag: refVal.hashtag,
+        event_name: refVal.label_text
       });
     }
   })
