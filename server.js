@@ -27,7 +27,7 @@ var njglobals = require('nunjucks/src/globals');
 */
 njglobals.recaptcha_public_key = process.env['RECAPTCHA_PUBLIC_KEY'];
 
-var firebaseDatastore = new Firebase('https://even-steven.firebaseio.com/');
+var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
 firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
   if(error) {
     console.log("Login Failed!", error);

@@ -10,7 +10,17 @@ var quiche = require('quiche'),
     Firebase = require('firebase'),
     app = require('../server');
 
-var firebaseDatastore = new Firebase('https://even-steven.firebaseio.com/');
+require('../config');
+
+//var firebaseDatastore = new Firebase('https://even-steven.firebaseio.com/');
+var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
+firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
+  if(error) {
+    console.log("Login Failed!", error);
+  } else {
+    console.log("Login Succeeded!");
+  }
+});
 
 // Main route
 app.get('/', function (req, res, next) {
@@ -104,6 +114,7 @@ app.post('/report', function (req, res, next) {
 
       pie_id = data.id;
       pie_url = data.link;
+
       // Create a database entry for this pie_id
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
       // And store the data in it
