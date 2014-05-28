@@ -1,0 +1,5 @@
+imgurApiKey: ADD_IMGUR_KEY_HERE
+recaptchaPublicKey: ADD_RECAPTCHA_KEY_HERE
+recaptchaPrivateKey: ADD_RECAPTCHA_P_KEY_HERE
+firebaseSecret: ADD_FIREBASE_SECRET_HERE
+firebaseStore: ADD_FIREBASE_STORE_URL_HERE
