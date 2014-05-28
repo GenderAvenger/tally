@@ -247,7 +247,10 @@ footer {
 <div class="navbar navbar-fixed-top alt" data-spy="affix" data-offset-top="1000">
   <div class="container">
     <div class="navbar-header">
-      <a href="http://genderavenger.com" class="navbar-brand">GenderAvenger</a>
+      <a href="http://genderavenger.com" class="navbar-brand img" style="padding:0px;"><img src="/img/galogo.png"/></a>
+        <span class="icon-bar">&nbsp; </span>
+      <span class="icon-bar text">Visualize Equality</span>
+<!--      <a href="http://genderavenger.com" class="navbar-brand">GenderAvenger</a>-->
       <!--<a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -261,10 +264,20 @@ footer {
    </div>
 </div>
 
-<div class="header alt vert">
+<div class="alt featurette">
   <div class="container">
-    <h2>Visualize Equality</h2>
-<!--      <a href="#" class="btn btn-default btn-lg">Get Started</a> -->
+    <div class="row">
+      <div class="col-md-7">
+        <br/>
+        <p>Do you notice when events have no women on a panel? Do something about it</p>
+        <ul><li><strong>Count the speakers</strong> on the agenda or panel you're attending</li>
+             <li><strong>Gauge organizers' openness</strong> to change, and the best way to encourage that change</li>
+             <li><strong>Share a chart</strong> on social media or with the organizers</li>
+             <li><strong>If you need to stay anonymous</strong>, we can share it for you</li>
+        </ul>
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -293,7 +306,7 @@ footer {
               class="{% if error.men %} error {% endif %}"
               {% if men %} value="{{ men }}" {% endif %} />  
         men at the session on 
-             <input type="text" name="session_text" 
+             <input type="text" name="session_text" placeholder="Session Name" 
               class="{% if error.session_text %} error {% endif %}"
               {% if session_text %} value="{{ session_text }}" {% endif %} />
         </p>
@@ -324,16 +337,8 @@ footer {
   <div class="container">
     <div class="row">
       <div class="col-md-12 text-left">
-        <h1>Where are the women?</h1>
-
-<p>No women on a panel. Just a few on the agenda. Women missing from a book of ideas, or absent from a cultural event.</p>
-
-<p>Stop being annoyed. Act.</p>
-
-<p>Count up the speakers on the agenda, or on the panel you are attending.</p><p> Or among the authors in an anthology, or on media lists of the “Top 30 This” or "Top 30 That".</p>
-
-<p>Enter the numbers here and generate a graphic to amplify your voice.</p>
-
+        <div align="center"><h2>About Gender Avengers</h2></div>
+        <p>Gender Avengers believes that change can happen when we challenge decision makers at all levels by pointing out “absences” and asking that they be corrected. Our team helps organizers <a href="http://www.genderavenger.com/excuses/">beat the excuses</a> and works with them to create diverse events.</p>
       </div>
     </div>
       </div>

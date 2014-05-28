@@ -149,7 +149,8 @@ app.get('/plot/:id', function (req, res, next) {
           hashtag: refVal.hashtag,
           event_name: refVal.label_text,
           session_text: refVal.session_text,
-          url_to_share: fullUrl
+          url_to_share: fullUrl,
+          report_is_new: 1
         })
       });
     } else {
@@ -159,7 +160,8 @@ app.get('/plot/:id', function (req, res, next) {
         hashtag: refVal.hashtag,
         event_name: refVal.label_text,
         session_text: refVal.session_text,
-        url_to_share: fullUrl
+        url_to_share: fullUrl,
+        report_is_new:0
       });
     }
   })
@@ -169,9 +171,10 @@ function generatePieChart (men, women, other) {
   // generate pie chart from google charts API
   var pie = new quiche('pie');
   pie.setTransparentBackground(); // Make background transparent
-  pie.setLegendSize(40);
+  pie.setLegendBottom();
+  pie.setLegendSize(30);
   pie.setLegendColor("444444");
-  pie.setWidth(600);
+  pie.setWidth(500);
   pie.setHeight(400);
   pie.addData(women, women + ' women', 'f44820');
   pie.addData(men, men + ' men', '7fc8b4');

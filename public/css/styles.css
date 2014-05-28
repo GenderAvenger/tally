@@ -1,3 +1,21 @@
 /* --- Gender Avenger Page CSS */
 p {padding-left:20px; padding-right:20px;}
 input{margin-top:5px}}
+.navbar-brand{
+  margin:0px;
+  padding:0px !important;
+}
+.navbar-brand img{
+  height:50px;
+}
+
+.icon-bar{
+  background:none !important;
+  font-size:32px;
+  -webkit-text-stroke: 1px rgba(f,f,f,0.1);
+  /*color:#431a6d;
+  color:#00d4b9;*/
+  line-height:48px;
+  color:#FEDD84;
+  text-transform:uppercase;
+}
