@@ -114,11 +114,12 @@ img.grayscale {
 }
 
     
-.header h1 {
-  font-size:60px;
+.header h2 {
+/*  font-size:60px;*/
   -webkit-text-stroke: 1px rgba(f,f,f,0.1);
   color:#431a6d;
   color:#00d4b9;
+  margin-top:40px;
   margin-left:-5px;
   margin-bottom:5px;
   text-transform:uppercase;
@@ -132,7 +133,8 @@ img.grayscale {
 .header {
   height: 30%;
   background: #fff repeat center fixed;
-  background-image: url('/img/bg.png');
+  background:#FEDD84 !important;
+  /*background-image: url('/img/bg.png');*/
 
 }
 
@@ -227,6 +229,12 @@ footer {
 
 /* -- end custom css for Bootstrap 3.x --*/
 
+/* -- custom css for this page --*/
+
+.sec1,.sec1 .container{
+  background:#FEDD84 !important;
+}
+
         </style>
         
         <script language="javascript">
@@ -261,35 +269,38 @@ footer {
   <div class="container">
     <div class="navbar-header">
       <a href="http://genderavenger.com" class="navbar-brand">GenderAvenger</a>
-      <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <!--<a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </a>
+      </a>-->
     </div>
-    <div class="navbar-collapse collapse" id="navbar">
+<!--    <div class="navbar-collapse collapse" id="navbar">
       <ul class="nav navbar-nav">
       </ul>
-    </div>
+    </div>-->
    </div>
 </div>
 
 <div class="header alt vert">
   <div class="container">
     
-    <h1>Visualize<br>Equality</h1>
-      <p class="lead"></p>
-		<div>&nbsp;</div>
+    <h2>Visualize<br>Equality</h2>
 <!--      <a href="#" class="btn btn-default btn-lg">Get Started</a> -->
   </div>
 </div>
 
-<div id="sec1">
+<div id="sec1" class="sec1">
   <div class="container">
+    <div class="row" class="row1">
+      <div><img src="{{pie}}" class="img-responsive"/></div>
+      <div>&nbsp;</div>
+    </div>
+   </div>
+</div>
+<div>
+   <div class="container">
     <div class="row">
-
-<p><img src="{{pie}}" /></p>
-	<div>&nbsp;</div>
 <!-- share buttons here 
 
 <script type="text/javascript">
