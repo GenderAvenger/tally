@@ -1,0 +1,1 @@
+convert -gravity north -stroke '#4444' -font Helvetica-bold -pointsize 52 -strokewidth 2 -annotate +0+35 'Faerie Dragon' -pointsize 32 -annotate +0+100 'Awesome Flame Edition' -page +0+0 assets/genderavenger_sample_template.png -page +100+150 assets/chartgen/d26c5ad0-12e1-4510-a304-238314e92efd_chart.png -layers flatten card.png
