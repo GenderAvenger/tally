@@ -6,19 +6,12 @@
         <meta name="generator" content="Generate graphs of gender equality at conferences and on lists." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/styles.css" rel="stylesheet">
         
         <!--[if lt IE 9]>
           <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-
-
-
-
-
-
-
-
 
         <!-- CSS code from Bootply.com editor -->
         
@@ -252,22 +245,21 @@ footer {
   <div class="container">
     <div class="navbar-header">
       <a href="http://genderavenger.com" class="navbar-brand">GenderAvenger</a>
-      <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <!--<a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-    </div>
-    <div class="navbar-collapse collapse" id="navbar">
+    </div>-->
+    <!--<div class="navbar-collapse collapse" id="navbar">
       <ul class="nav navbar-nav">
       </ul>
-    </div>
+    </div>-->
    </div>
 </div>
 
 <div class="header alt vert">
   <div class="container">
-    
     <h1>Visualize<br>Equality</h1>
       <p class="lead"></p>
 		<div>&nbsp;</div>
@@ -285,36 +277,41 @@ footer {
             lang  : 'en'
         };
       </script>
-        <form action="report" method="post">
-            <label>Event Name</label>
-            <input type="text" name="label_text" placeholder="Conference 2014"
+        <form action="report" method="post" role="form">
+        <div class="form-group">
+
+        <p>I'm at <input type="text" name="label_text" placeholder="Conference 2014"
               class="{% if error.label_text %} error {% endif %}"
               {% if label_text %} value="{{ label_text }}" {% endif %} />
-            <br>
-            <label>Event Hashtag (optional)</label>
-            <input type="text" name="hashtag" placeholder="#conference2014"
-              class="{% if error.hashtag %} error {% endif %}"
-              {% if hashtag %} value="{{ hashtag }}" {% endif %} />
-            <br>
-            <label>Men</label>
-            <input type="text" name="men"
-              class="{% if error.men %} error {% endif %}"
-              {% if men %} value="{{ men }}" {% endif %} />
-            <br>
-            <label>Women</label>
-            <input type="text" name="women"
+        and there are
+             <input type="text" size="2" name="women" type="number"
               class="{% if error.women %} error {% endif %}"
               {% if women %} value="{{ women }}" {% endif %} />
+        women and 
+             <input type="text" size="2" name="men" type="number"
+              class="{% if error.men %} error {% endif %}"
+              {% if men %} value="{{ men }}" {% endif %} />  
+        men at the session on 
+             <input type="text" name="session_text" 
+              class="{% if error.session_text %} error {% endif %}"
+              {% if session_text %} value="{{ session_text }}" {% endif %} />
+        </p>
+        <p>The hashtag (optional) is 
+            <input type="text" name="hashtag" placeholder="#conference2014"
+              class="{% if error.hashtag %} error {% endif %}"
+              {% if hashtag %} value="{{ hashtag }}" {% endif %} /></p>
+
             {% if error.recaptcha %}<div class="error"><h3 style="color:red;">Please Try Again</h3></div> {% endif %}
-            <script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k={{recaptcha_public_key}}"></script>
+            <p><script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k={{recaptcha_public_key}}"></script>
             <noscript>
                 <iframe src="http://www.google.com/recaptcha/api/noscript?k={{recaptcha_public_key}}" height="300" width="500" frameborder="0">
                 </iframe>
                 <br>
                 <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
                 <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
-            </noscript>
-            <input class="btn btn-default btn-lg" type="submit" value="Visualize Equality"/>
+            </noscript></p>
+            <p><input class="btn btn-default btn-lg" type="submit" value="Visualize Equality"/></p>
+        </div>
         </form>
     </div>
 </div>
