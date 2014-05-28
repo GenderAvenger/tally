@@ -10,17 +10,7 @@ var quiche = require('quiche'),
     Firebase = require('firebase'),
     app = require('../server');
 
-require('../config');
-
-//var firebaseDatastore = new Firebase('https://even-steven.firebaseio.com/');
 var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
-firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
-  if(error) {
-    console.log("Login Failed!", error);
-  } else {
-    console.log("Login Succeeded!");
-  }
-});
 
 // Main route
 app.get('/', function (req, res, next) {
