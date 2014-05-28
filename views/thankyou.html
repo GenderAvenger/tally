@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <title>GenderAvenger - Visualize Equality</title>
         <meta name="generator" content="Generate graphs of gender equality at conferences and on lists." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta property="og:title" content="Gender visualization" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Gender Avenger"/>
+		<meta property="og:type" content="blog"/>
+		<meta property="og:description" content="Help build a community that ensures women are represented in the public dialog." />
+		<!-- TODO dynamic URLs	<meta property="og:url" content="http://www.imdb.com/title/tt0117500/" />
+		<meta property="og:image" content="http://ia.media-imdb.com/images/rock.jpg" /> -->
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
-        
         <!--[if lt IE 9]>
           <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 
 
-
-
-
-
-
-
-
         <!-- CSS code from Bootply.com editor -->
-        
         <style type="text/css">
             /* -- custom css for Bootstrap 3.x --*/
 
@@ -232,7 +230,7 @@ footer {
         
         <script language="javascript">
         function emailCurrentPage(){
-            window.open("mailto:genderavengershares@googlegroups.com?subject=Will%20you%20share%20this%20image%20for%20me?"+"&body="+escape(window.location.href));
+            window.location.href="mailto:genderavengershares@googlegroups.com?subject=Can%20you%20share%20this%20image%20for%20me?%20[OR]%20Can%20you%20correct%20the%20record%20on%20this%20chart?"+"&body="+escape(window.location.href);
         }
     </script>
     </head>
@@ -240,15 +238,23 @@ footer {
     <!-- HTML code from Bootply.com editor -->
     
     <body  >
-        
+	<!-- Facebook JS SDK -->        
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=173688332778276&version=v2.0";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+
+<script>
+	window.fbAsyncInit = function() {
+	FB.init({appId: '675025332570890', status: true, cookie: true,
+	xfbml: true});
+	};
+	(function() {
+	var e = document.createElement('script'); e.async = true;
+	e.src = document.location.protocol +
+	'//connect.facebook.net/en_US/all.js';
+	document.getElementById('fb-root').appendChild(e);
+	}());
+</script>    
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
         
 <div class="navbar navbar-fixed-top alt" data-spy="affix" data-offset-top="1000">
   <div class="container">
@@ -283,14 +289,30 @@ footer {
 
 <p><img src="{{pie}}" /></p>
 	<div>&nbsp;</div>
-<!-- share buttons here -->
+<!-- share buttons here 
+
+<script type="text/javascript">
+var pageUrl = window.location;
+var FacebookUrl = "http://facebook.com/sharer.php?u=" + pageUrl;
+var TwitterUrl = "http://twitter.com/share?" + pageUrl;
+</script>
 	
-<div><p><img src="/img/facebook.png"> <img src="/img/tweet.png"></p></div>
+	-->
 
-<a href="javascript:emailCurrentPage()"><img src="/img/ask-us.png"></a>
+<a href="https://www.facebook.com/sharer/sharer.php?u={{url_to_share}}&t=TITLE"
+   onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+   target="_blank" title="Share on Facebook"><img src="/img/facebook.png"></a>
+<a href="https://twitter.com/share?url=http://www.matt.com&via=GenderAvenger&text=Check out the gender ratio at {{hashtag}}"
+   onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+   target="_blank" title="Share on Twitter"><img src="/img/tweet.png"></a>	
+
       <div class="col-md-7">
-<p>If you don't feel comfortable sharing this image yourself, we can connect you with our Gender Avenger Pros, who will share it on your behalf.</p><p>Raising your voice can have real, concrete impact.</p>
 
+<p><h2>Ask Us to Share</h2></p>
+<p>If for whatever reason you don't feel comfortable sharing this image yourself, our Gender Avenger Pros can share it on your behalf. <a href="javascript:emailCurrentPage()">Just email us</a> and we'll protect your identity.</p>
+
+<p><h2>Correct the Record</h2></p>
+<p>We recognize that gender is not simply a binary world of "male" and "female". At the same time, we don't feel comfortable inviting the public to guess as to whether or not a speaker identifies as transgendered. If you believe that this chart erroneously represents someone's gender, <a href="javascript:emailCurrentPage()">please let us know</a> and we'll correct the record.</p>
     </div>
 </div>
 
@@ -303,10 +325,11 @@ footer {
       <div class="col-md-12">
         <p><h2>Next steps:</h2></p>
 
-<p><ul><li>Did you share the visualization yet?</li>
-<li>Approach one of the conference organizers and discuss your concerns</li>
+<p><ul><li>Approach one of the conference organizers and discuss your concerns</li>
 <li>Let some other folks know what you are doing, so they can join and support you in these conversations</li>
-<li>What about those times when you look up and say, "Wow, look at all the women!"? Share the visualization and reward the organizers!</li></ul></p>
+<li>What about those times when you look up and say, "Wow, look at all the women!"? Share the visualization and reward the organizers!</li>
+<li><a href="http://www.genderavenger.com/">Join Gender Avenger</a> to amplify women's voices in the public dialog</li>
+</ul></p>
 
       </div>
     </div>

@@ -128,6 +128,7 @@ app.get('/plot/:id', function (req, res, next) {
     // If the pie_url is missing (meaning we need to regenerate it), generate the pie chart and re-upload to imgur
     // This is so that if we want to "correct the record" all we need to do is update the numbers in firebase
     // and delete the pie_url. Then the next person to visit the url will cause the chart to be regenerated
+    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     if (!pie_url) {
       var pie = generatePieChart(refVal.men, refVal.women, refVal.other);
       var isEquitable = isEquitableHelper(men, women);
@@ -138,11 +139,13 @@ app.get('/plot/:id', function (req, res, next) {
         // Update the pie_url to the newly created plot
         var pie_url = data.link;
         plotRef.child('pie_url').set(pie_url);
+
         return res.render('thankyou.html', {
           title: 'Thank You',
           pie: pie_url,
           hashtag: refVal.hashtag,
-          event_name: refVal.label_text
+          event_name: refVal.label_text,
+          url_to_share: fullUrl
         })
       });
     } else {
@@ -150,7 +153,8 @@ app.get('/plot/:id', function (req, res, next) {
         title: 'Thank You',
         pie: pie_url,
         hashtag: refVal.hashtag,
-        event_name: refVal.label_text
+        event_name: refVal.label_text,
+        url_to_share: fullUrl
       });
     }
   })
