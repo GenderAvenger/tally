@@ -36,9 +36,10 @@ app.post('/report', function (req, res, next) {
   var men        = parseInt(req.body.men, 10),
       women      = parseInt(req.body.women, 10),
       label_text = req.body.label_text,
+      session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
-  if (!isInt(men) || !isInt(women) || !_.isString(label_text) || (hashtag.length > 0 && hashtag.substr(0,1) != '#')) {
+  if (!isInt(men) || !isInt(women) || !_.isString(label_text) || !_.isString(session_text) || (hashtag.length > 0 && hashtag.substr(0,1) != '#')) {
     // Send the report page back down
     // Really, this should be handled directly by javascript in the page
     // Put by posting to /report teh user at least doesn't see a URL change
@@ -52,7 +53,8 @@ app.post('/report', function (req, res, next) {
         men: !isInt(men),
         women: !isInt(women),
         hashtag: (hashtag.length > 0 && hashtag.substr(0,1) != '#'),
-        label_text: !_.isString(label_text)
+        label_text: !_.isString(label_text),
+        session_text: !_.isString(session_text)
       }
     })
   }
@@ -79,6 +81,7 @@ app.post('/report', function (req, res, next) {
         men: req.body.men,
         women: req.body.women,
         label_text: req.body.label_text,
+        session_text: req.body.session_text,
         hashtag: req.body.hashtag,
         error: {recaptcha: true}
       });
@@ -95,7 +98,7 @@ app.post('/report', function (req, res, next) {
     var isEquitable = isEquitableHelper(men, women);
 
     // Pass in a callback since we need a way to hear back from the implicit network call
-    getMagickedImage(pie, label_text, isEquitable, function (error, data) {
+    getMagickedImage(pie, label_text, session_text, isEquitable, function (error, data) {
 
       // the 'next' method passes this on to the next route, which should be a 404 or 500
       if (error) {
@@ -108,7 +111,7 @@ app.post('/report', function (req, res, next) {
       // Create a database entry for this pie_id
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
       // And store the data in it
-      plotRef.set({label_text: label_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
+      plotRef.set({label_text: label_text, session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
       return res.redirect('/plot/' + pie_id);
     });
   });
@@ -132,7 +135,7 @@ app.get('/plot/:id', function (req, res, next) {
     if (!pie_url) {
       var pie = generatePieChart(refVal.men, refVal.women, refVal.other);
       var isEquitable = isEquitableHelper(men, women);
-      getMagickedImage(pie, refVal.label_text, isEquitable, function (error, data) {
+      getMagickedImage(pie, refVal.label_text, refVal.session_text, isEquitable, function (error, data) {
         if (error) {
           return next(error);
         }
@@ -145,6 +148,7 @@ app.get('/plot/:id', function (req, res, next) {
           pie: pie_url,
           hashtag: refVal.hashtag,
           event_name: refVal.label_text,
+          session_text: refVal.session_text,
           url_to_share: fullUrl
         })
       });
@@ -154,6 +158,7 @@ app.get('/plot/:id', function (req, res, next) {
         pie: pie_url,
         hashtag: refVal.hashtag,
         event_name: refVal.label_text,
+        session_text: refVal.session_text,
         url_to_share: fullUrl
       });
     }
@@ -176,7 +181,7 @@ function generatePieChart (men, women, other) {
   return pie;
 };
 
-function getMagickedImage (pie, label_text, isEquitable, callback) {
+function getMagickedImage (pie, label_text, session_text, isEquitable, callback) {
   // Callback parameters are (error, data)
   callback = callback || function () {}; // Null callback
   //generate UUID for filenames
@@ -196,16 +201,18 @@ function getMagickedImage (pie, label_text, isEquitable, callback) {
     // ONCE THE IMAGE IS DOWNLOADED
     response.on('end', function () {
       // convert -gravity north -stroke '#4444' \
-      // -font Helvetica-bold -pointsize 60 -strokewidth 2 \
+      // -font Helvetica-bold -pointsize 54 -strokewidth 2 \
       // -annotate +0+55 'Faerie Dragon' -page +0+0 \
       // assets/genderavenger_sample_template.png -page +100+150 \
       // assets/chartgen/da6cf241-feeb-4730-90b8-f36755a2028a_chart.png -layers flatten card.png
       im.convert(['-gravity', 'north',
                   '-stroke', '#444444',
                   '-font', 'Helvetica-bold',
-                  '-pointsize', '60',
+                  '-pointsize', '54',
                   '-strokewidth', '2',
-                  '-annotate', '+0+55', label_text,
+                  '-annotate', '+0+35', label_text,
+                  '-pointsize', '32',
+                  '-annotate', '+0+100', session_text,
                   '-page', '+0+0',
                   'assets/'+background_asset,
                   '-page', '+100+150', chart_filename,
