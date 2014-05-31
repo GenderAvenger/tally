@@ -95,10 +95,10 @@ app.post('/report', function (req, res, next) {
     // set initial pie url for redundancy's sake
     var pie_url = pie.getUrl(true).replace("https","http");
 
-    var isEquitable = isEquitableHelper(men, women);
+    var proportionWomen = (women / (men + women));
 
     // Pass in a callback since we need a way to hear back from the implicit network call
-    getMagickedImage(pie, label_text, session_text, isEquitable, function (error, data) {
+    getMagickedImage(pie, label_text, session_text, proportionWomen, function (error, data) {
 
       // the 'next' method passes this on to the next route, which should be a 404 or 500
       if (error) {
@@ -134,8 +134,8 @@ app.get('/plot/:id', function (req, res, next) {
     var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     if (!pie_url) {
       var pie = generatePieChart(refVal.men, refVal.women, refVal.other);
-      var isEquitable = isEquitableHelper(men, women);
-      getMagickedImage(pie, refVal.label_text, refVal.session_text, isEquitable, function (error, data) {
+      var proportionWomen = (women / (men + women));
+      getMagickedImage(pie, refVal.label_text, refVal.session_text, proportionWomen, function (error, data) {
         if (error) {
           return next(error);
         }
@@ -184,7 +184,7 @@ function generatePieChart (men, women, other) {
   return pie;
 };
 
-function getMagickedImage (pie, label_text, session_text, isEquitable, callback) {
+function getMagickedImage (pie, label_text, session_text, proportionWomen, callback) {
   // Callback parameters are (error, data)
   callback = callback || function () {}; // Null callback
   //generate UUID for filenames
@@ -192,7 +192,10 @@ function getMagickedImage (pie, label_text, session_text, isEquitable, callback)
   //download the pie chart to a local file
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
-  var background_asset = isEquitable ? 'genderavenger_sample_template.png' : 'genderavenger_sample_bad.png';
+  var background_asset = 'genderavenger_sample_template.png'; // default to hall of fame
+  if (proportionWomen < 0.4) { // 40%
+    var background_asset = proportionWomen < 0.3 ? 'genderavenger_sample_bad.png' : 'sunflower.png';
+  }
   var file = fs.createWriteStream(chart_filename);
   var request = http.get(pie.getUrl(true).replace("https","http"), function(response) {
     try{
@@ -226,12 +229,6 @@ function getMagickedImage (pie, label_text, session_text, isEquitable, callback)
           } else {
             //upload that local file to imgur
             // You need to set this value yourself in a file called 'creds.yaml' in the root folder
-            // The form of that file is
-            /*
-              imgurApiKey: "YOUR_IMGUR_KEY"
-              recaptchaPublicKey: "YOUR_PUBLIC_KEY"
-              recaptchaPrivateKey: "YOUR_PRIVATE_KEY"
-            */
             imgur.setClientID(process.env['IMGUR_API_KEY']);
             imgur.upload(path.join(__dirname, '../' + card_filename),function(error, response){
               return callback(null, response.data);
@@ -240,9 +237,4 @@ function getMagickedImage (pie, label_text, session_text, isEquitable, callback)
         });
     });
   });
-}
-
-function isEquitableHelper(men, women, threshold) {
-  threshold = threshold || 0.4; // default threshold
-  return (women / (men + women)) > threshold;
 }
