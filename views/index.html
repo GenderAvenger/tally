@@ -318,11 +318,11 @@ footer {
               class="{% if error.label_text %} error {% endif %}"
               {% if label_text %} value="{{ label_text }}" {% endif %} />
         and there are
-             <input type="text" size="2" name="women" type="number"
-              class="{% if error.women %} error {% endif %}"
+             <input type="number" size="2" name="women"
+              class="number{% if error.women %} error {% endif %}"
               {% if women %} value="{{ women }}" {% endif %} />
         women and 
-             <input type="text" size="2" name="men" type="number"
+             <input type="number" size="2" name="men"
               class="{% if error.men %} error {% endif %}"
               {% if men %} value="{{ men }}" {% endif %} />  
         men at the session on 
