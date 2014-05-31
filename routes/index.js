@@ -176,8 +176,10 @@ function generatePieChart (men, women, other) {
   pie.setLegendColor("444444");
   pie.setWidth(500);
   pie.setHeight(400);
-  pie.addData(women, women + ' women', 'f44820');
-  pie.addData(men, men + ' men', '7fc8b4');
+  var wLabel = women != 1 ? 'women' : 'woman';
+  var mLabel = men != 1 ? 'men' : 'man';
+  pie.addData(women, women + ' ' + wLabel, 'f44820');
+  pie.addData(men, men + ' ' +mLabel, '7fc8b4');
   if (other > 0) {
     pie.addData(other, other + ' other', '444444');
   }
