@@ -55,6 +55,10 @@ input.error {
   border: 1px solid red;
 }
 
+input[type="number"] {
+  width: 49px;
+}
+
 .icon-bar {
    background-color:#ffffff;
 }
@@ -318,11 +322,11 @@ footer {
               class="{% if error.label_text %} error {% endif %}"
               {% if label_text %} value="{{ label_text }}" {% endif %} />
         and there are
-             <input type="number" size="2" name="women"
-              class="number{% if error.women %} error {% endif %}"
+             <input type="number" name="women"
+              class="{% if error.women %} error {% endif %}"
               {% if women %} value="{{ women }}" {% endif %} />
         women and 
-             <input type="number" size="2" name="men"
+             <input type="number" name="men"
               class="{% if error.men %} error {% endif %}"
               {% if men %} value="{{ men }}" {% endif %} />  
         men at the session on 
