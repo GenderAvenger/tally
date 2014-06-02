@@ -67,9 +67,9 @@
             <form action="report" method="post" role="form">
             <div class="form-group">
 
-            <p>I'm at <input type="text" name="label_text" placeholder="Conference 2014"
-                  class="{% if error.label_text %} error {% endif %}"
-                  {% if label_text %} value="{{ label_text }}" {% endif %} />
+            <p>I'm at <input type="text" name="hashtag" placeholder="#conference2014"
+                  class="{% if error.hashtag %} error {% endif %}"
+                  {% if hashtag %} value="{{ hashtag }}" {% endif %} />
             and there are
                  <input type="number" name="women"
                   class="{% if error.women %} error {% endif %}"
@@ -83,10 +83,6 @@
                   class="{% if error.session_text %} error {% endif %}"
                   {% if session_text %} value="{{ session_text }}" {% endif %} />
             </p>
-            <p>The hashtag (optional) is 
-                <input type="text" name="hashtag" placeholder="#conference2014"
-                  class="{% if error.hashtag %} error {% endif %}"
-                  {% if hashtag %} value="{{ hashtag }}" {% endif %} /></p>
 
                 {% if error.recaptcha %}<div class="error"><h3 style="color:red;">Please Try Again</h3></div> {% endif %}
                 <script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k={{recaptcha_public_key}}"></script>

@@ -35,11 +35,10 @@ app.post('/report', function (req, res, next) {
   // Validate input
   var men        = parseInt(req.body.men, 10),
       women      = parseInt(req.body.women, 10),
-      label_text = req.body.label_text,
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
-  if (!isInt(men) || !isInt(women) || !_.isString(label_text) || !_.isString(session_text) || (hashtag.length > 0 && hashtag.substr(0,1) != '#')) {
+  if (!isInt(men) || !isInt(women) || !_.isString(session_text) || !_.isString(hashtag) || hashtag.length < 1  || hashtag.substr(0,1) != '#') {
     // Send the report page back down
     // Really, this should be handled directly by javascript in the page
     // Put by posting to /report teh user at least doesn't see a URL change
@@ -47,13 +46,11 @@ app.post('/report', function (req, res, next) {
     return res.render('report.html', {
       men: req.body.men,
       women: req.body.women,
-      label_text: req.body.label_text,
       hashtag: req.body.hashtag,
       error: {
         men: !isInt(men),
         women: !isInt(women),
-        hashtag: (hashtag.length > 0 && hashtag.substr(0,1) != '#'),
-        label_text: !_.isString(label_text),
+        hashtag: (!_.isString(hashtag) || hashtag.length < 1  || hashtag.substr(0,1) != '#'),
         session_text: !_.isString(session_text)
       }
     })
@@ -62,12 +59,6 @@ app.post('/report', function (req, res, next) {
   // Handle Recaptcha
   // See https://github.com/zeMirco/simple-recaptcha for instructions / steps
   // You need to set this value yourself in a file called 'creds.yaml' in the root folder
-  // The form of that file is
-  /*
-    imgurApiKey: "YOUR_IMGUR_KEY"
-    recaptchaPublicKey: "YOUR_PUBLIC_KEY"
-    recaptchaPrivateKey: "YOUR_PRIVATE_KEY"
-  */
   var privateKey = process.env['RECAPTCHA_PRIVATE_KEY'];
   var ip = req.ip;
   var challenge = req.body.recaptcha_challenge_field;
@@ -80,13 +71,11 @@ app.post('/report', function (req, res, next) {
       return res.render('report.html', {
         men: req.body.men,
         women: req.body.women,
-        label_text: req.body.label_text,
         session_text: req.body.session_text,
-        hashtag: req.body.hashtag.substring(1),
+        hashtag: req.body.hashtag,
         error: {recaptcha: true}
       });
     }
-
     // Since we're all good, generate and show the pie chart
 
     // Default to zero individuals with a non-binary gender
@@ -98,8 +87,7 @@ app.post('/report', function (req, res, next) {
     var proportionWomen = (women / (men + women));
 
     // Pass in a callback since we need a way to hear back from the implicit network call
-    getMagickedImage(pie, hashtag || label_text, session_text, proportionWomen, function (error, data) {
-
+    getMagickedImage(pie, hashtag, session_text, proportionWomen, function (error, data) {
       // the 'next' method passes this on to the next route, which should be a 404 or 500
       if (error) {
         return next(error);
@@ -111,7 +99,7 @@ app.post('/report', function (req, res, next) {
       // Create a database entry for this pie_id
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
       // And store the data in it
-      plotRef.set({label_text: label_text, session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id});
+      plotRef.set({session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id});
       return res.redirect('/plot/' + pie_id);
     });
   });
@@ -135,7 +123,7 @@ app.get('/plot/:id', function (req, res, next) {
     if (!pie_url) {
       var pie = generatePieChart(refVal.men, refVal.women, refVal.other);
       var proportionWomen = (refVal.women / (refVal.men + refVal.women));
-      getMagickedImage(pie, refVal.hashtag || refVal.label_text, refVal.session_text, proportionWomen, function (error, data) {
+      getMagickedImage(pie, refVal.hashtag, refVal.session_text, proportionWomen, function (error, data) {
         if (error) {
           return next(error);
         }
@@ -147,7 +135,6 @@ app.get('/plot/:id', function (req, res, next) {
           title: 'Thank You',
           pie: pie_url,
           hashtag: refVal.hashtag.substring(1),
-          event_name: refVal.label_text,
           session_text: refVal.session_text,
           url_to_share: fullUrl,
           report_is_new: 1
@@ -158,7 +145,6 @@ app.get('/plot/:id', function (req, res, next) {
         title: 'Thank You',
         pie: pie_url,
         hashtag: refVal.hashtag.substring(1),
-        event_name: refVal.label_text,
         session_text: refVal.session_text,
         url_to_share: fullUrl,
         report_is_new:0
@@ -186,7 +172,7 @@ function generatePieChart (men, women, other) {
   return pie;
 };
 
-function getMagickedImage (pie, label_text, session_text, proportionWomen, callback) {
+function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback) {
   // Callback parameters are (error, data)
   callback = callback || function () {}; // Null callback
   //generate UUID for filenames
@@ -215,7 +201,7 @@ function getMagickedImage (pie, label_text, session_text, proportionWomen, callb
                   '-font', 'Helvetica-bold',
                   '-pointsize', '52',
                   '-strokewidth', '2',
-                  '-annotate', '+0+0', label_text,
+                  '-annotate', '+0+0', hashtag,
                   '-pointsize', '32',
                   '-annotate', '+0+55', session_text,
                   '-page', '+0+0',
