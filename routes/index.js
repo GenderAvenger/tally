@@ -174,8 +174,8 @@ function generatePieChart (men, women, other) {
   pie.setLegendBottom();
   pie.setLegendSize(30);
   pie.setLegendColor("444444");
-  pie.setWidth(500);
-  pie.setHeight(400);
+  pie.setWidth(400);
+  pie.setHeight(295);
   var wLabel = women != 1 ? 'women' : 'woman';
   var mLabel = men != 1 ? 'men' : 'man';
   pie.addData(women, women + ' ' + wLabel, 'f44820');
@@ -198,7 +198,7 @@ function getMagickedImage (pie, label_text, session_text, proportionWomen, callb
   var foreground_asset = 'foreground-good.png';
   if (proportionWomen < 0.4) { // 40%
     background_asset = proportionWomen < 0.3 ? 'background-bad.png' : 'background-neutral.png';
-    foreground_asset = proportionWomen < 0.3 ? 'foreground-bad.png' : '';
+    foreground_asset = proportionWomen < 0.3 ? 'foreground-bad.png' : 'foreground-neutral.png';
   }
   var file = fs.createWriteStream(chart_filename);
   var request = http.get(pie.getUrl(true).replace("https","http"), function(response) {
@@ -210,11 +210,6 @@ function getMagickedImage (pie, label_text, session_text, proportionWomen, callb
 
     // ONCE THE IMAGE IS DOWNLOADED
     response.on('end', function () {
-      // convert -gravity north -stroke '#4444' \
-      // -font Helvetica-bold -pointsize 54 -strokewidth 2 \
-      // -annotate +0+55 'Faerie Dragon' -page +0+0 \
-      // assets/genderavenger_sample_template.png -page +100+150 \
-      // assets/chartgen/da6cf241-feeb-4730-90b8-f36755a2028a_chart.png -layers flatten card.png
       im.convert(['-gravity', 'north',
                   '-stroke', '#444444',
                   '-font', 'Helvetica-bold',
@@ -225,7 +220,7 @@ function getMagickedImage (pie, label_text, session_text, proportionWomen, callb
                   '-annotate', '+0+0', session_text,
                   '-page', '+0+0',
                   'assets/'+background_asset,
-                  '-page', '+0+160', chart_filename,
+                  '-page', '+50+145', chart_filename,
                   '-page', '+0+0', 'assets/' + foreground_asset,
                   '-layers', 'flatten', card_filename],
         function (err, stdout) {

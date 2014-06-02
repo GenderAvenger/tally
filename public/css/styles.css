@@ -24,6 +24,19 @@ input{
 .sec1,.sec1 .container{
   background:#FEDD84 !important;
 }
+
+.social-share {
+  display: inline-block;
+  margin-top: 15px;
+}
+
+.social-share.left {
+  margin-right: 4px;
+}
+.social-share.right {
+  margin-left: 4px;
+}
+
 /* -- custom css for Bootstrap 3.x --*/
 
 /* move special fonts to HTML head for better performance */
@@ -141,7 +154,7 @@ input[type="number"] {
 
 @media screen and (max-width: 480px){
   .navbar-header .text {
-    font-size: 22px;
+    font-size: 21px;
   }
   .btn-lg {
     width: 100%;
