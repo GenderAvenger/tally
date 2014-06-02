@@ -98,7 +98,7 @@ app.post('/report', function (req, res, next) {
     var proportionWomen = (women / (men + women));
 
     // Pass in a callback since we need a way to hear back from the implicit network call
-    getMagickedImage(pie, label_text, session_text, proportionWomen, function (error, data) {
+    getMagickedImage(pie, hashtag || label_text, session_text, proportionWomen, function (error, data) {
 
       // the 'next' method passes this on to the next route, which should be a 404 or 500
       if (error) {
@@ -135,7 +135,7 @@ app.get('/plot/:id', function (req, res, next) {
     if (!pie_url) {
       var pie = generatePieChart(refVal.men, refVal.women, refVal.other);
       var proportionWomen = (refVal.women / (refVal.men + refVal.women));
-      getMagickedImage(pie, refVal.label_text, refVal.session_text, proportionWomen, function (error, data) {
+      getMagickedImage(pie, refVal.hashtag || refVal.label_text, refVal.session_text, proportionWomen, function (error, data) {
         if (error) {
           return next(error);
         }
