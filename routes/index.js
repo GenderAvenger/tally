@@ -82,7 +82,7 @@ app.post('/report', function (req, res, next) {
         women: req.body.women,
         label_text: req.body.label_text,
         session_text: req.body.session_text,
-        hashtag: req.body.hashtag,
+        hashtag: req.body.hashtag.substring(1),
         error: {recaptcha: true}
       });
     }
@@ -146,7 +146,7 @@ app.get('/plot/:id', function (req, res, next) {
         return res.render('thankyou.html', {
           title: 'Thank You',
           pie: pie_url,
-          hashtag: refVal.hashtag,
+          hashtag: refVal.hashtag.substring(1),
           event_name: refVal.label_text,
           session_text: refVal.session_text,
           url_to_share: fullUrl,
@@ -157,7 +157,7 @@ app.get('/plot/:id', function (req, res, next) {
       return res.render('thankyou.html', {
         title: 'Thank You',
         pie: pie_url,
-        hashtag: refVal.hashtag,
+        hashtag: refVal.hashtag.substring(1),
         event_name: refVal.label_text,
         session_text: refVal.session_text,
         url_to_share: fullUrl,
