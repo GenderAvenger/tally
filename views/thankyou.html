@@ -21,10 +21,9 @@
         <link href="/css/styles.css" type="text/css" rel="stylesheet">
 
         <script language="javascript">
-        console.log('happened');
-        function emailCurrentPage(){
-          console.log('email');
-            window.location.href="mailto:genderavengershares@googlegroups.com?subject=Can%20you%20share%20this%20image%20for%20me?%20[OR]%20Can%20you%20correct%20the%20record%20on%20this%20chart?"+"&body="+escape(window.location.href);
+        function emailCurrentPage(isShare){
+          var subject = isShare ? "Can%20you%20share%20this%20image%20for%20me?" : "Can%20you%20correct%20the%20record%20on%20this%20chart?";
+          window.open("mailto:genderavengershares@googlegroups.com?subject="+subject+"&body="+escape(window.location.href));
         }
     </script>
     </head>
@@ -80,7 +79,7 @@
     <p><ul><li>Approach one of the conference organizers and discuss your concerns</li>
     <li>Let some other folks know what you are doing, so they can join and support you in these conversations</li>
     <li>What about those times when you look up and say, "Wow, look at all the women!"? Share the visualization and reward the organizers!</li>
-    <li>If you need us to share this anonymously, <a href="javascript:emailCurrentPage()">Just email us</a> and we'll protect your identity.</li>
+    <li>If you need us to share this anonymously, <a href="javascript:emailCurrentPage(true)">Just email us</a> and we'll protect your identity.</li>
     <li><a href="http://www.genderavenger.com/">Join Gender Avenger</a> to amplify women's voices in the public dialog</li>
     </ul></p>
     <p>This message appears only once, and only to you.</p>
@@ -125,7 +124,7 @@ var TwitterUrl = "http://twitter.com/share?" + pageUrl;
       <div class="col-md-7">
 
 <p><h2>Ask Us to Share</h2></p>
-<p>If for whatever reason you don't feel comfortable sharing this image yourself, our Gender Avenger Pros can share it on your behalf. <a href="javascript:emailCurrentPage()">Just email us</a> and we'll protect your identity.</p>
+<p>If for whatever reason you don't feel comfortable sharing this image yourself, our Gender Avenger Pros can share it on your behalf. <a href="javascript:emailCurrentPage(true)">Just email us</a> and we'll protect your identity.</p>
 
 <p><h2>Are You the Organizer?</h2></p>
 <p>Add content here.</p>
