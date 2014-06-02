@@ -217,7 +217,7 @@ function getMagickedImage (pie, label_text, session_text, proportionWomen, callb
                   '-strokewidth', '2',
                   '-annotate', '+0+0', label_text,
                   '-pointsize', '32',
-                  '-annotate', '+0+30', session_text,
+                  '-annotate', '+0+50', session_text,
                   '-page', '+0+0',
                   'assets/'+background_asset,
                   '-page', '+50+145', chart_filename,
