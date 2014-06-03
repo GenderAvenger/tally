@@ -71,17 +71,17 @@
                   class="{% if error.hashtag %} error {% endif %}"
                   {% if hashtag %} value="{{ hashtag }}" {% endif %} />
             and there are
-                 <input type="number" name="women"
+                 <input type="number" name="women" placeholder="0"
                   class="{% if error.women %} error {% endif %}"
                   {% if women %} value="{{ women }}" {% endif %} />
             women and 
-                 <input type="number" name="men"
+                 <input type="number" name="men" placeholder="0"
                   class="{% if error.men %} error {% endif %}"
-                  {% if men %} value="{{ men }}" {% endif %} />  
-            men at the session on 
-                 <input type="text" name="session_text" placeholder="Session Name" 
+                  {% if men %} value="{{ men }}" {% endif %} />
+            men at the session on
+                 <input type="text" name="session_text" placeholder="Session Name (optional)"
                   class="{% if error.session_text %} error {% endif %}"
-                  {% if session_text %} value="{{ session_text }}" {% endif %} />
+                  {% if session_text %} value="{{ session_text }}" {% endif %} />.
             </p>
 
                 {% if error.recaptcha %}<div class="error"><h3 style="color:red;">Please Try Again</h3></div> {% endif %}
