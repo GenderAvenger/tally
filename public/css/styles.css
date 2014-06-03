@@ -152,7 +152,7 @@ input[type="number"] {
   position: relative;
 }
 
-@media screen and (max-width: 480px){
+@media screen and (max-width: 650px){
   .navbar-header .text {
     font-size: 21px;
   }
@@ -161,6 +161,11 @@ input[type="number"] {
   }
 }
 
+@media screen and (max-width: 480px) {
+  .navbar-header .text {
+    font-size: 14px;
+  }
+}
 .header h2 {
 /*  font-size:60px;*/
   -webkit-text-stroke: 1px rgba(f,f,f,0.1);
