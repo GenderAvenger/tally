@@ -2,6 +2,11 @@
 input{
   margin-top:5px
 }
+
+#pie-chart {
+  width: 50%;
+}
+
 .navbar-brand{
   margin:0px;
   padding:0px !important;
@@ -154,9 +159,9 @@ input[type="number"] {
   position: relative;
 }
 
-@media screen and (max-width: 480px){
+@media screen and (max-width: 650px){
   .navbar-header .text {
-    font-size: 21px;
+    font-size: 26px;
   }
   .btn-lg {
     width: 100%;

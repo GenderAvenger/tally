@@ -15,13 +15,15 @@ var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
 // Main route
 app.get('/', function (req, res, next) {
   res.render('report.html', {
-    title: 'Report'
+    title: 'Report',
+    didRecaptcha: req.session.didRecaptcha
   });
 });
 
 app.get('/report', function (req, res, next) {
   res.render('report.html', {
-    title: 'Report'
+    title: 'Report',
+    didRecaptcha: req.session.didRecaptcha
   });
 });
 
@@ -38,7 +40,7 @@ app.post('/report', function (req, res, next) {
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
-  if (!isInt(men) || !isInt(women) || !_.isString(session_text) || !_.isString(hashtag) || hashtag.length < 1  || hashtag.substr(0,1) != '#') {
+  if (!isInt(men) || !isInt(women) || !_.isString(session_text) || !_.isString(hashtag) || hashtag.length < 1) {
     // Send the report page back down
     // Really, this should be handled directly by javascript in the page
     // Put by posting to /report teh user at least doesn't see a URL change
@@ -65,7 +67,7 @@ app.post('/report', function (req, res, next) {
   var response = req.body.recaptcha_response_field;
 
   simple_recaptcha(privateKey, ip, challenge, response, function(err) {
-    if (err) {
+    if (!req.session.didRecaptcha && err) {
       console.log("Recaptcha Fail");
       // Re-render the page
       return res.render('report.html', {
@@ -77,6 +79,7 @@ app.post('/report', function (req, res, next) {
       });
     }
     // Since we're all good, generate and show the pie chart
+    req.session.didRecaptcha = true;
 
     // Default to zero individuals with a non-binary gender
     var pie = generatePieChart(men, women, 0);
@@ -99,7 +102,8 @@ app.post('/report', function (req, res, next) {
       // Create a database entry for this pie_id
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
       // And store the data in it
-      plotRef.set({session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id});
+      plotRef.set({session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
+      req.session.lastCreated = pie_url;
       return res.redirect('/plot/' + pie_id);
     });
   });
@@ -115,15 +119,19 @@ app.get('/plot/:id', function (req, res, next) {
     // Firebase has a weird syntax / system. This is how we load the data in
     var refVal = snapshot.val();
     var pie_url = refVal.pie_url;
+    var report_is_new = req.session.lastCreated == pie_url;
+    /* req.session.lastCreated = ''; // Clear this out so repeat visits don't show that text */
 
     // If the pie_url is missing (meaning we need to regenerate it), generate the pie chart and re-upload to imgur
     // This is so that if we want to "correct the record" all we need to do is update the numbers in firebase
     // and delete the pie_url. Then the next person to visit the url will cause the chart to be regenerated
     var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    var hashtag = refVal.hashtag;
+
     if (!pie_url) {
       var pie = generatePieChart(refVal.men, refVal.women, refVal.other);
       var proportionWomen = (refVal.women / (refVal.men + refVal.women));
-      getMagickedImage(pie, refVal.hashtag, refVal.session_text, proportionWomen, function (error, data) {
+      getMagickedImage(pie, hashtag, refVal.session_text, proportionWomen, function (error, data) {
         if (error) {
           return next(error);
         }
@@ -134,20 +142,24 @@ app.get('/plot/:id', function (req, res, next) {
         return res.render('thankyou.html', {
           title: 'Thank You',
           pie: pie_url,
-          hashtag: refVal.hashtag.substring(1),
+          hashtag: hashtag,
           session_text: refVal.session_text,
           url_to_share: fullUrl,
-          report_is_new: 1
+          report_is_new: report_is_new,
+          hashtag_without_hash: hashtag.substr(0,1) == '#' ? hashtag.substring(1) : hashtag,
+          has_hash: hashtag.substr(0,1) == '#'
         })
       });
     } else {
       return res.render('thankyou.html', {
         title: 'Thank You',
         pie: pie_url,
-        hashtag: refVal.hashtag.substring(1),
+        hashtag: hashtag,
         session_text: refVal.session_text,
         url_to_share: fullUrl,
-        report_is_new:0
+        report_is_new: report_is_new,
+        hashtag_without_hash: hashtag.substr(0,1) == '#' ? hashtag.substring(1) : hashtag,
+        has_hash: hashtag.substr(0,1) == '#'
       });
     }
   })
@@ -158,10 +170,10 @@ function generatePieChart (men, women, other) {
   var pie = new quiche('pie');
   pie.setTransparentBackground(); // Make background transparent
   pie.setLegendBottom();
-  pie.setLegendSize(30);
-  pie.setLegendColor("444444");
-  pie.setWidth(400);
-  pie.setHeight(295);
+  pie.setLegendSize(21);
+  pie.setLegendColor("333333");
+  pie.setWidth(540);
+  pie.setHeight(540);
   var wLabel = women != 1 ? 'women' : 'woman';
   var mLabel = men != 1 ? 'men' : 'man';
   pie.addData(women, women + ' ' + wLabel, 'f44820');
@@ -180,11 +192,10 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
   //download the pie chart to a local file
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
-  var background_asset = 'background-good.png'; // default to hall of fame
-  var foreground_asset = 'foreground-good.png';
+  var background_asset = 'app-bg.png'; // default to hall of fame
+  var foreground_asset = 'app-star-transparentlayer.png';
   if (proportionWomen < 0.4) { // 40%
-    background_asset = proportionWomen < 0.3 ? 'background-bad.png' : 'background-neutral.png';
-    foreground_asset = proportionWomen < 0.3 ? 'foreground-bad.png' : 'foreground-neutral.png';
+    foreground_asset = proportionWomen < 0.3 ? 'app-cloud-transparentlayer.png' : 'foreground-neutral.png';
   }
   var file = fs.createWriteStream(chart_filename);
   var request = http.get(pie.getUrl(true).replace("https","http"), function(response) {
@@ -197,17 +208,17 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
     // ONCE THE IMAGE IS DOWNLOADED
     response.on('end', function () {
       im.convert(['-gravity', 'north',
-                  '-stroke', '#444444',
-                  '-font', 'Helvetica-bold',
-                  '-pointsize', '52',
-                  '-strokewidth', '2',
-                  '-annotate', '+0+0', hashtag,
-                  '-pointsize', '32',
-                  '-annotate', '+0+55', session_text,
-                  '-page', '+0+0',
-                  'assets/'+background_asset,
-                  '-page', '+50+145', chart_filename,
-                  '-page', '+0+0', 'assets/' + foreground_asset,
+                  '-stroke', '#333333',
+                  '-font', 'AvantGarde-Book',
+                  '-pointsize', '72',
+                  '-strokewidth', '1',
+                  '-annotate', '+0+10', hashtag,
+                  '-pointsize', '42',
+                  '-annotate', '+0+90', session_text,
+                  '-page', '+0+0', 'assets/' + background_asset, // Background
+                  '-page', '+0+0', 'assets/' + 'app-GAtitle-transparentlayer.png', // Branding at bottom
+                  '-page', '+230+290', chart_filename, // Chart
+                  '-page', '+0+0', 'assets/' + foreground_asset, // Foreground
                   '-layers', 'flatten', card_filename],
         function (err, stdout) {
           if (err) {

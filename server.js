@@ -44,6 +44,8 @@ app.configure(function () {
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
+    app.use(express.cookieParser('equalityrules'));
+    app.use(express.cookieSession());
 
     // Load static files from /public
     app.use(express.static(__dirname + '/public'));
