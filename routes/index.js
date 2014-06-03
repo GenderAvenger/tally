@@ -102,7 +102,8 @@ app.post('/report', function (req, res, next) {
       // Create a database entry for this pie_id
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
       // And store the data in it
-      plotRef.set({session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id});
+      plotRef.set({session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
+      req.session.lastCreated = pie_url;
       return res.redirect('/plot/' + pie_id);
     });
   });
@@ -118,6 +119,8 @@ app.get('/plot/:id', function (req, res, next) {
     // Firebase has a weird syntax / system. This is how we load the data in
     var refVal = snapshot.val();
     var pie_url = refVal.pie_url;
+    var report_is_new = req.session.lastCreated == pie_url;
+    /* req.session.lastCreated = ''; // Clear this out so repeat visits don't show that text */
 
     // If the pie_url is missing (meaning we need to regenerate it), generate the pie chart and re-upload to imgur
     // This is so that if we want to "correct the record" all we need to do is update the numbers in firebase
@@ -142,7 +145,7 @@ app.get('/plot/:id', function (req, res, next) {
           hashtag: hashtag,
           session_text: refVal.session_text,
           url_to_share: fullUrl,
-          report_is_new: 1,
+          report_is_new: report_is_new,
           hashtag_without_hash: hashtag.substr(0,1) == '#' ? hashtag.substring(1) : hashtag,
           has_hash: hashtag.substr(0,1) == '#'
         })
@@ -154,7 +157,7 @@ app.get('/plot/:id', function (req, res, next) {
         hashtag: hashtag,
         session_text: refVal.session_text,
         url_to_share: fullUrl,
-        report_is_new: 0,
+        report_is_new: report_is_new,
         hashtag_without_hash: hashtag.substr(0,1) == '#' ? hashtag.substring(1) : hashtag,
         has_hash: hashtag.substr(0,1) == '#'
       });
