@@ -70,8 +70,8 @@
 <div class="alt featurette">
   <div class="container">
 
-    <h2>Gender Ratio at "{{session_text}}"</h2>
-    <h3>{{hashtag}}</h3>
+    <h2>Gender Ratio at {{ hashtag }}</h2>
+    {% if session_text %}<h3>Session: {{ session_text }}</h3>{% endif %}
     {% if report_is_new == 1 %}
     <div class="new-report">
     <p>Now that you've created a visualization, here's what you can do next:</p>
