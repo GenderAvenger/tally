@@ -2,6 +2,11 @@
 input{
   margin-top:5px
 }
+
+#pie-chart {
+  width: 50%;
+}
+
 .navbar-brand{
   margin:0px;
   padding:0px !important;

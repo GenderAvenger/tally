@@ -172,8 +172,8 @@ function generatePieChart (men, women, other) {
   pie.setLegendBottom();
   pie.setLegendSize(21);
   pie.setLegendColor("333333");
-  pie.setWidth(270);
-  pie.setHeight(270);
+  pie.setWidth(540);
+  pie.setHeight(540);
   var wLabel = women != 1 ? 'women' : 'woman';
   var mLabel = men != 1 ? 'men' : 'man';
   pie.addData(women, women + ' ' + wLabel, 'f44820');
@@ -210,14 +210,14 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
       im.convert(['-gravity', 'north',
                   '-stroke', '#333333',
                   '-font', 'AvantGarde-Book',
-                  '-pointsize', '36',
+                  '-pointsize', '72',
                   '-strokewidth', '1',
                   '-annotate', '+0+10', hashtag,
-                  '-pointsize', '21',
-                  '-annotate', '+0+45', session_text,
+                  '-pointsize', '42',
+                  '-annotate', '+0+90', session_text,
                   '-page', '+0+0', 'assets/' + background_asset, // Background
                   '-page', '+0+0', 'assets/' + 'app-GAtitle-transparentlayer.png', // Branding at bottom
-                  '-page', '+115+145', chart_filename, // Chart
+                  '-page', '+230+290', chart_filename, // Chart
                   '-page', '+0+0', 'assets/' + foreground_asset, // Foreground
                   '-layers', 'flatten', card_filename],
         function (err, stdout) {
