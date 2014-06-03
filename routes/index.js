@@ -167,8 +167,8 @@ function generatePieChart (men, women, other) {
   var pie = new quiche('pie');
   pie.setTransparentBackground(); // Make background transparent
   pie.setLegendBottom();
-  pie.setLegendSize(30);
-  pie.setLegendColor("444444");
+  pie.setLegendSize(21);
+  pie.setLegendColor("333333");
   pie.setWidth(270);
   pie.setHeight(270);
   var wLabel = women != 1 ? 'women' : 'woman';
@@ -205,13 +205,13 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
     // ONCE THE IMAGE IS DOWNLOADED
     response.on('end', function () {
       im.convert(['-gravity', 'north',
-                  '-stroke', '#444444',
-                  '-font', 'Helvetica-bold',
-                  '-pointsize', '52',
-                  '-strokewidth', '2',
-                  '-annotate', '+0+0', hashtag,
-                  '-pointsize', '32',
-                  '-annotate', '+0+55', session_text,
+                  '-stroke', '#333333',
+                  '-font', 'AvantGarde-Book',
+                  '-pointsize', '36',
+                  '-strokewidth', '1',
+                  '-annotate', '+0+10', hashtag,
+                  '-pointsize', '21',
+                  '-annotate', '+0+45', session_text,
                   '-page', '+0+0', 'assets/' + background_asset, // Background
                   '-page', '+0+0', 'assets/' + 'app-GAtitle-transparentlayer.png', // Branding at bottom
                   '-page', '+115+145', chart_filename, // Chart
