@@ -3,6 +3,7 @@
   "description": "Report Gender Data from Conferences",
   "version": "0.0.1",
   "private": true,
+  "engine": "node 0.8.20"
   "scripts": {
     "start": "node server.js"
   },
