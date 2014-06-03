@@ -85,6 +85,7 @@
             </p>
 
                 {% if error.recaptcha %}<div class="error"><h3 style="color:red;">Please Try Again</h3></div> {% endif %}
+                {% if not didRecaptcha %}
                 <script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k={{recaptcha_public_key}}"></script>
                 <noscript>
                     <iframe src="http://www.google.com/recaptcha/api/noscript?k={{recaptcha_public_key}}" height="300" width="500" frameborder="0">
@@ -93,6 +94,7 @@
                     <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
                     <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
                 </noscript>
+                {% endif %}
                 <p><input class="btn btn-default btn-lg" type="submit" value="Picture It"/></p>
             </div>
             </form>

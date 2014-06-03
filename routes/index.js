@@ -15,13 +15,15 @@ var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
 // Main route
 app.get('/', function (req, res, next) {
   res.render('report.html', {
-    title: 'Report'
+    title: 'Report',
+    didRecaptcha: req.session.didRecaptcha
   });
 });
 
 app.get('/report', function (req, res, next) {
   res.render('report.html', {
-    title: 'Report'
+    title: 'Report',
+    didRecaptcha: req.session.didRecaptcha
   });
 });
 
@@ -65,7 +67,7 @@ app.post('/report', function (req, res, next) {
   var response = req.body.recaptcha_response_field;
 
   simple_recaptcha(privateKey, ip, challenge, response, function(err) {
-    if (err) {
+    if (!req.session.didRecaptcha && err) {
       console.log("Recaptcha Fail");
       // Re-render the page
       return res.render('report.html', {
@@ -77,6 +79,7 @@ app.post('/report', function (req, res, next) {
       });
     }
     // Since we're all good, generate and show the pie chart
+    req.session.didRecaptcha = true;
 
     // Default to zero individuals with a non-binary gender
     var pie = generatePieChart(men, women, 0);
