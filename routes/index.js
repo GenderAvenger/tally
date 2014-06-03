@@ -40,7 +40,7 @@ app.post('/report', function (req, res, next) {
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
-  if (!isInt(men) || !isInt(women) || !_.isString(session_text) || !_.isString(hashtag) || hashtag.length < 1  || hashtag.substr(0,1) != '#') {
+  if (!isInt(men) || !isInt(women) || !_.isString(session_text) || !_.isString(hashtag) || hashtag.length < 1) {
     // Send the report page back down
     // Really, this should be handled directly by javascript in the page
     // Put by posting to /report teh user at least doesn't see a URL change
@@ -123,10 +123,12 @@ app.get('/plot/:id', function (req, res, next) {
     // This is so that if we want to "correct the record" all we need to do is update the numbers in firebase
     // and delete the pie_url. Then the next person to visit the url will cause the chart to be regenerated
     var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    var hashtag = refVal.hashtag;
+
     if (!pie_url) {
       var pie = generatePieChart(refVal.men, refVal.women, refVal.other);
       var proportionWomen = (refVal.women / (refVal.men + refVal.women));
-      getMagickedImage(pie, refVal.hashtag, refVal.session_text, proportionWomen, function (error, data) {
+      getMagickedImage(pie, hashtag, refVal.session_text, proportionWomen, function (error, data) {
         if (error) {
           return next(error);
         }
@@ -137,20 +139,24 @@ app.get('/plot/:id', function (req, res, next) {
         return res.render('thankyou.html', {
           title: 'Thank You',
           pie: pie_url,
-          hashtag: refVal.hashtag.substring(1),
+          hashtag: hashtag,
           session_text: refVal.session_text,
           url_to_share: fullUrl,
-          report_is_new: 1
+          report_is_new: 1,
+          hashtag_without_hash: hashtag.substr(0,1) == '#' ? hashtag.substring(1) : hashtag,
+          has_hash: hashtag.substr(0,1) == '#'
         })
       });
     } else {
       return res.render('thankyou.html', {
         title: 'Thank You',
         pie: pie_url,
-        hashtag: refVal.hashtag.substring(1),
+        hashtag: hashtag,
         session_text: refVal.session_text,
         url_to_share: fullUrl,
-        report_is_new:0
+        report_is_new: 0,
+        hashtag_without_hash: hashtag.substr(0,1) == '#' ? hashtag.substring(1) : hashtag,
+        has_hash: hashtag.substr(0,1) == '#'
       });
     }
   })

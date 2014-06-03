@@ -71,7 +71,7 @@
   <div class="container">
 
     <h2>Gender Ratio at "{{session_text}}"</h2>
-    <h3>#{{hashtag}}</h3>
+    <h3>{{hashtag}}</h3>
     {% if report_is_new == 1 %}
     <div class="new-report">
     <p>Now that you've created a visualization, here's what you can do next:</p>
@@ -112,11 +112,10 @@ var TwitterUrl = "http://twitter.com/share?" + pageUrl;
 </script>
 
 	-->
-
 <a class="social-share left " href="https://www.facebook.com/sharer/sharer.php?u={{url_to_share}}&t=Share%20on%20Facebook"
    onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
    target="_blank" title="Share on Facebook"><img src="/img/facebook.png"></a>
-<a class="social-share right" href="https://twitter.com/share?url={{url_to_share}}&via=GenderAvenger&text=Check out the gender ratio at %23{{hashtag}}"
+<a class="social-share right" href="https://twitter.com/share?url={{url_to_share}}&via=GenderAvenger&text=Check out the gender ratio at {% if has_hash %}%23{% endif %}{{hashtag_without_hash}}"
    onclick="javascript:window.open(this.href, '', 'menubar=yes,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
    target="_blank" title="Share on Twitter"><img src="/img/tweet.png"></a>
 
