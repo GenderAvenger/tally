@@ -35,11 +35,10 @@ app.post('/report', function (req, res, next) {
   // Validate input
   var men        = parseInt(req.body.men, 10),
       women      = parseInt(req.body.women, 10),
-      label_text = req.body.label_text,
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
-  if (!isInt(men) || !isInt(women) || !_.isString(label_text) || !_.isString(session_text) || (hashtag.length > 0 && hashtag.substr(0,1) != '#')) {
+  if (!isInt(men) || !isInt(women) || !_.isString(session_text) || !_.isString(hashtag) || hashtag.length < 1  || hashtag.substr(0,1) != '#') {
     // Send the report page back down
     // Really, this should be handled directly by javascript in the page
     // Put by posting to /report teh user at least doesn't see a URL change
@@ -47,13 +46,11 @@ app.post('/report', function (req, res, next) {
     return res.render('report.html', {
       men: req.body.men,
       women: req.body.women,
-      label_text: req.body.label_text,
       hashtag: req.body.hashtag,
       error: {
         men: !isInt(men),
         women: !isInt(women),
-        hashtag: (hashtag.length > 0 && hashtag.substr(0,1) != '#'),
-        label_text: !_.isString(label_text),
+        hashtag: (!_.isString(hashtag) || hashtag.length < 1  || hashtag.substr(0,1) != '#'),
         session_text: !_.isString(session_text)
       }
     })
@@ -62,12 +59,6 @@ app.post('/report', function (req, res, next) {
   // Handle Recaptcha
   // See https://github.com/zeMirco/simple-recaptcha for instructions / steps
   // You need to set this value yourself in a file called 'creds.yaml' in the root folder
-  // The form of that file is
-  /*
-    imgurApiKey: "YOUR_IMGUR_KEY"
-    recaptchaPublicKey: "YOUR_PUBLIC_KEY"
-    recaptchaPrivateKey: "YOUR_PRIVATE_KEY"
-  */
   var privateKey = process.env['RECAPTCHA_PRIVATE_KEY'];
   var ip = req.ip;
   var challenge = req.body.recaptcha_challenge_field;
@@ -80,13 +71,11 @@ app.post('/report', function (req, res, next) {
       return res.render('report.html', {
         men: req.body.men,
         women: req.body.women,
-        label_text: req.body.label_text,
         session_text: req.body.session_text,
         hashtag: req.body.hashtag,
         error: {recaptcha: true}
       });
     }
-
     // Since we're all good, generate and show the pie chart
 
     // Default to zero individuals with a non-binary gender
@@ -98,8 +87,7 @@ app.post('/report', function (req, res, next) {
     var proportionWomen = (women / (men + women));
 
     // Pass in a callback since we need a way to hear back from the implicit network call
-    getMagickedImage(pie, label_text, session_text, proportionWomen, function (error, data) {
-
+    getMagickedImage(pie, hashtag, session_text, proportionWomen, function (error, data) {
       // the 'next' method passes this on to the next route, which should be a 404 or 500
       if (error) {
         return next(error);
@@ -111,7 +99,7 @@ app.post('/report', function (req, res, next) {
       // Create a database entry for this pie_id
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
       // And store the data in it
-      plotRef.set({label_text: label_text, session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
+      plotRef.set({session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id});
       return res.redirect('/plot/' + pie_id);
     });
   });
@@ -134,8 +122,8 @@ app.get('/plot/:id', function (req, res, next) {
     var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     if (!pie_url) {
       var pie = generatePieChart(refVal.men, refVal.women, refVal.other);
-      var proportionWomen = (women / (men + women));
-      getMagickedImage(pie, refVal.label_text, refVal.session_text, proportionWomen, function (error, data) {
+      var proportionWomen = (refVal.women / (refVal.men + refVal.women));
+      getMagickedImage(pie, refVal.hashtag, refVal.session_text, proportionWomen, function (error, data) {
         if (error) {
           return next(error);
         }
@@ -146,8 +134,7 @@ app.get('/plot/:id', function (req, res, next) {
         return res.render('thankyou.html', {
           title: 'Thank You',
           pie: pie_url,
-          hashtag: refVal.hashtag,
-          event_name: refVal.label_text,
+          hashtag: refVal.hashtag.substring(1),
           session_text: refVal.session_text,
           url_to_share: fullUrl,
           report_is_new: 1
@@ -157,8 +144,7 @@ app.get('/plot/:id', function (req, res, next) {
       return res.render('thankyou.html', {
         title: 'Thank You',
         pie: pie_url,
-        hashtag: refVal.hashtag,
-        event_name: refVal.label_text,
+        hashtag: refVal.hashtag.substring(1),
         session_text: refVal.session_text,
         url_to_share: fullUrl,
         report_is_new:0
@@ -174,8 +160,8 @@ function generatePieChart (men, women, other) {
   pie.setLegendBottom();
   pie.setLegendSize(30);
   pie.setLegendColor("444444");
-  pie.setWidth(500);
-  pie.setHeight(400);
+  pie.setWidth(400);
+  pie.setHeight(295);
   var wLabel = women != 1 ? 'women' : 'woman';
   var mLabel = men != 1 ? 'men' : 'man';
   pie.addData(women, women + ' ' + wLabel, 'f44820');
@@ -186,7 +172,7 @@ function generatePieChart (men, women, other) {
   return pie;
 };
 
-function getMagickedImage (pie, label_text, session_text, proportionWomen, callback) {
+function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback) {
   // Callback parameters are (error, data)
   callback = callback || function () {}; // Null callback
   //generate UUID for filenames
@@ -194,9 +180,11 @@ function getMagickedImage (pie, label_text, session_text, proportionWomen, callb
   //download the pie chart to a local file
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
-  var background_asset = 'genderavenger_sample_template.png'; // default to hall of fame
+  var background_asset = 'background-good.png'; // default to hall of fame
+  var foreground_asset = 'foreground-good.png';
   if (proportionWomen < 0.4) { // 40%
-    var background_asset = proportionWomen < 0.3 ? 'genderavenger_sample_bad.png' : 'sunflower.png';
+    background_asset = proportionWomen < 0.3 ? 'background-bad.png' : 'background-neutral.png';
+    foreground_asset = proportionWomen < 0.3 ? 'foreground-bad.png' : 'foreground-neutral.png';
   }
   var file = fs.createWriteStream(chart_filename);
   var request = http.get(pie.getUrl(true).replace("https","http"), function(response) {
@@ -208,22 +196,18 @@ function getMagickedImage (pie, label_text, session_text, proportionWomen, callb
 
     // ONCE THE IMAGE IS DOWNLOADED
     response.on('end', function () {
-      // convert -gravity north -stroke '#4444' \
-      // -font Helvetica-bold -pointsize 54 -strokewidth 2 \
-      // -annotate +0+55 'Faerie Dragon' -page +0+0 \
-      // assets/genderavenger_sample_template.png -page +100+150 \
-      // assets/chartgen/da6cf241-feeb-4730-90b8-f36755a2028a_chart.png -layers flatten card.png
       im.convert(['-gravity', 'north',
                   '-stroke', '#444444',
                   '-font', 'Helvetica-bold',
-                  '-pointsize', '54',
+                  '-pointsize', '52',
                   '-strokewidth', '2',
-                  '-annotate', '+0+35', label_text,
+                  '-annotate', '+0+0', hashtag,
                   '-pointsize', '32',
-                  '-annotate', '+0+100', session_text,
+                  '-annotate', '+0+55', session_text,
                   '-page', '+0+0',
                   'assets/'+background_asset,
-                  '-page', '+100+150', chart_filename,
+                  '-page', '+50+145', chart_filename,
+                  '-page', '+0+0', 'assets/' + foreground_asset,
                   '-layers', 'flatten', card_filename],
         function (err, stdout) {
           if (err) {

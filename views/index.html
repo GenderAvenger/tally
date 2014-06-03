@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
         <title>GenderAvenger - Visualize Equality</title>
@@ -282,10 +283,46 @@ footer {
     <!--<div class="navbar-collapse collapse" id="navbar">
       <ul class="nav navbar-nav">
       </ul>-->
-    </div>
-   </div>
-</div>
+=======
+  <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+      <title>GenderAvenger - Visualize Equality</title>
+      <meta name="generator" content="Generate graphs of gender equality at conferences and on lists." />
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+      <link rel="shortcut icon" type="image/x-icon" href="/public/favicon.ico" /> 
+      <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+      <link href="/css/styles.css" rel="stylesheet">
 
+      <!--[if lt IE 9]>
+        <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+      <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <div id="fb-root"></div>
+    <script>
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=173688332778276&version=v2.0";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <div class="navbar navbar-fixed-top alt" data-spy="affix" data-offset-top="1000">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="http://genderavenger.com" class="navbar-brand img" style="padding:0px;"><img src="/img/galogo.png"/></a>
+          <span class="icon-bar text">Visualize Equality</span>
+        </div>
+       </div>
+>>>>>>> FETCH_HEAD
+    </div>
+
+<<<<<<< HEAD
 <div class="alt featurette">
   <div class="container">
     <div class="row">
@@ -298,45 +335,26 @@ footer {
              <li><strong>If you need to stay anonymous</strong>, we can share it for you</li>
         </ul>
         </p>
+=======
+    <div class="alt featurette">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-9">
+            <br/>
+            <p>Do you notice when events have few or no women on a panel? Do something about it!</p>
+            <ul><li><strong>Count the speakers</strong> on the agenda or panel you're attending</li>
+                 <li><strong>Gauge organizers' openness</strong> to change, and the best way to encourage that change</li>
+                 <li><strong>Share a chart</strong> on social media or with the organizers</li>
+                 <li><strong>If you need to stay anonymous</strong>, we can share it for you</li>
+            </ul>
+            </p>
+          </div>
+        </div>
+>>>>>>> FETCH_HEAD
       </div>
     </div>
-  </div>
-</div>
 
-<div id="sec1" class="blurb">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-7">
-      <script type="text/javascript">
-        var RecaptchaOptions = {
-            theme : 'clean',
-            lang  : 'en'
-        };
-      </script>
-        <form action="report" method="post" role="form">
-        <div class="form-group">
-
-        <p>I'm at <input type="text" name="label_text" placeholder="Conference 2014"
-              class="{% if error.label_text %} error {% endif %}"
-              {% if label_text %} value="{{ label_text }}" {% endif %} />
-        and there are
-             <input type="number" name="women"
-              class="{% if error.women %} error {% endif %}"
-              {% if women %} value="{{ women }}" {% endif %} />
-        women and 
-             <input type="number" name="men"
-              class="{% if error.men %} error {% endif %}"
-              {% if men %} value="{{ men }}" {% endif %} />  
-        men at the session on 
-             <input type="text" name="session_text" placeholder="Session Name" 
-              class="{% if error.session_text %} error {% endif %}"
-              {% if session_text %} value="{{ session_text }}" {% endif %} />
-        </p>
-        <p>The hashtag (optional) is 
-            <input type="text" name="hashtag" placeholder="#conference2014"
-              class="{% if error.hashtag %} error {% endif %}"
-              {% if hashtag %} value="{{ hashtag }}" {% endif %} /></p>
-
+<<<<<<< HEAD
             {% if error.recaptcha %}<div class="error"><h3 style="color:red;">Please Try Again</h3></div> {% endif %}
             <p><script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k={{recaptcha_public_key}}"></script>
             <noscript>
@@ -348,14 +366,57 @@ footer {
             </noscript></p>
             <p><input class="btn btn-default btn-lg" type="submit" value="Visualize Equality"/></p>
             <p><em>Please don't miscount or misrepresent. No really nasty language. No personal attacks. The facts will win the day.</em></p>
+=======
+    <div id="sec1" class="blurb">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-9">
+          <script type="text/javascript">
+            var RecaptchaOptions = {
+                theme : 'clean',
+                lang  : 'en'
+            };
+          </script>
+            <form action="report" method="post" role="form">
+            <div class="form-group">
+
+            <p>I'm at <input type="text" name="hashtag" placeholder="#conference2014"
+                  class="{% if error.hashtag %} error {% endif %}"
+                  {% if hashtag %} value="{{ hashtag }}" {% endif %} />
+            and there are
+                 <input type="number" name="women"
+                  class="{% if error.women %} error {% endif %}"
+                  {% if women %} value="{{ women }}" {% endif %} />
+            women and 
+                 <input type="number" name="men"
+                  class="{% if error.men %} error {% endif %}"
+                  {% if men %} value="{{ men }}" {% endif %} />  
+            men at the session on 
+                 <input type="text" name="session_text" placeholder="Session Name" 
+                  class="{% if error.session_text %} error {% endif %}"
+                  {% if session_text %} value="{{ session_text }}" {% endif %} />
+            </p>
+
+                {% if error.recaptcha %}<div class="error"><h3 style="color:red;">Please Try Again</h3></div> {% endif %}
+                <script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k={{recaptcha_public_key}}"></script>
+                <noscript>
+                    <iframe src="http://www.google.com/recaptcha/api/noscript?k={{recaptcha_public_key}}" height="300" width="500" frameborder="0">
+                    </iframe>
+                    <br>
+                    <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                    <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+                </noscript>
+                <p><input class="btn btn-default btn-lg" type="submit" value="Visualize Equality"/></p>
+            </div>
+            </form>
+>>>>>>> FETCH_HEAD
         </div>
-        </form>
     </div>
-</div>
 
+        </div>
     </div>
-</div>
 
+<<<<<<< HEAD
 <div class="featurette" id="sec2">
   <div class="container">
     <div class="row">
@@ -366,28 +427,39 @@ footer {
     </div>
       </div>
             </div>
+=======
+    <div class="featurette" id="sec2">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-left">
+            <div align="center"><h2>About Gender Avengers</h2></div>
+            <p>Gender Avengers believes that change can happen when we challenge decision makers at all levels by pointing out “absences” and asking that they be corrected. Our team helps organizers <a href="http://www.genderavenger.com/excuses/">beat the excuses</a> and works with them to create diverse events.</p>
+          </div>
+        </div>
+          </div>
+                </div>
+>>>>>>> FETCH_HEAD
 
-    <div class="row">
-      <div class="col-md-7">
+        <div class="row">
+          <div class="col-md-9">
 
-<a href="https://twitter.com/genderavenger" target="_blank" title="Gender Avenger" class="social-twitter"></a><a href="https://plus.google.com/+Genderavenger/" target="_blank" title="Elan Morgan" class="social-google"></a><a href="http://www.facebook.com/GenderAvenger" target="_blank" title="Gender Avenger" class="social-facebook"></a>
+    <a href="https://twitter.com/genderavenger" target="_blank" title="Gender Avenger" class="social-twitter"></a><a href="https://plus.google.com/+Genderavenger/" target="_blank" title="Elan Morgan" class="social-google"></a><a href="http://www.facebook.com/GenderAvenger" target="_blank" title="Gender Avenger" class="social-facebook"></a>
 
-    </div>
+        </div>
+          </div>
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3 text-center">
+            <ul class="list-inline">
+        	<li><a href="https://twitter.com/genderavenger"><i class="icon-twitter icon-2x"></i></a></li>
+              <li><a href="https://plus.google.com/+Genderavenger/" target="_blank" title="Elan Morgan"><i class="icon-google-plus icon-2x"></i></a></li>
+              <li><a href="http://www.facebook.com/GenderAvenger" target="_blank" title="Gender Avenger"><i class="icon-facebook icon-2x"></i></a></li>
+                      </ul>
+          </div>
+        </div>
       </div>
- 
-<footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 text-center">
-        <ul class="list-inline">
-    	<li><a href="https://twitter.com/genderavenger"><i class="icon-twitter icon-2x"></i></a></li>
-          <li><a href="https://plus.google.com/+Genderavenger/" target="_blank" title="Elan Morgan"><i class="icon-google-plus icon-2x"></i></a></li>
-          <li><a href="http://www.facebook.com/GenderAvenger" target="_blank" title="Gender Avenger"><i class="icon-facebook icon-2x"></i></a></li>
-                  </ul>
-      </div>
-    </div>
-  </div>
-</footer>
+    </footer>
 
     </body>
 </html>
