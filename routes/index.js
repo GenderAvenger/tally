@@ -160,8 +160,8 @@ function generatePieChart (men, women, other) {
   pie.setLegendBottom();
   pie.setLegendSize(30);
   pie.setLegendColor("444444");
-  pie.setWidth(400);
-  pie.setHeight(295);
+  pie.setWidth(270);
+  pie.setHeight(270);
   var wLabel = women != 1 ? 'women' : 'woman';
   var mLabel = men != 1 ? 'men' : 'man';
   pie.addData(women, women + ' ' + wLabel, 'f44820');
@@ -180,11 +180,10 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
   //download the pie chart to a local file
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
-  var background_asset = 'background-good.png'; // default to hall of fame
-  var foreground_asset = 'foreground-good.png';
+  var background_asset = 'app-bg.png'; // default to hall of fame
+  var foreground_asset = 'app-star-transparentlayer.png';
   if (proportionWomen < 0.4) { // 40%
-    background_asset = proportionWomen < 0.3 ? 'background-bad.png' : 'background-neutral.png';
-    foreground_asset = proportionWomen < 0.3 ? 'foreground-bad.png' : 'foreground-neutral.png';
+    foreground_asset = proportionWomen < 0.3 ? 'app-cloud-transparentlayer.png' : 'foreground-neutral.png';
   }
   var file = fs.createWriteStream(chart_filename);
   var request = http.get(pie.getUrl(true).replace("https","http"), function(response) {
@@ -204,10 +203,10 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
                   '-annotate', '+0+0', hashtag,
                   '-pointsize', '32',
                   '-annotate', '+0+55', session_text,
-                  '-page', '+0+0',
-                  'assets/'+background_asset,
-                  '-page', '+50+145', chart_filename,
-                  '-page', '+0+0', 'assets/' + foreground_asset,
+                  '-page', '+0+0', 'assets/' + background_asset, // Background
+                  '-page', '+0+0', 'assets/' + 'app-GAtitle-transparentlayer.png', // Branding at bottom
+                  '-page', '+115+145', chart_filename, // Chart
+                  '-page', '+0+0', 'assets/' + foreground_asset, // Foreground
                   '-layers', 'flatten', card_filename],
         function (err, stdout) {
           if (err) {
