@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <title>GA Tally</title>
+        <title>Tally</title>
         <meta name="generator" content="Generate graphs of gender equality at conferences and on lists." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <link rel="shortcut icon" type="image/x-icon" href="/public/favicon.ico" />
@@ -60,18 +60,6 @@
         <div class="container">
           <h2>Gender Ratio at {{ hashtag }}</h2>
           {% if session_text %}<h3>Session: {{ session_text }}</h3>{% endif %}
-          {% if report_is_new == 1 %}
-          <div style="margin-left:20px;background:#222334;">
-          <p>Now that you've created a visualization, here's what you can do next:</p>
-          <p><ul><li>Approach one of the conference organizers and discuss your concerns</li>
-          <li>Let some other folks know what you are doing, so they can join and support you in these conversations</li>
-          <li>What about those times when you look up and say, "Wow, look at all the women!"? Share positive charts, too, and reward the organizers.</li>
-          <li>If you need us to share this anonymously, <a href="javascript:emailCurrentPage(true)">email us</a> and we'll protect your identity.</li>
-          <li><a href="http://www.genderavenger.com/">Join Gender Avenger</a> to amplify women's voices in the public dialog</li>
-          </ul></p>
-          <p><em>This message appears only once, and is only visible to you.</em></p>
-          </div>
-          {% endif %}
     <p>This chart shows the gender ratio at this event, as reported by an attendee.</p>
   </div>
 </div>
@@ -82,11 +70,7 @@
       <div><img src="{{pie}}" id="pie-chart" class="img-responsive"/></div>
     </div>
    </div>
-</div>
-<div>
-   <div class="container">
-    <div class="row">
-      <div class="share-buttons">
+    <div class="share-buttons">
         <a class="social-share left " href="https://www.facebook.com/sharer/sharer.php?u={{url_to_share}}&t=Share%20on%20Facebook"
            onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
            target="_blank" title="Share on Facebook"><img src="/img/facebook.png"></a>
@@ -94,34 +78,55 @@
            onclick="javascript:window.open(this.href, '', 'menubar=yes,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
            target="_blank" title="Share on Twitter"><img src="/img/tweet.png"></a>
       </div>
+</div>
+<div>
+   <div class="container">
+    <div class="row">
 
       <div>
 
-<p><h2>Make a New Chart</h2></p>
-<p>Want to create a new pie chart? <a href="http://gender-avenger-app.herokuapp.com/">Click here.</a>
+          {% if report_is_new == 1 %}
+          <div style="margin-left:20px;">
+          <p>Now that you've created a visualization, here's what you can do next:</p>
+          <p><ul><li>If you need us to share this anonymously, email us at <a href="javascript:emailCurrentPage(true)">genderavengershares@googlegroups.com</a> and we'll protect your identity.</li>
+          <li>Approach one of the conference organizers and discuss your concerns</li>
+          <li>Let some other folks know what you are doing, so they can join and support you in these conversations</li>
+          <li>What about those times when you look up and say, "Wow, look at all the women!"? Share positive charts, too, and reward the organizers.</li>
+          <li><a href="http://www.genderavenger.com/">Join Gender Avenger</a> to amplify women's voices in the public dialog</li>
+          </ul></p>
+          <p><em>This message appears only once, and is only visible to you.</em></p>
+          </div>
+          {% endif %}
 
-<p><h2>Ask Us to Share</h2></p>
-<p>If for whatever reason you don't feel comfortable sharing this image yourself, our Gender Avenger Pros can share it on your behalf. <a href="javascript:emailCurrentPage(true)">Just email us</a> and we'll protect your identity.</p>
+<p><h2>Make a New Chart</h2></p>
+<p>Want to create a new pie chart? Go to <a href="app.genderavenger.com">app.genderavenger.com</a>.
 
 <p><h2>Are You the Organizer?</h2></p>
 <p>See our <a href="http://www.genderavenger.com/how-to-do-better/">How To Do Better</a> page.</p>
 
 <p><h2>Correct the Record</h2></p>
-<p>We recognize that gender is not simply a binary world of "male" and "female". At the same time, we don't feel comfortable inviting the public to guess as to whether or not a speaker identifies as transgendered. If you believe that this chart erroneously represents someone's gender, <a href="javascript:emailCurrentPage(false)">please let us know</a> and we'll correct the record.</p>
+<p>We recognize that gender is not simply a binary world of "male" and "female". At the same time, we don't feel comfortable inviting the public to guess as to whether or not a speaker identifies as transgendered. If you believe that this chart erroneously represents someone's gender, please let us know at <a href="javascript:emailCurrentPage(false)">genderavengershares@googlegroups.com</a> and we'll correct the record.</p>
     </div>
 </div>
 
     </div>
 </div>
 
-    <div class="row">
-      <div>
+<div class="container">
+  <div class="row">
+    <div id="disqus_thread"></div>
+  </div>
+</div>
 
-<a href="https://twitter.com/genderavenger" target="_blank" title="Gender Avenger" class="social-twitter"></a><a href="https://plus.google.com/+Genderavenger/" target="_blank" title="Elan Morgan" class="social-google"></a><a href="http://www.facebook.com/GenderAvenger" target="_blank" title="Gender Avenger" class="social-facebook"></a>
-
-    </div>
+    <footer>
+<div class="col-md-12 text-left">
+            <div align="center"><h2>About Gender Avenger</h2></div>
+            <p><a href="http://www.genderavenger.com/">Gender Avenger</a> is a community dedicated to ensuring that women are always part of the public dialog. We believe that change can happen when we challenge decision makers at all levels by pointing out gender imbalances. <a href="http://www.genderavenger.com/">Join us.</a></p>
+          </div>
+        </div>
       </div>
-<footer>
+    </div>
+    
   <div class="container">
     <div class="row">
       <div class="col-md-6 col-md-offset-3 text-center">
@@ -134,11 +139,8 @@
     </div>
   </div>
 </footer>
-<div class="container">
-  <div class="row">
-    <div id="disqus_thread"></div>
-  </div>
-</div>
+
+
   <!-- DISQUS stuff -->
   <script type="text/javascript">
       /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
