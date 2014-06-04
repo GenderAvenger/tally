@@ -50,9 +50,23 @@ input{
   margin-left: 4px;
 }
 
-/*#disqus-thread {
-  color: white !important;
-}*/
+#recaptcha_area {
+  background-color: white;
+  width: 438px;
+}
+
+#recaptcha_table {
+  border: none !important;
+}
+
+@media screen and (max-width: 480px) {
+  #thank-you-body {
+    text-align: center;
+  }
+  ul {
+    text-align: left;
+  }
+}
 
 /* -- custom css for Bootstrap 3.x --*/
 
