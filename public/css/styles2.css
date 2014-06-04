@@ -32,8 +32,12 @@ img.grayscale {
     -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
 }
 
-.icon-bar {
-   background-color:#ffffff;
+input.error {
+  border: 1px solid red;
+}
+
+input[type="number"] {
+  width: 49px;
 }
 
 .scroll-down a, .scroll-top a {
@@ -91,11 +95,13 @@ img.grayscale {
 
 .navbar-header {
   width: 100%;
+  background-color:#7FC8B4;
 }
 
 .navbar-header .navbar-brand {
   width: 50px;
   height: 50px;
+  background-color:#7FC8B4;
 }
 
 .navbar-header .text {
@@ -109,6 +115,7 @@ img.grayscale {
     font-size: 22px;
   }
 }
+
 
 .header h2 {
 /*  font-size:60px;*/
@@ -129,13 +136,15 @@ img.grayscale {
 .header {
   height: 30%;
   background:#FEDD84 !important;
-  /*background-image: url('/img/bg.png');*/
+  /*
+  background: #fff repeat center fixed;
+  background-image: url('img/bg.png');*/
 }
 
 /* use alt in navbar and header for different color */
 
 .alt {
-  background-color: #5fcdb6;
+  background-color: #7FC8B4;
 }
 
 .alt .lead {

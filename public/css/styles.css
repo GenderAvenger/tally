@@ -28,9 +28,9 @@ input{
   font-weight:bold;
 }
 
-.sec1,.sec1 .container{
+/*.sec1,.sec1 .container{
   background:#FEDD84 !important;
-}
+}*/
 
 .social-share {
   display: inline-block;
@@ -146,11 +146,13 @@ input[type="number"] {
 
 .navbar-header {
   width: 100%;
+  background-color:#7FC8B4;
 }
 
 .navbar-header .navbar-brand {
   width: 50px;
   height: 50px;
+  background-color:#7FC8B4;
 }
 
 .navbar-header .text {
@@ -159,9 +161,9 @@ input[type="number"] {
   position: relative;
 }
 
-@media screen and (max-width: 650px){
+@media screen and (max-width: 480px){
   .navbar-header .text {
-    font-size: 26px;
+    font-size: 22px;
   }
   .btn-lg {
     width: 100%;
@@ -193,7 +195,7 @@ input[type="number"] {
 /* use alt in navbar and header for different color */
 
 .alt {
-  background-color: #5fcdb6;
+  background-color: #7FC8B4;
 }
 
 .alt .lead {
@@ -212,7 +214,6 @@ input[type="number"] {
 
 .blurb {
   padding: 30px 0;
-  background-color:#fefefe;
 }
 
 .blurb .panel {
@@ -228,6 +229,10 @@ input[type="number"] {
   background: #222334;
   padding: 50px 0 10px;
   color: #ffffff;
+}
+
+#sec2 {
+  padding-top: 0px;
 }
 
 .featurette-item {
