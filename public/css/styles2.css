@@ -1,5 +1,3 @@
-/* -- custom css for Bootstrap 3.x --*/
-
 /* move special fonts to HTML head for better performance */
 @import url(http://fonts.googleapis.com/css?family=Voltaire);
 
@@ -32,12 +30,8 @@ img.grayscale {
     -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
 }
 
-input.error {
-  border: 1px solid red;
-}
-
-input[type="number"] {
-  width: 49px;
+.icon-bar {
+   background-color:#ffffff;
 }
 
 .scroll-down a, .scroll-top a {
@@ -67,7 +61,7 @@ input[type="number"] {
    border-color:#eeeeee;
    padding:15px;
    background-color:transparent;
-   color:#00d4b9;
+   color:#fff3a2;
 }
 
 .header .btn-lg:hover {
@@ -93,30 +87,7 @@ input[type="number"] {
   background-color:#d46054;
 }
 
-.navbar-header {
-  width: 100%;
-  background-color:#7FC8B4;
-}
-
-.navbar-header .navbar-brand {
-  width: 50px;
-  height: 50px;
-  background-color:#7FC8B4;
-}
-
-.navbar-header .text {
-  left: 15px;
-  line-height: 48px;
-  position: relative;
-}
-
-@media screen and (max-width: 480px){
-  .navbar-header .text {
-    font-size: 22px;
-  }
-}
-
-
+    
 .header h2 {
 /*  font-size:60px;*/
   -webkit-text-stroke: 1px rgba(f,f,f,0.1);
@@ -135,16 +106,16 @@ input[type="number"] {
 
 .header {
   height: 30%;
-  background:#FEDD84 !important;
-  /*
   background: #fff repeat center fixed;
-  background-image: url('img/bg.png');*/
+  background:#FEDD84 !important;
+  /*background-image: url('/img/bg.png');*/
+
 }
 
 /* use alt in navbar and header for different color */
 
 .alt {
-  background-color: #7FC8B4;
+  background-color: #fefefe;
 }
 
 .alt .lead {
@@ -231,3 +202,9 @@ footer {
 }
 
 /* -- end custom css for Bootstrap 3.x --*/
+
+/* -- custom css for this page --*/
+
+.sec1,.sec1 .container{
+  background:#ffe88b !important;
+}

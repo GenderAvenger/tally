@@ -170,7 +170,7 @@ function generatePieChart (men, women, other) {
   var pie = new quiche('pie');
   pie.setTransparentBackground(); // Make background transparent
   pie.setLegendBottom();
-  pie.setLegendSize(21);
+  pie.setLegendSize(42);
   pie.setLegendColor("333333");
   pie.setWidth(540);
   pie.setHeight(540);

@@ -7,8 +7,8 @@
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
       <link rel="shortcut icon" type="image/x-icon" href="/public/favicon.ico" />
       <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
-      <link href="/css/styles.css" rel="stylesheet">
       <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+      <link href="/css/styles.css" rel="stylesheet">
 
   </head>
   <body>
@@ -31,7 +31,7 @@
       <div class="container">
         <div class="navbar-header">
           <a href="http://genderavenger.com" class="navbar-brand img" style="padding:0px;"><img src="/img/galogo.png"/></a>
-          <span class="icon-bar text">GA Calculator</span>
+          <span class="icon-bar text">GA Tally</span>
         </div>
        </div>
     </div>
@@ -54,23 +54,23 @@
       <div class="container">
         <div class="row">
           <div class="col-md-9">
-            <form action="report" method="post" role="form">
+            <form action="report" method="post" role="form" class="">
             <div class="form-group">
 
             <p>I'm at <input type="text" name="hashtag" placeholder="#conference2014"
-                  class="{% if error.hashtag %} error {% endif %}"
+                  class="form-control{% if error.hashtag %} error {% endif %}"
                   {% if hashtag %} value="{{ hashtag }}" {% endif %} />
             and there are
                  <input type="number" name="women" placeholder="0"
-                  class="{% if error.women %} error {% endif %}"
+                  class="form-control{% if error.women %} error {% endif %}"
                   {% if women %} value="{{ women }}" {% endif %} />
             women and 
                  <input type="number" name="men" placeholder="0"
-                  class="{% if error.men %} error {% endif %}"
+                  class="form-control{% if error.men %} error {% endif %}"
                   {% if men %} value="{{ men }}" {% endif %} />
             men at the session on
                  <input type="text" name="session_text" placeholder="Session Name (optional)"
-                  class="{% if error.session_text %} error {% endif %}"
+                  class="form-control{% if error.session_text %} error {% endif %}"
                   {% if session_text %} value="{{ session_text }}" {% endif %} />.
             </p>
 

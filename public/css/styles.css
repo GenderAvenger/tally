@@ -4,7 +4,9 @@ input{
 }
 
 #pie-chart {
-  width: 50%;
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .navbar-brand{
@@ -28,9 +30,13 @@ input{
   font-weight:bold;
 }
 
-/*.sec1,.sec1 .container{
-  background:#FEDD84 !important;
-}*/
+.sec1,.sec1 .container{
+  background:#EDCE63 !important;
+}
+
+.container {
+  color: white;
+}
 
 .social-share {
   display: inline-block;
@@ -44,6 +50,10 @@ input{
   margin-left: 4px;
 }
 
+/*#disqus-thread {
+  color: white !important;
+}*/
+
 /* -- custom css for Bootstrap 3.x --*/
 
 /* move special fonts to HTML head for better performance */
@@ -55,6 +65,7 @@ body {
   width: 100%;
   font-family:Arial,sans-serif;
   font-size: 13px;
+  background-color: #222334;
 }
 
 /* fix bs3 horizontal scrollbar bug */
@@ -84,7 +95,18 @@ input.error {
 }
 
 input[type="number"] {
-  width: 49px;
+  width: 49px !important;
+}
+
+input[name="session_text"] {
+  min-width: 166px;
+}
+
+.form-control {
+  width: auto;
+  display: inline-block;
+  height: auto;
+  padding: 1px 4px;
 }
 
 .icon-bar {
@@ -118,7 +140,7 @@ input[type="number"] {
    border-color:#eeeeee;
    padding:15px;
    background-color:transparent;
-   color:#00d4b9;
+   color:#fff3a2;
 }
 
 .header .btn-lg:hover {
@@ -147,6 +169,7 @@ input[type="number"] {
 .navbar-header {
   width: 100%;
   background-color:#7FC8B4;
+  text-align: left;
 }
 
 .navbar-header .navbar-brand {
@@ -188,8 +211,7 @@ input[type="number"] {
 
 .header {
   height: 30%;
-  background:#FEDD84 !important;
-  /*background-image: url('/img/bg.png');*/
+  background: #fff repeat center fixed;
 }
 
 /* use alt in navbar and header for different color */
@@ -235,6 +257,10 @@ input[type="number"] {
   padding-top: 0px;
 }
 
+.featurette input {
+  color: #333;
+}
+
 .featurette-item {
   margin-bottom: 15px;
 }
@@ -247,7 +273,7 @@ input[type="number"] {
   width: 140px;
   height: 140px;
   line-height: 136px;
-  vertical-align: middle; 
+  vertical-align: middle;
   text-align: center;
 }
 
