@@ -30,6 +30,17 @@ input{
   font-weight:bold;
 }
 
+.beta-lower{
+  background:none !important;
+  font-size:12px;
+  -webkit-text-stroke: 1px rgba(f,f,f,0.1);
+  /*color:#431a6d;
+  color:#00d4b9;*/
+  color:#ffffff;
+  font-family:Arial,sans-serif;
+  font-weight:bold;
+}
+
 .sec1,.sec1 .container{
   background:#EDCE63 !important;
 }
