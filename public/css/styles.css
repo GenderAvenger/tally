@@ -153,6 +153,10 @@ input[name="session_text"] {
   text-align:center;
 }
 
+ .beta {
+ 	color:#ffffff;
+}
+
 .header .btn-lg {
    font-size:28px;
    border-color:#eeeeee;
