@@ -51,7 +51,7 @@
             <form action="report" method="post" role="form" class="">
             <div class="form-group">
 
-            <p>I'm at <input type="text" name="hashtag" placeholder="#conference2014"
+            <p><input type="text" name="hashtag" placeholder="#hashtag"
                   class="form-control{% if error.hashtag %} error {% endif %}"
                   {% if hashtag %} value="{{ hashtag }}" {% endif %} />
             and there are
@@ -62,8 +62,8 @@
                  <input type="number" name="men" placeholder="0"
                   class="form-control{% if error.men %} error {% endif %}"
                   {% if men %} value="{{ men }}" {% endif %} />
-            men at the session on
-                 <input type="text" name="session_text" placeholder="Session Name (optional)"
+            men at/in
+                 <input type="text" name="session_text" placeholder="(optional)"
                   class="form-control{% if error.session_text %} error {% endif %}"
                   {% if session_text %} value="{{ session_text }}" {% endif %} />.
             </p>
