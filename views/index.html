@@ -51,10 +51,10 @@
             <form action="report" method="post" role="form" class="">
             <div class="form-group">
 
-            <p><input type="text" name="hashtag" placeholder="#hashtag"
+            <p>For <input type="text" name="hashtag" placeholder="#hashtag"
                   class="form-control{% if error.hashtag %} error {% endif %}"
                   {% if hashtag %} value="{{ hashtag }}" {% endif %} />
-            and there are
+            there are
                  <input type="number" name="women" placeholder="0"
                   class="form-control{% if error.women %} error {% endif %}"
                   {% if women %} value="{{ women }}" {% endif %} />
