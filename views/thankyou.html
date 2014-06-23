@@ -15,9 +15,14 @@
         <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
         <link href="/css/styles.css" type="text/css" rel="stylesheet">
 
+        <meta property="twitter:card" content="photo" />
+        <meta property="twitter:site" content="Gender Avenger" />
+        <meta property="twitter:title" content="Gender ratio at {{session_text}} {% if has_hash %}%23{% endif %}{{hashtag_without_hash}}" />
+        <meta property="twitter:description" content="{{session_text}} included {{proportion_women}} women out of {{total_count}} people. Click to join the discussion." />
+        <meta property="twitter:image" content="{{pie}}" />
+        <meta property="twitter:url" content="{{url_to_share}}" />
 
 
-        </style>
         <script language="javascript">
         function emailCurrentPage(isShare){
           var subject = isShare ? "Can%20you%20share%20this%20image%20for%20me?" : "Can%20you%20correct%20the%20record%20on%20this%20chart?";
