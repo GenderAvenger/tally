@@ -8,6 +8,7 @@ var quiche = require('quiche'),
     simple_recaptcha = require('simple-recaptcha'),
     uuid   = require('node-uuid'),
     Firebase = require('firebase'),
+    csv = require('express-csv'),
     app = require('../server');
 
 var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
@@ -107,6 +108,43 @@ app.post('/report', function (req, res, next) {
       return res.redirect('/plot/' + pie_id);
     });
   });
+});
+
+
+/// IN PROGRESS CSV EXPORT
+/*app.get('/data', function(req, res, next){
+  var plotRef = firebaseDatastore.child('plots');
+  csv_rows = [
+    ["session_text","hashtag","women","men"]
+  ];
+  plotRef.once('value', function(snapshot) {
+      debugger
+      var plot = snapshot.val();
+      csv_rows.push([plot.session_text, plot.hashtag, plot.women, plot.men]);
+  });
+  res.csv(csv_rows);
+});*/
+
+app.get('/embed/:id', function(req, res, next){
+  // Get the param
+  var pie_id = req.params.id;
+  // Get the plot with this id
+  var plotRef = firebaseDatastore.child('plots/'+pie_id);
+  // Load the data from firebase
+  plotRef.once('value', function (snapshot) {
+    var refVal = snapshot.val();
+    var pie_url = refVal.pie_url;
+    var fullUrl = req.protocol + '://' + req.get('host') + "/plot/" + pie_id;
+    var hashtag = refVal.hashtag;
+    var session_text = refVal.session_text;
+    return res.render('embed.html', {
+      session_text: session_text,
+      pie: pie_url,
+      full_url: fullUrl,
+      hashtag: hashtag
+    });
+  });
+
 });
 
 app.get('/plot/:id', function (req, res, next) {
