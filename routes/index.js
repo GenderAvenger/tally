@@ -103,7 +103,7 @@ app.post('/report', function (req, res, next) {
       // Create a database entry for this pie_id
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
       // And store the data in it
-      plotRef.set({session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
+      plotRef.set({timestamp: new Date().toString(), session_text: session_text, hashtag: hashtag, men: men, women: women, other: 0, pie_id: pie_id, pie_url: pie_url});
       req.session.lastCreated = pie_url;
       return res.redirect('/plot/' + pie_id);
     });
@@ -111,19 +111,28 @@ app.post('/report', function (req, res, next) {
 });
 
 
-/// IN PROGRESS CSV EXPORT
-/*app.get('/data', function(req, res, next){
-  var plotRef = firebaseDatastore.child('plots');
+app.get('/data', function(req, res, next){
+  // fetch all plots
+  var plotRef = firebaseDatastore.child('plots/');
+
+  // set up row headers
   csv_rows = [
-    ["session_text","hashtag","women","men"]
+    ["timestamp", "session_text","hashtag","women","men", "full_url"]
   ];
+
+  // TODO set this up with promises so we
+  // can query other data, like DISQUSS engagement
+  // and Twitter/Facebook engagement
   plotRef.once('value', function(snapshot) {
-      debugger
       var plot = snapshot.val();
-      csv_rows.push([plot.session_text, plot.hashtag, plot.women, plot.men]);
+      // iterate through reports and push onto report CSVs
+      _.forEach(plot, function(report, key) {
+          var full_url = req.protocol + '://' + req.get('host') + "/plot/" + report.pie_id;
+          csv_rows.push([report.timestamp, report.session_text, report.hashtag, report.women, report.men, full_url]);
+      });
+      res.csv(csv_rows);
   });
-  res.csv(csv_rows);
-});*/
+});
 
 app.get('/embed/:id', function(req, res, next){
   // Get the param
