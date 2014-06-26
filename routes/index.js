@@ -173,6 +173,7 @@ app.get('/plot/:id', function (req, res, next) {
     // This is so that if we want to "correct the record" all we need to do is update the numbers in firebase
     // and delete the pie_url. Then the next person to visit the url will cause the chart to be regenerated
     var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    var host = req.get('host');
     var hashtag = refVal.hashtag;
 
     if (!pie_url) {
@@ -189,6 +190,8 @@ app.get('/plot/:id', function (req, res, next) {
         return res.render('thankyou.html', {
           title: 'Thank You',
           pie: pie_url,
+          pie_id: pie_id,
+          host_url: host_url,
           hashtag: hashtag,
           session_text: refVal.session_text,
           proportion_women: refVal.women,
@@ -204,6 +207,8 @@ app.get('/plot/:id', function (req, res, next) {
       return res.render('thankyou.html', {
         title: 'Thank You',
         pie: pie_url,
+        pie_id: pie_id,
+        host: host,
         hashtag: hashtag,
         session_text: refVal.session_text,
         proportion_women: refVal.women,
