@@ -13,6 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "3.x",
+    "express-csv":"*",
     "firebase": "1.0.15-3",
     "imgur-upload": "*",
     "lodash": "2.4.1",
