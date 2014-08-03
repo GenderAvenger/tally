@@ -2,8 +2,14 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , nunjucks = require('nunjucks')
-  , connect = require('./node_modules/express/node_modules/connect')
   , Firebase = require('firebase');
+
+// Express 3.x to 4.x Migration
+var bodyParser = require('body-parser')
+  , cookieParser = require('cookie-parser')
+  , cookieSession = require('cookie-session')
+  , morgan = require('morgan') // replaced express.logger
+  , favicon = require('serve-favicon');
 
 // Set up config credentials
 require('./config');
@@ -17,16 +23,10 @@ nunjucks.configure(__dirname + '/views', {
 
 // Set global template variables
 var njglobals = require('nunjucks/src/globals');
-// You need to set this value yourself in a file called 'creds.yaml' in the root folder
-// The form of that file is
-/*
-  imgurApiKey: "YOUR_IMGUR_KEY"
-  recaptchaPublicKey: "YOUR_PUBLIC_KEY"
-  recaptchaPrivateKey: "YOUR_PRIVATE_KEY"
-  firebaseSecret: "FIREBASE_SECRET"
-*/
 njglobals.recaptcha_public_key = process.env['RECAPTCHA_PUBLIC_KEY'];
+app.set('views', __dirname + '/views');
 
+// Connect to firebase
 var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
 firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
   if(error) {
@@ -36,27 +36,27 @@ firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
   }
 });
 
-app.configure(function () {
-    app.set('port', process.env.PORT || 3000);
-    app.set('views', __dirname + '/views');
+// Set up the flavicon
+app.use(favicon(__dirname + "/public/favicon.ico"));
+// Set up body parsing for POST data
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-    app.use(express.favicon(__dirname + "/public/favicon.ico"));
-    app.use(express.logger('dev'));
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(express.cookieParser('equalityrules'));
-    app.use(express.cookieSession());
+// Set up what we need for cookie sessions (used to avoid re-showing)
+app.use(cookieParser('equalityrules'));
+app.use(cookieSession({
+  keys: ['equalityrules']
+}));
 
-    // Load static files from /public
-    app.use(express.static(__dirname + '/public'));
+// Load static files from /public
+app.use(express.static(__dirname + '/public'));
+// Set up logging middleware (after static so we don't log static file requests)
+app.use(morgan('dev'));
 
-    // Prepare the routes
-    require('./routes')
+// Prepare the routes
+require('./routes')
 
-    //items beneath here may not be loaded
-    app.use(app.router);
-});
-
-http.createServer(app).listen(app.get('port'), function(){
+app.set('port', process.env.PORT || 3000);
+app.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });

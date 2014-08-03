@@ -1,10 +1,10 @@
 {
   "name": "even-steven",
   "description": "Report Gender Data from Conferences",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "engines": {
-    "node": "0.8.x"
+    "node": "0.10.30"
   },
   "scripts": {
     "start": "node server.js"
@@ -12,16 +12,21 @@
   "main": "./server.js",
   "license": "MIT",
   "dependencies": {
-    "express": "3.x",
-    "express-csv":"*",
+    "body-parser": "^1.5.2",
+    "cookie-parser": "^1.3.2",
+    "cookie-session": "^1.0.2",
+    "express": "4.7.2",
+    "express-csv": "*",
     "firebase": "1.0.15-3",
     "imgur-upload": "*",
     "lodash": "2.4.1",
+    "morgan": "^1.2.2",
     "node-imagemagick": "*",
     "node-uuid": "*",
     "nunjucks": "1.0.5",
     "quiche": "*",
     "request": "*",
+    "serve-favicon": "^2.0.1",
     "simple-recaptcha": "0.0.3",
     "yamljs": "0.1.5"
   }
