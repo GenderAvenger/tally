@@ -346,7 +346,7 @@ input[name="session_text"] {
 }
 
 footer {
-  padding-top: 25px;
+  /*padding-top: 25px;*/
 }
 
 /* -- end custom css for Bootstrap 3.x --*/

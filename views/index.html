@@ -14,15 +14,8 @@
   <body>
 
     <div id="fb-root"></div>
-    <script>
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=173688332778276&version=v2.0";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-    </script>
+    <script src='/js/facebook_connect.js' type="text/javascript"></script>
+    <!-- Recaptcha -->
     <script type="text/javascript">
       var RecaptchaOptions = {theme: 'clean', lang: 'en'};
     </script>
@@ -31,8 +24,9 @@
       <div class="container">
         <div class="navbar-header">
           <a href="http://genderavenger.com" class="navbar-brand img" style="padding:0px;"><img src="/img/galogo.png"/></a>
-          <span class="icon-bar text">Tally</span> &nbsp;<span class="beta-lower"> beta</span>          </div>        </div>
-       </div>
+          <span class="icon-bar text">Tally</span> &nbsp;<span class="beta-lower"> beta</span>
+        </div>
+      </div>
     </div>
 
 <div class="alt featurette">
@@ -88,41 +82,8 @@
       </div>
     </div>
 
-    <div class="featurette" id="sec2">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 text-left">
-            <div align="center"><h2>About GenderAvenger</h2></div>
-            <p><a href="http://www.genderavenger.com/">GenderAvenger</a> is a community dedicated to ensuring that women are always part of the public dialog. We believe that change can happen when we challenge decision makers at all levels by pointing out gender imbalances. <a href="http://www.genderavenger.com/">Join us.</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Footer -->
+    {% include "shared/footer.html" %}
 
-    <div class="row">
-      <div class="col-md-9">
-        <a href="https://twitter.com/genderavenger" target="_blank" title="Gender Avenger" class="social-twitter"></a><a href="https://plus.google.com/+Genderavenger/" target="_blank" title="Elan Morgan" class="social-google"></a><a href="http://www.facebook.com/GenderAvenger" target="_blank" title="Gender Avenger" class="social-facebook"></a>
-      </div>
-    </div>
-    <footer>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 col-md-offset-3 text-center">
-            <ul class="list-inline">
-        	    <li>
-                <a href="https://twitter.com/genderavenger"><i class="icon-twitter icon-2x"></i></a>
-              </li>
-              <li>
-                <a href="https://plus.google.com/+Genderavenger/" target="_blank" title="Elan Morgan"><i class="icon-google-plus icon-2x"></i></a>
-              </li>
-              <li>
-                <a href="http://www.facebook.com/GenderAvenger" target="_blank" title="Gender Avenger"><i class="icon-facebook icon-2x"></i></a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-    </body>
+  </body>
 </html>
