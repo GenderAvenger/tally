@@ -1,129 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <title>Gender Ratio at {{session_text}} {% if has_hash %}%23{% endif %}{{hashtag_without_hash}}</title>
-        <meta name="generator" content="Generate graphs of gender equality at conferences and on lists." />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <link rel="shortcut icon" type="image/x-icon" href="/public/favicon.ico" />
-        <meta property="og:title" content="" />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="GenderAvenger"/>
-        <meta property="og:type" content="blog"/>
-        <meta property="og:description" content="{{session_text}} included {{proportion_women}} women out of {{total_count}} people. Click to join the discussion. This data was reported with GenderAvenger Tally." />
-        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
-        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-        <link href="/css/styles.css" type="text/css" rel="stylesheet">
+  <!-- Head -->
+  {% include "shared/header.html" %}
 
-        <meta property="twitter:card" content="photo" />
-        <meta property="twitter:site" content="Gender Avenger" />
-        <meta property="twitter:title" content="Gender ratio at {{session_text}} {% if has_hash %}%23{% endif %}{{hashtag_without_hash}}" />
-        <meta property="twitter:description" content="{{session_text}} included {{proportion_women}} women out of {{total_count}} people. Click to join the discussion." />
-        <meta property="twitter:image" content="{{pie}}" />
-        <meta property="twitter:url" content="{{url_to_share}}" />
-
-
-        <script language="javascript">
-        function emailCurrentPage(isShare){
-          var subject = isShare ? "Can%20you%20share%20this%20image%20for%20me?" : "Can%20you%20correct%20the%20record%20on%20this%20chart?";
-          window.open("mailto:genderavengershares@googlegroups.com?subject="+subject+"&body="+escape(window.location.href));
-        }
-    </script>
-    </head>
-
-    <!-- HTML code from Bootply.com editor -->
-
-    <body id="thank-you-body">
-      	<!-- Facebook JS SDK -->
-      <div id="fb-root"></div>
-
-      <script>
-      	window.fbAsyncInit = function() {
-      	FB.init({appId: '675025332570890', status: true, cookie: true,
-      	xfbml: true});
-      	};
-      	(function() {
-      	var e = document.createElement('script'); e.async = true;
-      	e.src = document.location.protocol +
-      	'//connect.facebook.net/en_US/all.js';
-      	document.getElementById('fb-root').appendChild(e);
-      	}());
-      </script>
-
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
-
-      <div class="navbar navbar-fixed-top alt" data-spy="affix" data-offset-top="1000">
-        <div class="container">
-          <div class="navbar-header">
-            <a href="http://genderavenger.com" class="navbar-brand img" style="padding:0px;"><img src="/img/galogo.png"/></a>
-          <span class="icon-bar text">Tally</span> &nbsp;<span class="beta-lower"><sup> beta</sup></span>          </div>
-         </div>
+  <body id="thank-you-body">
+    	<!-- Facebook JS SDK -->
+    <div id="fb-root"></div>
+    <script src='/js/facebook_connect.js' type="text/javascript"></script>
+    {% include "shared/navbar.html" %}
+    <div class="alt featurette">
+      <div class="container">
+        <h3>Gender at {{ hashtag }}</h3>
       </div>
-
-      <div class="alt featurette">
-        <div class="container">
-          <h3>Gender at {{ hashtag }}</h3>
-<!--          {% if session_text %}<h3>Session: {{ session_text }}</h3>{% endif %} -->
-  </div>
-</div>
-
-<div id="sec1" class="sec1">
-  <div class="container">
-    <div class="row" class="row1">
-      <div><img src="{{pie}}" id="pie-chart" class="img-responsive"/></div>
     </div>
-   </div>
-    <div class="share-buttons">
-        <p><a class="social-share left " href="https://www.facebook.com/sharer/sharer.php?u={{url_to_share}}&t=Share%20on%20Facebook"
-           onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
-           target="_blank" title="Share on Facebook"><img src="/img/facebook.png"></a>
-        <a class="social-share right" href="https://twitter.com/share?url={{url_to_share}}&via=GenderAvenger&text=Check out the gender ratio at {% if has_hash %}%23{% endif %}{{hashtag_without_hash}} %23GenderAvenger"
-           onclick="javascript:window.open(this.href, '', 'menubar=yes,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
-           target="_blank" title="Share on Twitter"><img src="/img/tweet.png"></a></p>
-           <p>&nbsp;</p>
-           <h4>Copy code to embed this report</h4>
-           <textarea cols="40" rows="1"><a id="genderavenger-tally" href="{{url_to_share}}" data-width="", data-height="" data-style="" data-tally-id="{{pie_id}}" class="genderavenger-tally">{{proportion_women}} and {{proportion_men}} were counted at {{session_text}} {{hashtag}}. Learn more at GenderAvenger Tally</a><script type="text/javascript">!function(d,s,id){var e,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'http';if(!d.getElementById(id)){e=d.createElement(s);e.id=id; e.src=p + "://{{host}}/js/embed.js";f.parentNode.insertBefore(e,f);}}(document,"script","genderavenger-embed");</script></textarea>
+
+    <div id="sec1" class="sec1">
+      <div class="container">
+        <div class="row" class="row1">
+          <div><img src="{{pie}}" id="pie-chart" class="img-responsive"/></div>
+        </div>
       </div>
-</div>
-<div>
-   <div class="container">
-    <div class="row">
+      <div class="share-buttons">
+        <p>
+          <a class="social-share left " href="https://www.facebook.com/sharer/sharer.php?u={{url_to_share}}&t=Share%20on%20Facebook"
+             onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+             target="_blank" title="Share on Facebook"><img src="/img/facebook.png">
+          </a>
+          <a class="social-share right" href="https://twitter.com/share?url={{url_to_share}}&via=GenderAvenger&text=Check out the gender ratio at {% if has_hash %}%23{% endif %}{{hashtag_without_hash}} %23GenderAvenger"
+             onclick="javascript:window.open(this.href, '', 'menubar=yes,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+             target="_blank" title="Share on Twitter"><img src="/img/tweet.png">
+          </a>
+        </p>
+        <!-- Clean up embed code experience -->
+        <h4>Copy code to embed this report</h4>
+        <textarea cols="40" rows="1"><a id="genderavenger-tally" href="{{url_to_share}}" data-width="", data-height="" data-style="" data-tally-id="{{pie_id}}" class="genderavenger-tally">{{proportion_women}} and {{proportion_men}} were counted at {{session_text}} {{hashtag}}. Learn more at GenderAvenger Tally</a><script type="text/javascript">!function(d,s,id){var e,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'http';if(!d.getElementById(id)){e=d.createElement(s);e.id=id; e.src=p + "://{{host}}/js/embed.js";f.parentNode.insertBefore(e,f);}}(document,"script","genderavenger-embed");</script></textarea>
+      </div>
+    </div>
+    <div>
+      <div class="container">
+        <div class="row">
+          <div>
+            {% if report_is_new == 1 %}
+            <div style="margin-left:20px;margin-top:20px">
+              <p>Now that you've created a visualization, here's what you can do next:</p>
+              <p>
+                <ul>
+                  <li>If you need us to share this anonymously, email us at <a href="javascript:emailCurrentPage(true)">genderavengershares@googlegroups.com</a> and we'll protect your identity.</li>
+                  <li>Approach one of the conference organizers and discuss your concerns.</li>
+                  <li>Let some other folks know what you are doing, so they can join and support you in these conversations.</li>
+                  <li>What about those times when you look up and say, "Wow, look at all the women!"? Share positive charts, too, and reward the organizers.</li>
+                </ul>
+              </p>
+              <p><em>This message appears only once, and is only visible to you.</em></p>
+              <p><hr></p>
+            </div>
+            {% endif %}
 
-      <div>
+            <p><em>This chart was created by a GenderAvenger Tally user.</em></p>
+            <p><h2>Make a New Chart</h2></p>
+            <p>Want to create a new pie chart? Go to <a href="http://app.genderavenger.com/">app.genderavenger.com</a></p>
 
-          {% if report_is_new == 1 %}
-          <div style="margin-left:20px;margin-top:20px">
-          <p>Now that you've created a visualization, here's what you can do next:</p>
-          <p><ul><li>If you need us to share this anonymously, email us at <a href="javascript:emailCurrentPage(true)">genderavengershares@googlegroups.com</a> and we'll protect your identity.</li>
-          <li>Approach one of the conference organizers and discuss your concerns.</li>
-          <li>Let some other folks know what you are doing, so they can join and support you in these conversations.</li>
-          <li>What about those times when you look up and say, "Wow, look at all the women!"? Share positive charts, too, and reward the organizers.</li>
-          </ul></p>
-          <p><em>This message appears only once, and is only visible to you.</em></p>
-          <p><hr></p>
+            <p><h2>Are You the Organizer?</h2></p>
+            <p>See our <a href="http://www.genderavenger.com/how-to-do-better/">How To Do Better</a> page.</p>
+
+            <p><h2>Correct the Record</h2></p>
+            <p>We recognize that gender is not simply a binary world of "male" and "female". At the same time, we don't feel comfortable inviting the public to guess as to whether or not a speaker identifies as transgendered. If you believe that this chart erroneously represents someone's gender, please let us know at <a href="javascript:emailCurrentPage(false)">genderavengershares@googlegroups.com</a> and we'll correct the record.</p>
           </div>
-          {% endif %}
+        </div>
 
-<p><em>This chart was created by a GenderAvenger Tally user.</em></p>
-<p><h2>Make a New Chart</h2></p>
-<p>Want to create a new pie chart? Go to <a href="http://app.genderavenger.com/">app.genderavenger.com</a>.
-
-<p><h2>Are You the Organizer?</h2></p>
-<p>See our <a href="http://www.genderavenger.com/how-to-do-better/">How To Do Better</a> page.</p>
-
-<p><h2>Correct the Record</h2></p>
-<p>We recognize that gender is not simply a binary world of "male" and "female". At the same time, we don't feel comfortable inviting the public to guess as to whether or not a speaker identifies as transgendered. If you believe that this chart erroneously represents someone's gender, please let us know at <a href="javascript:emailCurrentPage(false)">genderavengershares@googlegroups.com</a> and we'll correct the record.</p>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div id="disqus_thread"></div>
+        </div>
+      </div>
     </div>
-</div>
-
-    </div>
-</div>
-
-<div class="container">
-  <div class="row">
-    <div id="disqus_thread"></div>
-  </div>
-</div>
 
     <!-- Footer -->
     {% include "shared/footer.html" %}
