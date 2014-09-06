@@ -4,7 +4,7 @@ var _      = require('lodash'),
     csv = require('express-csv'),
     app = require('../server');
 
-var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
+// var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
 
 app.get('/data', function(req, res, next){
   // fetch all plots

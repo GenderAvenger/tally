@@ -11,7 +11,7 @@ var quiche = require('quiche'),
     csv = require('express-csv'),
     app = require('../server');
 
-var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
+// var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
 
 // Main route (aliases /report)
 app.get('/', function (req, res, next) {

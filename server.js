@@ -27,14 +27,14 @@ njglobals.recaptcha_public_key = process.env['RECAPTCHA_PUBLIC_KEY'];
 app.set('views', __dirname + '/views');
 
 // Connect to firebase
-var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
-firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
-  if(error) {
-    console.log("Login Failed!", error);
-  } else {
-    console.log("Login Succeeded!");
-  }
-});
+// var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
+// firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
+//   if(error) {
+//     console.log("Login Failed!", error);
+//   } else {
+//     console.log("Login Succeeded!");
+//   }
+// });
 
 // Set up the flavicon
 app.use(favicon(__dirname + "/public/favicon.ico"));
