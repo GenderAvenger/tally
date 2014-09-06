@@ -99,6 +99,7 @@ app.post('/report', function (req, res, next) {
 
       pie_id = data.id;
       pie_url = data.link;
+      return res.send('Success');
 
       // Create a database entry for this pie_id
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
@@ -274,7 +275,7 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
             // You need to set this value yourself in a file called 'creds.yaml' in the root folder
             imgur.setClientID(process.env['IMGUR_API_KEY']);
             imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response){
-              return callback(null, response.data);
+              return callback(error, response.data);
             });
           }
         });
