@@ -28,13 +28,13 @@ app.set('views', __dirname + '/views');
 
 // Connect to firebase
 var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
-firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
-  if(error) {
-    console.log("Login Failed!", error);
-  } else {
-    console.log("Login Succeeded!");
-  }
-});
+// firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
+//   if(error) {
+//     console.log("Login Failed!", error);
+//   } else {
+//     console.log("Login Succeeded!");
+//   }
+// });
 module.exports.firebaseDatastore = firebaseDatastore;
 
 // Set up the flavicon

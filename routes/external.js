@@ -99,7 +99,6 @@ app.post('/report', function (req, res, next) {
 
       pie_id = data.id;
       pie_url = data.link;
-      return res.send('Success');
 
       // Create a database entry for this pie_id
       var plotRef = firebaseDatastore.child('plots/'+pie_id);
