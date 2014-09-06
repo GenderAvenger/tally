@@ -27,8 +27,8 @@ njglobals.recaptcha_public_key = process.env['RECAPTCHA_PUBLIC_KEY'];
 app.set('views', __dirname + '/views');
 
 // Connect to firebase
-//var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
-module.exports.firebaseDatastore = {};//firebaseDatastore;
+var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
+module.exports.firebaseDatastore = firebaseDatastore;
 
 // Set up the flavicon
 app.use(favicon(__dirname + "/public/favicon.ico"));
