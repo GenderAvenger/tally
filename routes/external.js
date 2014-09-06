@@ -9,9 +9,9 @@ var quiche = require('quiche'),
     uuid   = require('node-uuid'),
     Firebase = require('firebase'),
     csv = require('express-csv'),
-    app = require('../server');
+    app = require('../server').app,
+    firebaseDatastore = require('../server').firebaseDatastore;
 
-// var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
 
 // Main route (aliases /report)
 app.get('/', function (req, res, next) {
