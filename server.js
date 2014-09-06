@@ -14,7 +14,7 @@ var bodyParser = require('body-parser')
 // Set up config credentials
 require('./config');
 var app = express();
-module.exports = app;
+module.exports.app = app;
 
 nunjucks.configure(__dirname + '/views', {
     autoescape: true,
@@ -28,13 +28,7 @@ app.set('views', __dirname + '/views');
 
 // Connect to firebase
 var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
-firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
-  if(error) {
-    console.log("Login Failed!", error);
-  } else {
-    console.log("Login Succeeded!");
-  }
-});
+module.exports.firebaseDatastore = firebaseDatastore;
 
 // Set up the flavicon
 app.use(favicon(__dirname + "/public/favicon.ico"));

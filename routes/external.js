@@ -9,9 +9,9 @@ var quiche = require('quiche'),
     uuid   = require('node-uuid'),
     Firebase = require('firebase'),
     csv = require('express-csv'),
-    app = require('../server');
+    app = require('../server').app,
+    firebaseDatastore = require('../server').firebaseDatastore;
 
-var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
 
 // Main route (aliases /report)
 app.get('/', function (req, res, next) {
@@ -274,7 +274,7 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
             // You need to set this value yourself in a file called 'creds.yaml' in the root folder
             imgur.setClientID(process.env['IMGUR_API_KEY']);
             imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response){
-              return callback(null, response.data);
+              return callback(error, response.data);
             });
           }
         });
