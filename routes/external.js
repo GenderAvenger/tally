@@ -130,6 +130,9 @@ app.get('/plot/:id', function (req, res, next) {
   plotRef.once('value', function (snapshot) {
     // Firebase has a weird syntax / system. This is how we load the data in
     var refVal = snapshot.val();
+    if (!refVal) {
+      return res.redirect('/');
+    }
     var pie_url = refVal.pie_url;
     var report_is_new = req.session.lastCreated == pie_url;
     req.session.lastCreated = ''; // Clear this out so repeat visits don't show that text
@@ -188,7 +191,7 @@ app.get('/plot/:id', function (req, res, next) {
   })
 });
 
-app.get('/embed/:id', function(req, res, next){
+app.get('/embed/:id', function (req, res, next) {
   // Route that returns just the image, so that it can be embedded
   // FIXME(nate): If the pie_url is missing, this will fail
   // Get the param
@@ -198,6 +201,9 @@ app.get('/embed/:id', function(req, res, next){
   // Load the data from firebase
   plotRef.once('value', function (snapshot) {
     var refVal = snapshot.val();
+    if (!refval) {
+      return res.redirect('/');
+    }
     var pie_url = refVal.pie_url;
     var fullUrl = req.protocol + '://' + req.get('host') + "/plot/" + pie_id;
     var hashtag = refVal.hashtag;
