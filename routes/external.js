@@ -257,6 +257,10 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
       return callback(err, null);
     }
 
+    if (session_text.charAt(0) === '@') {
+      session_text = '\\' + session_text;
+    }
+
     // ONCE THE IMAGE IS DOWNLOADED
     response.on('end', function () {
       im.convert(['-gravity', 'north',
