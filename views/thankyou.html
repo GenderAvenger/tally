@@ -3,43 +3,45 @@
   <!-- Head -->
   {% include "shared/header.html" %}
 
-  <body id="thank-you-body">
-    	<!-- Facebook JS SDK -->
+  <body>
+    <!-- Facebook JS SDK -->
     <div id="fb-root"></div>
     <script src='/js/facebook_connect.js' type="text/javascript"></script>
-    {% include "shared/navbar.html" %}
-    <div class="alt featurette">
-      <div class="container">
-        <h3>Gender at {{ hashtag }}</h3>
-      </div>
-    </div>
 
-    <div id="sec1" class="sec1">
-      <div class="container">
-        <div class="row" class="row1">
-          <div><img src="{{pie}}" id="pie-chart" class="img-responsive"/></div>
-        </div>
-      </div>
-      <div class="share-buttons">
-        <p>
-          <a class="social-share left " href="https://www.facebook.com/sharer/sharer.php?u={{url_to_share}}&t=Share%20on%20Facebook"
-             onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
-             target="_blank" title="Share on Facebook"><img src="/img/facebook.png">
-          </a>
-          <a class="social-share right" href="https://twitter.com/share?url={{url_to_share}}&via=GenderAvenger&text=Check out the gender ratio at {% if has_hash %}%23{% endif %}{{hashtag_without_hash}} %23GenderAvenger"
-             onclick="javascript:window.open(this.href, '', 'menubar=yes,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
-             target="_blank" title="Share on Twitter"><img src="/img/tweet.png">
-          </a>
-        </p>
-        <!-- Clean up embed code experience -->
-        <h4>Copy code to embed this report</h4>
-        <textarea cols="40" rows="1"><a id="genderavenger-tally" href="{{url_to_share}}" data-width="", data-height="" data-style="" data-tally-id="{{pie_id}}" class="genderavenger-tally">{{proportion_women}} and {{proportion_men}} were counted at {{session_text}} {{hashtag}}. Learn more at GenderAvenger Tally</a><script type="text/javascript">!function(d,s,id){var e,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'http';if(!d.getElementById(id)){e=d.createElement(s);e.id=id; e.src=p + "://{{host}}/js/embed.js";f.parentNode.insertBefore(e,f);}}(document,"script","genderavenger-embed");</script></textarea>
-      </div>
-    </div>
-    <div>
+    {% include "shared/navbar.html" %}
+
+    <div id="chart" class="container">
       <div class="container">
         <div class="row">
-          <div>
+          <div class="col-sm-12">
+            <h3>Gender at {{ hashtag }}</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-8">
+            <img src="{{pie}}" id="pie-chart" class="img-responsive"/>
+          </div>
+        </div>
+        <div id="share-buttons" class="row">
+          <div id="fb-share-button" class="col-xs-offset-0 col-xs-6 text-right">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{url_to_share}}&t=Share%20on%20Facebook"
+               onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+               target="_blank" title="Share on Facebook"><img src="/img/facebook.png">
+            </a>
+          </div>
+          <div id="twitter-share-button" class="col-xs-6 text-left">
+            <a href="https://twitter.com/share?url={{url_to_share}}&via=GenderAvenger&text=Check out the gender ratio at {% if has_hash %}%23{% endif %}{{hashtag_without_hash}} %23GenderAvenger"
+               onclick="javascript:window.open(this.href, '', 'menubar=yes,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+               target="_blank" title="Share on Twitter"><img src="/img/tweet.png">
+            </a>
+          </div>
+        </div>
+        <!-- TODO: Clean up embed code experience -->
+        <div class="row nomobile">
+          <h4>Copy code to embed this report</h4>
+          <textarea cols="40" rows="5"><a id="genderavenger-tally" href="{{url_to_share}}" data-width="", data-height="" data-style="" data-tally-id="{{pie_id}}" class="genderavenger-tally">{{proportion_women}} and {{proportion_men}} were counted at {{session_text}} {{hashtag}}. Learn more at GenderAvenger Tally</a><script type="text/javascript">!function(d,s,id){var e,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'http';if(!d.getElementById(id)){e=d.createElement(s);e.id=id; e.src=p + "://{{host}}/js/embed.js";f.parentNode.insertBefore(e,f);}}(document,"script","genderavenger-embed");</script></textarea>
+        </div>
+        <div class="row nomobile">
             {% if report_is_new == 1 %}
             <div style="margin-left:20px;margin-top:20px">
               <p>Now that you've created a visualization, here's what you can do next:</p>
@@ -65,12 +67,8 @@
 
             <p><h2>Correct the Record</h2></p>
             <p>We recognize that gender is not simply a binary world of "male" and "female". At the same time, we don't feel comfortable inviting the public to guess as to whether or not a speaker identifies as transgendered. If you believe that this chart erroneously represents someone's gender, please let us know at <a href="javascript:emailCurrentPage(false)">genderavengershares@googlegroups.com</a> and we'll correct the record.</p>
-          </div>
         </div>
-
-      </div>
-      <div class="container">
-        <div class="row">
+        <div class="row nomobile">
           <div id="disqus_thread"></div>
         </div>
       </div>
