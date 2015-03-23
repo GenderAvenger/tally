@@ -1,352 +1,351 @@
-/* --- Gender Avenger Page CSS */
-input{
-  margin-top:5px
-}
+/****************************
+ *  File Organization
+ *  1) Core HTML / Bootstrap
+ *  2) Identified Elements
+ *  3) Generic Classes
+ *  4) Media Queries
+ ****************************/
 
-#pie-chart {
-  width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-}
+@import url(http://fonts.googleapis.com/css?family=Voltaire); /* TODO: move special fonts to HTML head for better performance */
 
-.navbar-brand{
-  margin:0px;
-  padding:0px !important;
-}
-.navbar-brand img{
-  height:50px;
-}
-
-.icon-bar{
-  background:none !important;
-  font-size:32px;
-  -webkit-text-stroke: 1px rgba(f,f,f,0.1);
-  /*color:#431a6d;
-  color:#00d4b9;*/
-  line-height:48px;
-  color:#ffffff;
-  text-transform:uppercase;
-  font-family:Arial,sans-serif;
-  font-weight:bold;
-}
-
-.beta-lower{
-  background:none !important;
-  font-size:12px;
-  -webkit-text-stroke: 1px rgba(f,f,f,0.1);
-  /*color:#431a6d;
-  color:#00d4b9;*/
-  color:#ffffff;
-  font-family:Arial,sans-serif;
-  font-weight:bold;
-}
-
-.sec1,.sec1 .container{
-  background:#EDCE63 !important;
-}
-
-.share-buttons {
-  text-align: center;
-}
-
-.container {
-  color: white;
-}
-
-.social-share {
-  display: inline-block;
-  margin-top: 15px;
-}
-
-.social-share.left {
-  margin-right: 4px;
-}
-.social-share.right {
-  margin-left: 4px;
-}
-
-#recaptcha_area {
-  background-color: white;
-  width: 438px;
-}
-
-#recaptcha_table {
-  border: none !important;
-}
-
-@media screen and (max-width: 480px) {
-  #thank-you-body {
-    text-align: center;
+/********************************
+ ** Core HTML / Bootstrap Tags **
+ ********************************/
+  html, body {
+    height: 100%;
+    width: 100%;
+    font-family:Arial,sans-serif;
+    font-size: 13px;
+    background-color: #222334;
   }
-  ul {
-    text-align: left;
+
+  input{
+    margin-top:5px
   }
-}
 
-/* -- custom css for Bootstrap 3.x --*/
+  h1,h2,h3,h4,.lead,.btn,.navbar a { 
+    text-transform:uppercase;
+    font-family:'Futura',Arial,sans-serif;
+    letter-spacing:2px;
+  }
 
-/* move special fonts to HTML head for better performance */
-@import url(http://fonts.googleapis.com/css?family=Voltaire);
+  .navbar a {
+    color:#f44820;
+    font-size:14px;
+  }
 
-html,
-body {
-  height: 100%;
-  width: 100%;
-  font-family:Arial,sans-serif;
-  font-size: 13px;
-  background-color: #222334;
-}
+  h1 {
+    font-size:50px;
+  }
 
-/* fix bs3 horizontal scrollbar bug */
-.row { margin: 0; padding: 0 }
-
-
-/* use special fonts in certain elements */
-h1,h2,h3,h4,.lead,.btn,.navbar a {
-  text-transform:uppercase;
-  font-family:'Futura',Arial,sans-serif;
-  letter-spacing:2px;
-}
-
-h1 {
-  font-size:50px;
-}
-
-/* make images gray */
-img.grayscale {
+  img.grayscale {
     filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+, Firefox on Android */
     filter: gray; /* IE6-9 */
     -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
-}
-
-input.error {
-  border: 1px solid red;
-}
-
-input[type="number"] {
-  width: 49px !important;
-}
-
-input[name="session_text"] {
-  min-width: 166px;
-}
-
-.form-control {
-  width: auto;
-  display: inline-block;
-  height: auto;
-  padding: 1px 4px;
-}
-
-.icon-bar {
-   background-color:#ffffff;
-}
-
-.scroll-down a, .scroll-top a {
-   color:#ffffff;
-}
-
-.scroll-down {
-   position:fixed;
-   bottom:20%;
-   right:0%;
-   color:#f9f9f9;
-}
-
-.scroll-top {
-  background-color:#dbdbdb;
-}
-
-.vert {
-  vertical-align: middle;
-  width:100%;
-  padding-top:4%;
-  text-align:center;
-}
-
- .beta {
- 	color:#ffffff;
-}
-
-.header .btn-lg {
-   font-size:28px;
-   border-color:#eeeeee;
-   padding:15px;
-   background-color:transparent;
-   color:#fff3a2;
-}
-
-.header .btn-lg:hover {
-   background-color:#eeeeee;
-   color:#777777;
-}
-
-.navbar a {
-  color:#f44820;
-  font-size:14px;
-}
-
-.navbar-bold.affix {
-  background-color:#d46054;
-}
-
-.navbar-bold {
-  background-color:#f68076;
-  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
-}
-
-.navbar-bold li a:hover, .navbar-bold li.active {
-  background-color:#d46054;
-}
-
-.navbar-header {
-  width: 100%;
-  background-color:#7FC8B4;
-  text-align: left;
-}
-
-.navbar-header .navbar-brand {
-  width: 50px;
-  height: 50px;
-  background-color:#7FC8B4;
-}
-
-.navbar-header .text {
-  left: 15px;
-  line-height: 48px;
-  position: relative;
-}
-
-@media screen and (max-width: 480px){
-  .navbar-header .text {
-    font-size: 22px;
   }
-  .btn-lg {
+
+  input.error {
+    border: 1px solid red;
+  }
+
+  input[type="number"] {
+    width: 49px !important;
+  }
+
+  input[name="session_text"] {
+    min-width: 166px;
+  }
+
+/*************************
+ ** Identified Elements **
+ *************************/
+  #pie-chart {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #recaptcha_area {
+    background-color: white;
+    width: 438px;
+  }
+
+  #recaptcha_table {
+    border: none !important;
+  }
+
+  #sec2 {
+    padding-top: 0px;
+  }
+
+
+/*********************
+ ** Generic Classes **
+ *********************/
+
+  .navbar-brand{
+    margin:0px;
+    padding:0px !important;
+  }
+  .navbar-brand img{
+    height:50px;
+  }
+
+  .icon-bar{
+    background:none !important;
+    font-size:32px;
+    -webkit-text-stroke: 1px rgba(f,f,f,0.1);
+    line-height:48px;
+    color:#ffffff;
+    text-transform:uppercase;
+    font-family:Arial,sans-serif;
+    font-weight:bold;
+  }
+
+  .beta-lower{
+    background:none !important;
+    font-size:12px;
+    -webkit-text-stroke: 1px rgba(f,f,f,0.1);
+    color:#ffffff;
+    font-family:Arial,sans-serif;
+    font-weight:bold;
+  }
+
+  .sec1,.sec1 .container{
+    background:#EDCE63 !important;
+  }
+
+  .share-buttons {
+    text-align: center;
+  }
+
+  .container {
+    color: white;
+  }
+
+  .social-share {
+    display: inline-block;
+    margin-top: 15px;
+  }
+
+  .social-share.left {
+    margin-right: 4px;
+  }
+  .social-share.right {
+    margin-left: 4px;
+  }
+
+  .form-control {
+    width: auto;
+    display: inline-block;
+    height: auto;
+    padding: 1px 4px;
+  }
+
+  .icon-bar {
+    background-color:#ffffff;
+  }
+
+  .scroll-down a, .scroll-top a {
+    color:#ffffff;
+  }
+
+  .scroll-down {
+    position:fixed;
+    bottom:20%;
+    right:0%;
+    color:#f9f9f9;
+  }
+
+  .scroll-top {
+    background-color:#dbdbdb;
+  }
+
+  .vert {
+    vertical-align: middle;
+    width:100%;
+    padding-top:4%;
+    text-align:center;
+  }
+
+   .beta {
+    color:#ffffff;
+  }
+
+  .header .btn-lg {
+    font-size:28px;
+    border-color:#eeeeee;
+    padding:15px;
+    background-color:transparent;
+    color:#fff3a2;
+  }
+
+  .header .btn-lg:hover {
+    background-color:#eeeeee;
+    color:#777777;
+  }
+
+  .callout {
+    color: #ffffff;
+    padding-top:7%;
+    height: 100%;
     width: 100%;
+    background: url('http://www.bootply.com/assets/example/bg_suburb.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
   }
-}
 
-.header h2 {
-/*  font-size:60px;*/
-  -webkit-text-stroke: 1px rgba(f,f,f,0.1);
-  color:#431a6d;
-  color:#00d4b9;
-  margin-top:40px;
-  margin-left:-5px;
-  margin-bottom:5px;
-  text-transform:uppercase;
-}
+  .gallery {
+    padding: 50px 0;
+  }
 
-.header .lead {
-  color:#d46054;
-  font-size:25px;
-}
+  .call-to-action {
+    background: #eeeeee;
+    padding: 50px 0;
+  }
 
-.header {
-  height: 30%;
-  background: #fff repeat center fixed;
-}
+  .call-to-action .btn {
+    margin: 10px;
+  }
 
-/* use alt in navbar and header for different color */
+  .new-report {
+    margin-left:20px;
+    background:#5fcdb6;
+    padding: 10px;
+  }
+  .blurb {
+    padding: 30px 0;
+  }
 
-.alt {
-  background-color: #7FC8B4;
-}
+  .blurb .panel {
+    background-color:transparent;
+  }
 
-.alt .lead {
-  color: #3B0496;
-}
+  .bright {
+    background: #dbdbdb url('http://www.bootply.com/assets/example/pt_topo.png') repeat center center fixed; 
+    color:#777;
+  }
 
-.alt.affix {
-  background-color:#4C06AB;
-}
+  .featurette {
+    background: #222334;
+    padding: 50px 0 10px;
+    color: #ffffff;
+  }
 
-.alt li a:hover, .alt li.active {
-  background-color:#5D17BA;
-}
+  .featurette input {
+    color: #333;
+  }
+
+  .featurette-item {
+    margin-bottom: 15px;
+  }
+
+  .featurette-item > i {
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    display: inline-block;
+    font-size: 56px;
+    width: 140px;
+    height: 140px;
+    line-height: 136px;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .featurette-item > i:hover {
+    font-size: 68px;
+  }
+  /* fix bs3 horizontal scrollbar bug */
+  .row { margin: 0; padding: 0 }
+
+  .navbar-bold.affix {
+    background-color:#d46054;
+  }
+
+  .navbar-bold {
+    background-color:#f68076;
+    font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  }
+
+  .navbar-bold li a:hover, .navbar-bold li.active {
+    background-color:#d46054;
+  }
+
+  .navbar-header {
+    width: 100%;
+    background-color:#7FC8B4;
+    text-align: left;
+  }
+
+  .navbar-header .navbar-brand {
+    width: 50px;
+    height: 50px;
+    background-color:#7FC8B4;
+  }
+
+  .navbar-header .text {
+    left: 15px;
+    line-height: 48px;
+    position: relative;
+  }
+
+  .header h2 {
+    -webkit-text-stroke: 1px rgba(f,f,f,0.1);
+    color:#431a6d;
+    color:#00d4b9;
+    margin-top:40px;
+    margin-left:-5px;
+    margin-bottom:5px;
+    text-transform:uppercase;
+  }
+
+  .header .lead {
+    color:#d46054;
+    font-size:25px;
+  }
+
+  .header {
+    height: 30%;
+    background: #fff repeat center fixed;
+  }
+
+  /* use alt in navbar and header for different color */
+  .alt {
+    background-color: #7FC8B4;
+  }
+
+  .alt .lead {
+    color: #3B0496;
+  }
+
+  .alt.affix {
+    background-color:#4C06AB;
+  }
+
+  .alt li a:hover, .alt li.active {
+    background-color:#5D17BA;
+  }
 
 
+/*******************
+ ** Media Queries **
+ *******************/
+  @media screen and (max-width: 480px) {
+    #thank-you-body {
+      text-align: center;
+    }
+    ul {
+      text-align: left;
+    }
+  }
 
-.blurb {
-  padding: 30px 0;
-}
-
-.blurb .panel {
-  background-color:transparent;
-}
-
-.bright {
-  background: #dbdbdb url('http://www.bootply.com/assets/example/pt_topo.png') repeat center center fixed; 
-  color:#777;
-}
-
-.featurette {
-  background: #222334;
-  padding: 50px 0 10px;
-  color: #ffffff;
-}
-
-#sec2 {
-  padding-top: 0px;
-}
-
-.featurette input {
-  color: #333;
-}
-
-.featurette-item {
-  margin-bottom: 15px;
-}
-
-.featurette-item > i {
-  border: 3px solid #ffffff;
-  border-radius: 50%;
-  display: inline-block;
-  font-size: 56px;
-  width: 140px;
-  height: 140px;
-  line-height: 136px;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.featurette-item > i:hover {
-  font-size: 68px;
-}
-
-.callout {
-  color: #ffffff;
-  padding-top:7%;
-  height: 100%;
-  width: 100%;
-  background: url('http://www.bootply.com/assets/example/bg_suburb.jpg') no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-
-.gallery {
-  padding: 50px 0;
-}
-
-.call-to-action {
-  background: #eeeeee;
-  padding: 50px 0;
-}
-
-.call-to-action .btn {
-  margin: 10px;
-}
-
-.new-report {
-  margin-left:20px;
-  background:#5fcdb6;
-  padding: 10px;
-}
-
-footer {
-  /*padding-top: 25px;*/
-}
-
-/* -- end custom css for Bootstrap 3.x --*/
+  @media screen and (max-width: 480px){
+    .navbar-header .text {
+      font-size: 22px;
+    }
+    .btn-lg {
+      width: 100%;
+    }
+  }
