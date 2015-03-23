@@ -15,7 +15,7 @@
         <p>GenderAvenger Tally creates gender ratio pie charts you can share on Twitter and Facebook.</p>
         <p>Few to zero women on a panel? A top 30 list mysteriously missing women? Take action with GA Tally and share the results!</p>
       </div>
-      <form class="form-horizontal">
+      <form action="report" method="post" role="form" class="form-horizontal">
         <div class="form-group">
           <label class="control-label col-sm-2" for="hashtag">Hashtag</label>
           <div class="col-sm-10">
@@ -51,18 +51,16 @@
 
         <div id="preview"></div>
 
-        {% if error.recaptcha %}<div class="error"><h3 style="color:red;">Please Try Again</h3></div> {% endif %}
+        {% if error.recaptcha %}
+        <div class="error">
+          <h3 style="color:red;">Please Try Again</h3>
+        </div>
+        {% endif %}
         {% if not didRecaptcha %}
+
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
-            <script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k={{recaptcha_public_key}}"></script>
-            <noscript>
-                <iframe src="http://www.google.com/recaptcha/api/noscript?k={{recaptcha_public_key}}" height="300" width="500" frameborder="0">
-                </iframe>
-                <br>
-                <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-                <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
-            </noscript>
+            <div class="g-recaptcha" data-sitekey="6LeU8wMTAAAAAAiHDLDe97YRgos0uD7eCtG_Ex-5"></div>
           </div>
         </div>
         {% endif %}

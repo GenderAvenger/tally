@@ -8,3 +8,8 @@ User provides a conference name and hashtag as well as the breakdown of male and
 We return a shareable pie chart to illustrate their point.
 
 Requires imagemagick, ghostscript
+
+
+## Temp Notes
+
+- You need to install ImageMagick

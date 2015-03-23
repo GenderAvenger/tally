@@ -30,6 +30,7 @@ app.get('/report', function (req, res, next) {
 
 app.post('/report', function (req, res, next) {
 
+  console.log("starting");
   // Helper function
   var isInt = function (n) {
     return typeof n === 'number' && n % 1 == 0;
@@ -277,7 +278,8 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
                   '-page', '+0+0', 'assets/' + foreground_asset, // Foreground
                   '-layers', 'flatten', card_filename],
         function (err, stdout) {
-          if (err) {
+          console.log("MAGIC3!");
+            if (err) {
             return callback(err, null);
           } else {
             // upload that local file to imgur
