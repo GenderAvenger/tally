@@ -1,7 +1,7 @@
 /****************************
  *  File Organization
  *  1) Core HTML / Bootstrap
- *  2) Identified Elements
+ *  2) Page Elements
  *  3) Generic Classes
  *  4) Media Queries
  ****************************/
@@ -16,7 +16,7 @@
     width: 100%;
     font-family:Arial,sans-serif;
     font-size: 13px;
-    background-color: #222334;
+    background-color: #ECCD6B;
   }
 
   input{
@@ -56,9 +56,32 @@
     min-width: 166px;
   }
 
-/*************************
- ** Identified Elements **
- *************************/
+/*******************
+ ** Page Elements **
+ *******************/
+
+  #navbar {
+    background: #7FC8B4;
+  }
+    #navbar .navbar-brand {
+      height: 60px;
+      padding: 5px 0px;
+      margin-right: 15px;
+    }
+    #navbar #ga-logo img {
+      height: 50px;
+    }
+    #navbar #tally-logo {
+      font-family: arial;
+      text-transform: uppercase;
+      font-size: 30px;
+      line-height: 60px;
+    }
+
+  #app {
+    margin-top: 70px;
+  }
+
   #pie-chart {
     width: 500px;
     margin-left: auto;
@@ -70,26 +93,10 @@
     width: 438px;
   }
 
-  #recaptcha_table {
-    border: none !important;
-  }
-
-  #sec2 {
-    padding-top: 0px;
-  }
-
-
 /*********************
  ** Generic Classes **
  *********************/
 
-  .navbar-brand{
-    margin:0px;
-    padding:0px !important;
-  }
-  .navbar-brand img{
-    height:50px;
-  }
 
   .icon-bar{
     background:none !important;

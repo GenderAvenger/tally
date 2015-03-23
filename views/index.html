@@ -10,63 +10,75 @@
       var RecaptchaOptions = {theme: 'clean', lang: 'en'};
     </script>
 
-    <div class="alt featurette">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-7">
-            <br/>
-            <p>GenderAvenger Tally creates gender ratio pie charts you can share on Twitter and Facebook.</p>
-            <p>Few to zero women on a panel? A top 30 list mysteriously missing women? Take action with GA Tally and share the results!</p>
-          </div>
-        </div>
-        <div id="sec1" class="blurb">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-9">
-                <form action="report" method="post" role="form" class="">
-                <div class="form-group">
-
-                <p>For <input type="text" name="hashtag" placeholder="#hashtag"
-                      class="form-control{% if error.hashtag %} error {% endif %}"
-                      {% if hashtag %} value="{{ hashtag }}" {% endif %} />
-                there are
-                     <input type="number" name="women" placeholder="0"
-                      class="form-control{% if error.women %} error {% endif %}"
-                      {% if women %} value="{{ women }}" {% endif %} />
-                women and 
-                     <input type="number" name="men" placeholder="0"
-                      class="form-control{% if error.men %} error {% endif %}"
-                      {% if men %} value="{{ men }}" {% endif %} />
-                men at/in
-                     <input type="text" name="session_text" placeholder="(optional)"
-                      class="form-control{% if error.session_text %} error {% endif %}"
-                      {% if session_text %} value="{{ session_text }}" {% endif %} />.
-                </p>
-
-                    {% if error.recaptcha %}<div class="error"><h3 style="color:red;">Please Try Again</h3></div> {% endif %}
-                    {% if not didRecaptcha %}
-                    <p><script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k={{recaptcha_public_key}}"></script>
-                    <noscript>
-                        <iframe src="http://www.google.com/recaptcha/api/noscript?k={{recaptcha_public_key}}" height="300" width="500" frameborder="0">
-                        </iframe>
-                        <br>
-                        <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-                        <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
-                    </noscript></p>
-                    {% endif %}
-                    <p><input class="btn btn-default btn-lg" type="submit" value="Chart it"/></p>
-                    <p><em>Please don't miscount or misrepresent. No really nasty language. No personal attacks. The facts will win the day.</em></p>
-                </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div id="app" class="container">
+      <div id="instructions">
+        <p>GenderAvenger Tally creates gender ratio pie charts you can share on Twitter and Facebook.</p>
+        <p>Few to zero women on a panel? A top 30 list mysteriously missing women? Take action with GA Tally and share the results!</p>
       </div>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="hashtag">Hashtag</label>
+          <div class="col-sm-10">
+            <input type="text" name="hashtag" id="hashtag" placeholder="#hashtag"
+              class="form-control{% if error.hashtag %} error {% endif %}"
+              {% if hashtag %} value="{{ hashtag }}" {% endif %} />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="women">Number of Women</label>
+          <div class="col-sm-10">
+            <input type="number" id="women" name="women" placeholder="0"
+              class="form-control{% if error.women %} error {% endif %}"
+              {% if women %} value="{{ women }}" {% endif %} />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="men">Number of Men</label>
+          <div class="col-sm-10">
+            <input type="number" id="men" name="men" placeholder="0"
+              class="form-control{% if error.men %} error {% endif %}"
+              {% if men %} value="{{ men }}" {% endif %} />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="session_text">Context <em>(optional)</em></label>
+          <div class="col-sm-10">
+            <input type="text" id="session_text" name="session_text" placeholder="e.g. session name"
+              class="form-control{% if error.session_text %} error {% endif %}"
+              {% if session_text %} value="{{ session_text }}" {% endif %} />
+          </div>
+        </div>
+
+        <div id="preview"></div>
+
+        {% if error.recaptcha %}<div class="error"><h3 style="color:red;">Please Try Again</h3></div> {% endif %}
+        {% if not didRecaptcha %}
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k={{recaptcha_public_key}}"></script>
+            <noscript>
+                <iframe src="http://www.google.com/recaptcha/api/noscript?k={{recaptcha_public_key}}" height="300" width="500" frameborder="0">
+                </iframe>
+                <br>
+                <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+            </noscript>
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <input class="btn btn-default btn-lg" type="submit" value="Chart it"/>
+          </div>
+        </div>
+        <div class="col-sm-offset-2 col-sm-10">
+          <p><em>Please don't miscount or misrepresent. No really nasty language. No personal attacks. The facts will win the day.</em></p>
+        </div>
+      </form>
     </div>
 
     <!-- Footer -->
     {% include "shared/footer.html" %}
-
   </body>
 </html>
