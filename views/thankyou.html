@@ -10,13 +10,17 @@
 
     {% include "shared/navbar.html" %}
 
-    <div id="chart" class="container">
+    <div id="chart-title">
       <div class="container">
         <div class="row">
           <div class="col-sm-12">
             <h3>Gender at {{ hashtag }}</h3>
           </div>
         </div>
+      </div>
+    </div>
+    <div id="results" class="container root">
+      <div class="container">
         <div class="row">
           <div class="col-sm-offset-2 col-sm-8">
             <img src="{{pie}}" id="pie-chart" class="img-responsive"/>
@@ -36,40 +40,58 @@
             </a>
           </div>
         </div>
+        <div class="row">
+          <div id="disclaimer" class="col-sm-offset-2 col-sm-8">
+            <p><em>This chart was created by a GenderAvenger Tally user.</em></p>
+          </div>
+        </div>
         <!-- TODO: Clean up embed code experience -->
         <div class="row nomobile">
-          <h4>Copy code to embed this report</h4>
-          <textarea cols="40" rows="5"><a id="genderavenger-tally" href="{{url_to_share}}" data-width="", data-height="" data-style="" data-tally-id="{{pie_id}}" class="genderavenger-tally">{{proportion_women}} and {{proportion_men}} were counted at {{session_text}} {{hashtag}}. Learn more at GenderAvenger Tally</a><script type="text/javascript">!function(d,s,id){var e,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'http';if(!d.getElementById(id)){e=d.createElement(s);e.id=id; e.src=p + "://{{host}}/js/embed.js";f.parentNode.insertBefore(e,f);}}(document,"script","genderavenger-embed");</script></textarea>
+          <div id="embed-share" class="col-sm-offset-2 col-sm-8">
+            <h4>Copy code to embed this report</h4>
+            <textarea cols="40" rows="2"><a id="genderavenger-tally" href="{{url_to_share}}" data-width="", data-height="" data-style="" data-tally-id="{{pie_id}}" class="genderavenger-tally">{{proportion_women}} and {{proportion_men}} were counted at {{session_text}} {{hashtag}}. Learn more at GenderAvenger Tally</a><script type="text/javascript">!function(d,s,id){var e,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'http';if(!d.getElementById(id)){e=d.createElement(s);e.id=id; e.src=p + "://{{host}}/js/embed.js";f.parentNode.insertBefore(e,f);}}(document,"script","genderavenger-embed");</script></textarea>
+          </div>
         </div>
-        <div class="row nomobile">
-            {% if report_is_new == 1 %}
-            <div style="margin-left:20px;margin-top:20px">
-              <p>Now that you've created a visualization, here's what you can do next:</p>
-              <p>
-                <ul>
-                  <li>If you need us to share this anonymously, email us at <a href="javascript:emailCurrentPage(true)">genderavengershares@googlegroups.com</a> and we'll protect your identity.</li>
-                  <li>Approach one of the conference organizers and discuss your concerns.</li>
-                  <li>Let some other folks know what you are doing, so they can join and support you in these conversations.</li>
-                  <li>What about those times when you look up and say, "Wow, look at all the women!"? Share positive charts, too, and reward the organizers.</li>
-                </ul>
-              </p>
-              <p><em>This message appears only once, and is only visible to you.</em></p>
-              <p><hr></p>
-            </div>
-            {% endif %}
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-8">
+            <hr>
+          </div>
+        </div>
 
-            <p><em>This chart was created by a GenderAvenger Tally user.</em></p>
-            <p><h2>Make a New Chart</h2></p>
+        {% if report_is_new == 1 %}
+        <div class="row">
+          <div id="author-instructions" class="col-sm-offset-2 col-sm-8">
+            <p>Now that you've created a visualization, here's what you can do next:</p>
+            <p>
+              <ul>
+                <li>If you need us to share this anonymously, email us at <a href="javascript:emailCurrentPage(true)">genderavengershares@googlegroups.com</a> and we'll protect your identity.</li>
+                <li>Approach one of the conference organizers and discuss your concerns.</li>
+                <li>Let some other folks know what you are doing, so they can join and support you in these conversations.</li>
+                <li>What about those times when you look up and say, "Wow, look at all the women!"? Share positive charts, too, and reward the organizers.</li>
+              </ul>
+            </p>
+            <hr>
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+          <div id="followup" class="col-sm-offset-2 col-sm-8">
+            <h2>Make a New Chart</h2>
             <p>Want to create a new pie chart? Go to <a href="http://app.genderavenger.com/">app.genderavenger.com</a></p>
 
-            <p><h2>Are You the Organizer?</h2></p>
+            <h2>Are You the Organizer?</h2>
             <p>See our <a href="http://www.genderavenger.com/how-to-do-better/">How To Do Better</a> page.</p>
 
-            <p><h2>Correct the Record</h2></p>
+            <h2>Correct the Record</h2>
             <p>We recognize that gender is not simply a binary world of "male" and "female". At the same time, we don't feel comfortable inviting the public to guess as to whether or not a speaker identifies as transgendered. If you believe that this chart erroneously represents someone's gender, please let us know at <a href="javascript:emailCurrentPage(false)">genderavengershares@googlegroups.com</a> and we'll correct the record.</p>
+          </div>
         </div>
         <div class="row nomobile">
-          <div id="disqus_thread"></div>
+          <div class="col-sm-offset-2 col-sm-8">
+            <h2>Discussion</h2>
+            <div id="disqus_thread"></div>
+          </div>
         </div>
       </div>
     </div>
