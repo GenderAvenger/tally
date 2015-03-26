@@ -26,18 +26,24 @@
             <img src="{{pie}}" id="pie-chart" class="img-responsive"/>
           </div>
         </div>
-        <div id="share-buttons" class="row">
+        <div class="row share-buttons">
           <div id="fb-share-button" class="col-xs-offset-0 col-xs-6 text-right">
             <a href="https://www.facebook.com/sharer/sharer.php?u={{url_to_share}}&t=Share%20on%20Facebook"
                onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
-               target="_blank" title="Share on Facebook"><img src="/img/facebook.png">
-            </a>
+               target="_blank" title="Share on Facebook"><img src="/img/facebook.png"></a>
           </div>
           <div id="twitter-share-button" class="col-xs-6 text-left">
             <a href="https://twitter.com/share?url={{url_to_share}}&via=GenderAvenger&text=Check out the gender ratio at {% if has_hash %}%23{% endif %}{{hashtag_without_hash}} %23GenderAvenger"
                onclick="javascript:window.open(this.href, '', 'menubar=yes,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
-               target="_blank" title="Share on Twitter"><img src="/img/tweet.png">
-            </a>
+               target="_blank" title="Share on Twitter"><img src="/img/tweet.png"></a>
+          </div>
+        </div>
+        <div class="row share-buttons">
+          <div id="make-button" class="col-xs-offset-0 col-xs-6 text-right">
+            <a href="http://app.genderavenger.com/"><img src="/img/makenewchart.png"></a>
+          </div>
+          <div id="anonymous-button" class="col-xs-6 text-left">
+            <a href="http://app.genderavenger.com/"><img src="/img/anonymous.png"></a>
           </div>
         </div>
         <div class="row">
@@ -77,9 +83,6 @@
 
         <div class="row">
           <div id="followup" class="col-sm-offset-2 col-sm-8">
-            <h2>Make a New Chart</h2>
-            <p>Want to create a new pie chart? Go to <a href="http://app.genderavenger.com/">app.genderavenger.com</a></p>
-
             <h2>Are You the Organizer?</h2>
             <p>See our <a href="http://www.genderavenger.com/how-to-do-better/">How To Do Better</a> page.</p>
 

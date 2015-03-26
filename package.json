@@ -27,7 +27,6 @@
     "quiche": "*",
     "request": "^2.42.0",
     "serve-favicon": "^2.0.1",
-    "simple-recaptcha": "0.0.3",
     "yamljs": "^0.1.5"
   }
 }

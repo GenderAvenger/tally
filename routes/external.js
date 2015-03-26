@@ -1,5 +1,6 @@
 var quiche = require('quiche'),
     http   = require('http'),
+    https   = require('https'),
     _      = require('lodash'),
     fs     = require('fs'),
     imgur  = require('imgur-upload'),
@@ -10,6 +11,7 @@ var quiche = require('quiche'),
     Firebase = require('firebase'),
     csv = require('express-csv'),
     app = require('../server').app,
+    querystring = require('querystring'),
     firebaseDatastore = require('../server').firebaseDatastore;
 
 
@@ -30,7 +32,6 @@ app.get('/report', function (req, res, next) {
 
 app.post('/report', function (req, res, next) {
 
-  console.log("starting");
   // Helper function
   var isInt = function (n) {
     return typeof n === 'number' && n % 1 == 0;
@@ -65,12 +66,10 @@ app.post('/report', function (req, res, next) {
   // You need to set this value yourself in a file called 'creds.yaml' in the root folder
   var privateKey = process.env['RECAPTCHA_PRIVATE_KEY'];
   var ip = req.ip;
-  var challenge = req.body.recaptcha_challenge_field;
-  var response = req.body.recaptcha_response_field;
+  var recaptchaResponse = req.body['g-recaptcha-response'];
 
-  simple_recaptcha(privateKey, ip, challenge, response, function(err) {
+  verifyRecaptcha(privateKey, recaptchaResponse, function(err) {
     if (!req.session.didRecaptcha && err) {
-      console.log("Recaptcha Fail");
       // Re-render the page
       return res.render('report.html', {
         men: req.body.men,
@@ -218,6 +217,34 @@ app.get('/embed/:id', function (req, res, next) {
   });
 });
 
+function verifyRecaptcha(privateKey, recaptchaResponse, callback) {
+  https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + privateKey + "&response=" + recaptchaResponse, function(res) {
+  var data = "";
+  res.on('data', function (chunk) {
+    data += chunk.toString();
+  });
+  res.on('end', function() {
+    try {
+      var parsedData = JSON.parse(data);
+      if (!parsedData.success) return callback(new Error(error));
+      callback(null);
+    } catch (e) {
+      callback(false);
+    }
+    });
+  });
+
+  // An object of options to indicate where to post to
+  var options = {
+      host: 'www.google.com',
+      path: '/recaptcha/api/siteverify',
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      }
+  };
+}
+
 function generatePieChart (men, women, other) {
   // generate pie chart from google charts API
   var pie = new quiche('pie');
@@ -278,7 +305,6 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
                   '-page', '+0+0', 'assets/' + foreground_asset, // Foreground
                   '-layers', 'flatten', card_filename],
         function (err, stdout) {
-          console.log("MAGIC3!");
             if (err) {
             return callback(err, null);
           } else {

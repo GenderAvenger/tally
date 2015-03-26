@@ -119,13 +119,13 @@
       margin-right: auto;
     }
 
-    #share-buttons {}
-      #share-buttons a {
+    .share-buttons {}
+      .share-buttons a {
         display: inline-block;
         margin-top: 15px;
         max-width: 235px;
       }
-      #share-buttons a img {
+      .share-buttons a img {
         width: 100%;
       }
       #embed-share {
