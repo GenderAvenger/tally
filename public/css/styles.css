@@ -6,7 +6,7 @@
  *  4) Media Queries
  ****************************/
 
-@import url(http://fonts.googleapis.com/css?family=Voltaire); /* TODO: move special fonts to HTML head for better performance */
+@import url(//fonts.googleapis.com/css?family=Voltaire); /* TODO: move special fonts to HTML head for better performance */
 
 /********************************
  ** Core HTML / Bootstrap Tags **
@@ -101,7 +101,7 @@
     }
 
   #results {
-    margin-top: 100px;
+    margin-top: 120px;
   }
     #chart-title {
       position: fixed;
