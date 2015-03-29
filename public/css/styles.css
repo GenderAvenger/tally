@@ -125,12 +125,18 @@
         margin-top: 15px;
         max-width: 235px;
       }
-      .share-buttons a img {
+      .share-buttons img {
         width: 100%;
       }
       #embed-share {
         text-align: center;
       }
+      #anonymous-confirmation {
+        display: none;
+        margin-top: 15px;
+        max-width: 235px;
+      }
+
     #disclaimer {
       padding: 15px 0px;
       text-align: center;

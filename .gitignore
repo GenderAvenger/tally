@@ -2,3 +2,4 @@ node_modules
 *.swp
 assets/chartgen/*.png
 creds.yaml
+.env

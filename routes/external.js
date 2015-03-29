@@ -12,8 +12,18 @@ var quiche = require('quiche'),
     csv = require('express-csv'),
     app = require('../server').app,
     querystring = require('querystring'),
+    nodemailer = require('nodemailer'),
     firebaseDatastore = require('../server').firebaseDatastore;
 
+
+// Set up nodemailer's transporter
+var email_transporter = nodemailer.createTransport({
+    service: 'Mandrill',
+    auth: {
+        user: process.env['MANDRILL_USERNAME'],
+        pass: process.env['MANDRILL_APIKEY']
+    }
+});
 
 // Main route (aliases /report)
 app.get('/', function (req, res, next) {
@@ -79,6 +89,10 @@ app.post('/report', function (req, res, next) {
         error: {recaptcha: true}
       });
     }
+
+    // Mark this user as being not a robot
+    res.cookie('ishuman', 'true');
+
     // Since we're all good, generate and show the pie chart
     req.session.didRecaptcha = true;
 
@@ -122,11 +136,9 @@ app.post('/report', function (req, res, next) {
 });
 
 app.get('/plot/:id', function (req, res, next) {
-  // Get the param
+  // Get the pie chart
   var pie_id = req.params.id;
-  // Get the plot with this id
   var plotRef = firebaseDatastore.child('plots/'+pie_id);
-  // Load the data from firebase
   plotRef.once('value', function (snapshot) {
     // Firebase has a weird syntax / system. This is how we load the data in
     var refVal = snapshot.val();
@@ -194,14 +206,13 @@ app.get('/plot/:id', function (req, res, next) {
 app.get('/embed/:id', function (req, res, next) {
   // Route that returns just the image, so that it can be embedded
   // FIXME(nate): If the pie_url is missing, this will fail
-  // Get the param
+
+  // Get the pie chart from firebase
   var pie_id = req.params.id;
-  // Get the plot with this id
   var plotRef = firebaseDatastore.child('plots/'+pie_id);
-  // Load the data from firebase
   plotRef.once('value', function (snapshot) {
     var refVal = snapshot.val();
-    if (!refval) {
+    if (!refVal) {
       return res.redirect('/');
     }
     var pie_url = refVal.pie_url;
@@ -214,6 +225,54 @@ app.get('/embed/:id', function (req, res, next) {
       full_url: fullUrl,
       hashtag: hashtag
     });
+  });
+});
+
+app.post('/anonymous/:id', function (req, res, next) {
+  // Route that will generate an email request to submit things anonymously
+
+  // TODO: this is kind of hackish, using a cookie for non-robotness should either be discontinued or be used everywhere as part of a standard flow
+  // The original author has already been verified as "not a robot" -- check the cookie to be sure this is being accessed by a human
+  if (req.cookies.ishuman != "true") {
+    res.status(403);
+    res.send('You have not been verified as human.');
+    return next();
+  }
+
+  // Get the pie chart from firebase
+  // TODO: consider refactoring to have a strong model for pie charts (this isn't DRY as it stands; we lookup from firebase in many places)
+  var pie_id = req.params.id;
+  var plotRef = firebaseDatastore.child('plots/'+pie_id);
+
+  plotRef.once('value', function (snapshot) {
+    var refVal = snapshot.val();
+    if (!refVal) {
+      return next();
+    }
+
+    var pie_url = refVal.pie_url;
+    var fullUrl = req.protocol + '://' + req.get('host') + "/plot/" + pie_id;
+    var hashtag = refVal.hashtag;
+    var session_text = refVal.session_text;
+
+    // Send the email
+    // TODO: convert this to a templated email
+    var mailOptions = {
+        from: process.env['ADMIN_EMAIL'],
+        to: process.env['ADMIN_EMAIL'],
+        subject: 'Anonymous Submission Request (' + pie_id + ')',
+        html: 'A new anonymous GA Tally request<br>-------------<br>Tally URL: ' + fullUrl + '<br>Hashtag: ' + hashtag + '<br>Session Text: ' + session_text,
+    };
+    email_transporter.sendMail(mailOptions, function(error, info) {
+        if(error){
+            console.log(error);
+        }else{
+            console.log('Message sent: ' + info.response);
+        }
+    });
+
+    res.send('Request submitted.');
+    return next();
   });
 });
 

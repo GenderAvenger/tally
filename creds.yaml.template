@@ -3,3 +3,6 @@ recaptchaPublicKey: ADD_RECAPTCHA_KEY_HERE
 recaptchaPrivateKey: ADD_RECAPTCHA_P_KEY_HERE
 firebaseSecret: ADD_FIREBASE_SECRET_HERE
 firebaseStore: ADD_FIREBASE_STORE_URL_HERE
+mandrillApiKey: ADD_MANDRILL_KEY_HERE
+mandrillUsername: ADD_MANDRILL_USERNAME_HERE
+adminEmail: ADD_EMAIL_HERE

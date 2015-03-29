@@ -42,11 +42,32 @@
           <div id="make-button" class="col-xs-offset-0 col-xs-6 text-right">
             <a href="http://app.genderavenger.com/"><img src="/img/makenewchart.png"></a>
           </div>
+          {% if report_is_new == 0 %}
           <div id="anonymous-button" class="col-xs-6 text-left">
-            <a href="http://app.genderavenger.com/"><img src="/img/anonymous.png"></a>
+            <a href=""><img src="/img/anonymous.png"></a>
+            <div id="anonymous-confirmation"><img src="/img/requestsent.png"></div>
           </div>
+          <script type="text/javascript">
+            $(function() {
+              // Enable the anonymous send button
+              $("#anonymous-button>a").click(function() {
+                $(this).hide();
+                $("#anonymous-confirmation").show();
+                setTimeout(function() {
+                  $("#anonymous-confirmation").fadeOut(1500);
+                }, 200);
+
+                $.ajax("/anonymous/{{pie_id}}", {
+                  method: "post",
+                })
+                return false;
+              });
+            })
+          </script>
+
+          {% endif %}
         </div>
-        <div class="row">
+        <div class="row nomobile">
           <div id="disclaimer" class="col-sm-offset-2 col-sm-8">
             <p><em>This chart was created by a GenderAvenger Tally user.</em></p>
           </div>
@@ -58,19 +79,18 @@
             <textarea cols="40" rows="2"><a id="genderavenger-tally" href="{{url_to_share}}" data-width="", data-height="" data-style="" data-tally-id="{{pie_id}}" class="genderavenger-tally">{{proportion_women}} and {{proportion_men}} were counted at {{session_text}} {{hashtag}}. Learn more at GenderAvenger Tally</a><script type="text/javascript">!function(d,s,id){var e,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'http';if(!d.getElementById(id)){e=d.createElement(s);e.id=id; e.src=p + "://{{host}}/js/embed.js";f.parentNode.insertBefore(e,f);}}(document,"script","genderavenger-embed");</script></textarea>
           </div>
         </div>
-        <div class="row">
+        <div class="row nomobile">
           <div class="col-sm-offset-2 col-sm-8">
             <hr>
           </div>
         </div>
 
         {% if report_is_new == 1 %}
-        <div class="row">
+        <div class="row nomobile">
           <div id="author-instructions" class="col-sm-offset-2 col-sm-8">
             <p>Now that you've created a visualization, here's what you can do next:</p>
             <p>
               <ul>
-                <li>If you need us to share this anonymously, email us at <a href="javascript:emailCurrentPage(true)">genderavengershares@googlegroups.com</a> and we'll protect your identity.</li>
                 <li>Approach one of the conference organizers and discuss your concerns.</li>
                 <li>Let some other folks know what you are doing, so they can join and support you in these conversations.</li>
                 <li>What about those times when you look up and say, "Wow, look at all the women!"? Share positive charts, too, and reward the organizers.</li>
@@ -81,7 +101,7 @@
         </div>
         {% endif %}
 
-        <div class="row">
+        <div class="row nomobile">
           <div id="followup" class="col-sm-offset-2 col-sm-8">
             <h2>Are You the Organizer?</h2>
             <p>See our <a href="http://www.genderavenger.com/how-to-do-better/">How To Do Better</a> page.</p>
