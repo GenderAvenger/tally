@@ -3,3 +3,4 @@ node_modules
 assets/chartgen/*.png
 creds.yaml
 .env
+newrelic_agent.log

@@ -6,3 +6,4 @@ firebaseStore: ADD_FIREBASE_STORE_URL_HERE
 mandrillApiKey: ADD_MANDRILL_KEY_HERE
 mandrillUsername: ADD_MANDRILL_USERNAME_HERE
 adminEmail: ADD_EMAIL_HERE
+newRelicLicenseKey: ADD_NEWRELIC_KEY_HERE

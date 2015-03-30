@@ -1,3 +1,9 @@
+// Set up config credentials
+require('./config');
+
+// Load in newrelic
+require('newrelic');
+
 var express = require('express')
   , http = require('http')
   , path = require('path')
@@ -11,8 +17,6 @@ var bodyParser = require('body-parser')
   , morgan = require('morgan') // replaced express.logger
   , favicon = require('serve-favicon');
 
-// Set up config credentials
-require('./config');
 var app = express();
 module.exports.app = app;
 
