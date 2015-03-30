@@ -6,7 +6,7 @@
   <body>
     <!-- Facebook JS SDK -->
     <div id="fb-root"></div>
-    <script src='/js/facebook_connect.js' type="text/javascript"></script>
+    <script src='/js/lib/facebook_connect.js' type="text/javascript"></script>
 
     {% include "shared/navbar.html" %}
 
@@ -40,7 +40,7 @@
         </div>
         <div class="row share-buttons">
           <div id="make-button" class="col-xs-offset-0 col-xs-6 text-right">
-            <a href="http://app.genderavenger.com/"><img src="/img/makenewchart.png"></a>
+            <a href="http://app.genderavenger.com/" target="_blank"><img src="/img/makenewchart.png"></a>
           </div>
           {% if report_is_new == 1 %}
           <div id="anonymous-button" class="col-xs-6 text-left">
@@ -76,7 +76,7 @@
         <div class="row nomobile">
           <div id="embed-share" class="col-sm-offset-2 col-sm-8">
             <h4>Copy code to embed this report</h4>
-            <textarea cols="40" rows="2"><a id="genderavenger-tally" href="{{url_to_share}}" data-width="", data-height="" data-style="" data-tally-id="{{pie_id}}" class="genderavenger-tally">{{proportion_women}} and {{proportion_men}} were counted at {{session_text}} {{hashtag}}. Learn more at GenderAvenger Tally</a><script type="text/javascript">!function(d,s,id){var e,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'http';if(!d.getElementById(id)){e=d.createElement(s);e.id=id; e.src=p + "://{{host}}/js/embed.js";f.parentNode.insertBefore(e,f);}}(document,"script","genderavenger-embed");</script></textarea>
+            <textarea cols="40" rows="2"><a id="genderavenger-tally" href="{{url_to_share}}" data-width="", data-height="" data-style="" data-tally-id="{{pie_id}}" class="genderavenger-tally">{{proportion_women}} and {{proportion_men}} were counted at {{session_text}} {{hashtag}}. Learn more at GenderAvenger Tally</a><script type="text/javascript">!function(d,s,id){var e,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'http';if(!d.getElementById(id)){e=d.createElement(s);e.id=id; e.src=p + "://{{host}}/js/lib/embed.js";f.parentNode.insertBefore(e,f);}}(document,"script","genderavenger-embed");</script></textarea>
           </div>
         </div>
         <div class="row nomobile">
@@ -123,6 +123,8 @@
     {% include "shared/footer.html" %}
 
     <!-- DISQUS stuff -->
-    <script type="text/javascript" src="/js/disqus.js"></script>
+    <script type="text/javascript" src="/js/lib/disqus.js"></script>
+    <script type="text/javascript" src="/js/chart_events.js"></script>
+
   </body>
 </html>

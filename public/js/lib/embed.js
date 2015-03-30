@@ -13,8 +13,7 @@ nl = d.getElementById("genderavenger-tally")
 var iframe = d.createElement('iframe');       
 nl.parentNode.insertBefore(iframe, nl);
 
-//iframe.src = "http://app.genderavenger.com/plot/" + nl.getAttribute("data-tally-id")";
-iframe.src = "http://localhost:3000/embed/" + nl.getAttribute("data-tally-id");
+iframe.src = "http://app.genderavenger.com/plot/" + nl.getAttribute("data-tally-id");
 iframe.width = "200";
 iframe.height = "200";
 
