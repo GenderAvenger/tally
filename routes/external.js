@@ -52,7 +52,7 @@ app.post('/report', function (req, res, next) {
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
-  if (!isInt(men) || !isInt(women) || !_.isString(session_text) || !_.isString(hashtag) || hashtag.length < 1) {
+  if ((!isInt(men) || men < 0) || (!isInt(women) || women < 0) || !_.isString(session_text) || !_.isString(hashtag) || hashtag.length < 1) {
     // Send the report page back down
     // Really, this should be handled directly by javascript in the page
     // Put by posting to /report, the user at least doesn't see a URL change
@@ -62,8 +62,8 @@ app.post('/report', function (req, res, next) {
       women: req.body.women,
       hashtag: req.body.hashtag,
       error: {
-        men: !isInt(men),
-        women: !isInt(women),
+        men: !isInt(men) || men < 0,
+        women: !isInt(women) || women < 0 ,
         hashtag: (!_.isString(hashtag) || hashtag.length < 1  || hashtag.substr(0,1) != '#'),
         session_text: !_.isString(session_text)
       }
@@ -77,8 +77,8 @@ app.post('/report', function (req, res, next) {
   var ip = req.ip;
   var recaptchaResponse = req.body['g-recaptcha-response'];
 
-  verifyRecaptcha(privateKey, recaptchaResponse, function(err) {
-    if (!req.session.didRecaptcha && err) {
+  verifyRecaptcha(privateKey, recaptchaResponse, function(success) {
+    if (!success) {
       // Re-render the page
       return res.render('report.html', {
         men: req.body.men,
@@ -284,8 +284,8 @@ function verifyRecaptcha(privateKey, recaptchaResponse, callback) {
   res.on('end', function() {
     try {
       var parsedData = JSON.parse(data);
-      if (!parsedData.success) return callback(new Error(error));
-      callback(null);
+      if (!parsedData.success) return callback(false);
+      callback(true);
     } catch (e) {
       callback(false);
     }
