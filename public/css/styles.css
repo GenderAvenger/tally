@@ -182,4 +182,8 @@
     .nomobile {
       display: none;
     }
+    h3 {
+      font-size: 12px;
+      white-space: nowrap;
+    }
   }
