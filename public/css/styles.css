@@ -25,7 +25,7 @@
     margin-top:5px
   }
 
-  h1,h2,h3,h4,.lead,.btn,.navbar a { 
+  h1,h2,h3,h4,.lead,.btn,.navbar a {
     text-transform:uppercase;
     font-family:'Futura',Arial,sans-serif;
     letter-spacing:2px;
@@ -53,6 +53,11 @@
 
   input.error {
     border: 1px solid red;
+  }
+  div.error {
+    color: red;
+    font-weight: bold;
+    font-size: 16px;
   }
 
   input[type="number"] {

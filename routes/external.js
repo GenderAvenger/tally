@@ -52,7 +52,11 @@ app.post('/report', function (req, res, next) {
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
-  if ((!isInt(men) || men < 0) || (!isInt(women) || women < 0) || !_.isString(session_text) || !_.isString(hashtag) || hashtag.length < 1) {
+  var hashPattern = new RegExp(/^\#\S{1,20}$/);
+
+
+  // TODO - make validation DRY
+  if ((!isInt(men) || men < 0) || (!isInt(women) || women < 0) || !_.isString(session_text) || !hashtag.match(hashPattern)) {
     // Send the report page back down
     // Really, this should be handled directly by javascript in the page
     // Put by posting to /report, the user at least doesn't see a URL change
@@ -64,7 +68,7 @@ app.post('/report', function (req, res, next) {
       error: {
         men: !isInt(men) || men < 0,
         women: !isInt(women) || women < 0 ,
-        hashtag: (!_.isString(hashtag) || hashtag.length < 1  || hashtag.substr(0,1) != '#'),
+        hashtag: !hashtag.match(hashPattern),
         session_text: !_.isString(session_text)
       }
     })
@@ -73,64 +77,47 @@ app.post('/report', function (req, res, next) {
   // Handle Recaptcha
   // See https://github.com/zeMirco/simple-recaptcha for instructions / steps
   // You need to set this value yourself in a file called 'creds.yaml' in the root folder
-  var privateKey = process.env['RECAPTCHA_PRIVATE_KEY'];
-  var ip = req.ip;
-  var recaptchaResponse = req.body['g-recaptcha-response'];
+  // Mark this user as being not a robot
+  res.cookie('ishuman', 'true');
 
-  verifyRecaptcha(privateKey, recaptchaResponse, function(success) {
-    if (!success) {
-      // Re-render the page
-      return res.render('report.html', {
-        men: req.body.men,
-        women: req.body.women,
-        session_text: req.body.session_text,
-        hashtag: req.body.hashtag,
-        error: {recaptcha: true}
-      });
+  // Since we're all good, generate and show the pie chart
+  req.session.didRecaptcha = true;
+
+  // Default to zero individuals with a non-binary gender
+  var pie = generatePieChart(men, women, 0);
+
+  // set initial pie url for redundancy's sake
+  var pie_url = pie.getUrl(true).replace("https","http");
+
+  var proportionWomen = (women / (men + women));
+
+  // Pass in a callback since we need a way to hear back from the implicit network call
+  getMagickedImage(pie, hashtag, session_text, proportionWomen, function (error, data) {
+    // the 'next' method passes this on to the next route, which should be a 404 or 500
+    if (error) {
+      return next(error);
     }
 
-    // Mark this user as being not a robot
-    res.cookie('ishuman', 'true');
+    pie_id = data.id;
+    pie_url = data.link;
 
-    // Since we're all good, generate and show the pie chart
-    req.session.didRecaptcha = true;
-
-    // Default to zero individuals with a non-binary gender
-    var pie = generatePieChart(men, women, 0);
-
-    // set initial pie url for redundancy's sake
-    var pie_url = pie.getUrl(true).replace("https","http");
-
-    var proportionWomen = (women / (men + women));
-
-    // Pass in a callback since we need a way to hear back from the implicit network call
-    getMagickedImage(pie, hashtag, session_text, proportionWomen, function (error, data) {
-      // the 'next' method passes this on to the next route, which should be a 404 or 500
-      if (error) {
-        return next(error);
-      }
-
-      pie_id = data.id;
-      pie_url = data.link;
-
-      // Create a database entry for this pie_id
-      var plotRef = firebaseDatastore.child('plots/'+pie_id);
-      // And store the data in it
-      var timestamp = new Date().toString();
-      plotRef.set({
-        timestamp: timestamp,
-        session_text: session_text,
-        hashtag: hashtag,
-        men: men,
-        women: women,
-        other: 0,
-        pie_id: pie_id,
-        pie_url: pie_url
-      });
-
-      req.session.lastCreated = pie_url;
-      return res.redirect('/plot/' + pie_id);
+    // Create a database entry for this pie_id
+    var plotRef = firebaseDatastore.child('plots/'+pie_id);
+    // And store the data in it
+    var timestamp = new Date().toString();
+    plotRef.set({
+      timestamp: timestamp,
+      session_text: session_text,
+      hashtag: hashtag,
+      men: men,
+      women: women,
+      other: 0,
+      pie_id: pie_id,
+      pie_url: pie_url
     });
+
+    req.session.lastCreated = pie_url;
+    return res.redirect('/plot/' + pie_id);
   });
 });
 

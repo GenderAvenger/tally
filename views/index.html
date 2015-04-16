@@ -18,6 +18,15 @@
       </div>
       <div class="row">
         <form id="tally_form" action="report" method="post" role="form" class="form-horizontal">
+          {% if error.hashtag %}
+          <div class="form-group">
+            <div class="error">
+              <div class="col-sm-offset-3 col-sm-6">
+                Please enter a valid hashtag (max characters: 20)
+              </div>
+            </div>
+          </div>
+          {% endif %}
           <div class="form-group">
             <label class="control-label col-sm-3" for="hashtag">Hashtag</label>
             <div class="col-sm-6">
@@ -52,22 +61,6 @@
           </div>
 
           <div id="preview"></div>
-
-          {% if error.recaptcha %}
-          <div class="error">
-            <div class="col-sm-offset-3 col-sm-6">
-              <h3 style="color:red;">Please Try Again</h3>
-            </div>
-          </div>
-          {% endif %}
-          {% if not didRecaptcha %}
-
-          <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-6">
-              <div class="g-recaptcha" data-sitekey="{{recaptcha_public_key}}"></div>
-            </div>
-          </div>
-          {% endif %}
 
           <div class="form-group">
             <div class="col-sm-offset-3 col-sm-6">
