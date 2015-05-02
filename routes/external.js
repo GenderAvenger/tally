@@ -53,10 +53,11 @@ app.post('/report', function (req, res, next) {
       hashtag = req.body.hashtag;
 
   var hashPattern = new RegExp(/^\#\S{1,20}$/);
+  var sessionPattern = new RegExp(/^.{0,40}$/);
 
 
   // TODO - make validation DRY
-  if ((!isInt(men) || men < 0) || (!isInt(women) || women < 0) || !_.isString(session_text) || !hashtag.match(hashPattern)) {
+  if ((!isInt(men) || men < 0) || (!isInt(women) || women < 0) || !_.isString(session_text) || !hashtag.match(hashPattern) || !session_text.match(sessionPattern)) {
     // Send the report page back down
     // Really, this should be handled directly by javascript in the page
     // Put by posting to /report, the user at least doesn't see a URL change
@@ -65,11 +66,12 @@ app.post('/report', function (req, res, next) {
       men: req.body.men,
       women: req.body.women,
       hashtag: req.body.hashtag,
+      session_text: req.body.session_text,
       error: {
         men: !isInt(men) || men < 0,
         women: !isInt(women) || women < 0 ,
         hashtag: !hashtag.match(hashPattern),
-        session_text: !_.isString(session_text)
+        session_text: !_.isString(session_text) || !session_text.match(sessionPattern)
       }
     })
   }

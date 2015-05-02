@@ -22,7 +22,16 @@
           <div class="form-group">
             <div class="error">
               <div class="col-sm-offset-3 col-sm-6">
-                Please enter a valid #hashtag (max characters: 20)
+                Oops! Your hashtag is too long or has spaces. (Max characters: 20, no spaces allowed)
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          {% if error.session_text %}
+          <div class="form-group">
+            <div class="error">
+              <div class="col-sm-offset-3 col-sm-6">
+                Oops! Your context is too long. (max characters: 40)
               </div>
             </div>
           </div>
