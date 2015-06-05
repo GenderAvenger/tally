@@ -4,6 +4,13 @@
   {% include "shared/header.html" %}
 
   <body>
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@genderavenger">
+    <meta name="twitter:title" content="Gender at {{ hashtag }}">
+    <meta name="twitter:description" content="{{proportion_women}} and {{proportion_men}} were counted at {{hashtag}}. Learn more at GenderAvenger Tally">
+    <meta name="twitter:image" content="{{pie}}">
+
     <!-- Facebook JS SDK -->
     <div id="fb-root"></div>
     <script src='/js/lib/facebook_connect.js' type="text/javascript"></script>
