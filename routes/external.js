@@ -39,11 +39,6 @@ app.get('/report', function (req, res, next) {
   });
 });
 
-// Testing Timeouts
-app.get('/timeout',function() {
-  return;
-});
-
 app.post('/report', function (req, res, next) {
 
   // Helper function
