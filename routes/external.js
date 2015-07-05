@@ -106,7 +106,7 @@ app.post('/report', function (req, res, next) {
     // Create a database entry for this pie_id
     var plotRef = firebaseDatastore.child('plots/'+pie_id);
     // And store the data in it
-    var timestamp = new Date().toString();
+    var timestamp = new Date().getTime();
     plotRef.set({
       timestamp: timestamp,
       session_text: session_text,
