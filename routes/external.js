@@ -119,6 +119,8 @@ app.post('/report', function (req, res, next) {
       pie_url: pie_url
     });
 
+    plotRef.setPriority(timestamp.getTime());
+
     req.session.lastCreated = pie_url;
     return res.redirect('/plot/' + pie_id);
   });
