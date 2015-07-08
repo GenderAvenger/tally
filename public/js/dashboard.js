@@ -5,6 +5,7 @@ $(function() {
 
   var renderCharts = function(newCharts) {
     var keys = Object.keys(newCharts);
+    keys = keys.reverse();
     for(var x in keys) {
       var chartCode = keys[x];
       var chart = newCharts[chartCode];
