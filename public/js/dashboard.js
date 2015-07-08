@@ -132,8 +132,7 @@ $(function() {
 
   }
 
-  setInterval(loadNew, 30000);
-  //setInterval(loadOld, 5000);
+  //setInterval(loadNew, 30000);
   loadOld();
 
   $timeline = $("#timeline");
