@@ -108,8 +108,8 @@ app.post('/report', function (req, res, next) {
     // And store the data in it
     var timestamp = new Date();
     plotRef.set({
-      timestamp: timestamp,
-      "unicode-timestamp": timestamp,
+      timestamp: timestamp.toString(),
+      "unicode-timestamp": timestamp.getTime(),
       session_text: session_text,
       hashtag: hashtag,
       men: men,
