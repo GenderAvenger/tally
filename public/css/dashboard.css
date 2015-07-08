@@ -1,0 +1,84 @@
+* {
+  margin: 0px; padding: 0px;
+}
+
+body {
+  background: #ECCD6B;
+  font-family: arial;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+#timeline {
+  width: 80%;
+  margin: auto;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.date {
+  display: inline-block;
+  width: 180px;
+  margin: 10px;
+  white-space: normal;
+    vertical-align:top;
+}
+.date h2 {
+  text-align: center;
+  font-family: arial;
+  padding: 10px;
+  border-bottom: 3px solid white;
+}
+
+.hash {
+  margin-bottom: 20px;
+  background: #FDDE7C;
+  padding: 10px;
+}
+.hash .title {
+  overflow: auto;
+  display: block;
+  font-size: 20px;
+  font-weight: normal;
+  text-align: center;
+  border-bottom: 2px dashed #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.chart {}
+.chart h4 {
+  text-align: center;
+  min-height: 2em;
+  padding: 5px;
+}
+.chart .chart-image {
+  display: block;
+  width: 140px;
+  margin: auto;
+}
+.chart .chart-stats {
+  margin: auto;
+  width: 50px;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.chart .chart-stats .twitter {
+  display: block;
+  background-image: url('../img/twitter.png');
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center top;
+  height: 25px;
+  text-align: center;
+  padding-top: 25px;
+}
+
