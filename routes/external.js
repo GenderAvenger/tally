@@ -99,7 +99,7 @@ app.post('/report', function (req, res, next) {
     if (error) {
       return next(error);
     }
-    if(!(id in data)) {
+    if(!("id" in data)) {
       return next(data);
     }
 
