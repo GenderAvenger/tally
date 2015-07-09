@@ -361,8 +361,11 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
             // upload that local file to imgur
             // You need to set this value yourself in a file called 'creds.yaml' in the root folder
             imgur.setClientID(process.env['IMGUR_API_KEY']);
-            imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response){
-              return callback(error, response.data);
+            imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+              if(error)
+                return callback(error,null);
+              else
+                return callback(error, response.data);
             });
           }
         });

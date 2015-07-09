@@ -55,11 +55,24 @@ app.use(cookieSession({
 
 // Load static files from /public
 app.use(express.static(__dirname + '/public'));
+
 // Set up logging middleware (after static so we don't log static file requests)
 app.use(morgan('dev'));
 
 // Prepare the routes
 require('./routes')
+
+// Handle 404
+app.use(function(req, res) {
+   res.send("We couldn't find that page", 404);
+});
+
+// Handle 500
+app.use(function(error, req, res, next) {
+   res.send('Sorry!  Something went wrong.', 500);
+});
+
+
 
 app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'), function(){
