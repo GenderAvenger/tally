@@ -99,6 +99,10 @@ app.post('/report', function (req, res, next) {
     if (error) {
       return next(error);
     }
+    if(!(id in data)) {
+      return next(data);
+    }
+
 
     pie_id = data.id;
     pie_url = data.link;
