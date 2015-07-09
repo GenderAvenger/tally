@@ -62,16 +62,12 @@ app.use(morgan('dev'));
 // Prepare the routes
 require('./routes')
 
-// Handle 404
-app.use(function(req, res) {
-   res.send("We couldn't find that page", 404);
-});
-
 // Handle 500
 app.use(function(error, req, res, next) {
-   res.send('Sorry!  Something went wrong.', 500);
-});
 
+  res.status(500);
+  res.render('500.html', {});
+});
 
 
 app.set('port', process.env.PORT || 3000);
