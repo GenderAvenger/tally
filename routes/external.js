@@ -376,7 +376,7 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
                   if('Location' in data && 'ETag' in data) {
                     return callback(null, {
                       link: data.Location,
-                      id: data.ETag
+                      id: data.ETag.slice(1,-1)
                     });
                   }
                   return callback(error,null);
