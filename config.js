@@ -18,4 +18,6 @@ if (process.env.NODE_ENV == 'localDevelopment') {
   set('MANDRILL_USERNAME', creds['mandrillUsername']);
   set('ADMIN_EMAIL', creds['adminEmail']);
   set('NEW_RELIC_LICENSE_KEY', creds['newRelicLicenseKey']);
+  set('AWS_SECRET', creds['awsSecret']);
+  set('AWS_ID', creds['awsId']);
 }

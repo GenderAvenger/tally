@@ -12,7 +12,8 @@ var quiche = require('quiche'),
     app = require('../server').app,
     querystring = require('querystring'),
     nodemailer = require('nodemailer'),
-    firebaseDatastore = require('../server').firebaseDatastore;
+    firebaseDatastore = require('../server').firebaseDatastore,
+    AWS = require('aws-sdk');
 
 
 // Set up nodemailer's transporter
@@ -366,8 +367,21 @@ function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback
             // You need to set this value yourself in a file called 'creds.yaml' in the root folder
             imgur.setClientID(process.env['IMGUR_API_KEY']);
             imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
-              if(error)
-                return callback(error,null);
+              if(error || !response.data) {
+                AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
+
+                var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
+                var body = fs.createReadStream(path.join(__dirname, '../' + card_filename));
+                s3obj.upload({Body: body}, function(err, data) {
+                  if('Location' in data && 'ETag' in data) {
+                    return callback(null, {
+                      link: data.Location,
+                      id: data.ETag
+                    });
+                  }
+                  return callback(error,null);
+                });
+              }
               else
                 return callback(error, response.data);
             });
