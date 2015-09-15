@@ -95,10 +95,27 @@ $(function() {
             .appendTo($targetStats)
           $chart.data("twitter", data.count)
         })
+
+        $.ajax("http://api.facebook.com/restserver.php?method=links.getStats&urls="+encodeURIComponent("http://app.genderavenger.com/plot/" + chartCode)+"&format=json", {
+          dataType: "jsonp",
+          method: "GET"
+        }).done(function(data) {
+          var total_count = 0;
+          if(data.length >0)
+            total_count = data[0].total_count;
+
+          var $chartStats_facebook = $("<a>")
+            .attr("href", "https://facebook.com/search?q=" + encodeURIComponent("http://app.genderavenger.com/plot/" + targetChart.pie_id))
+            .attr("target", "_blank")
+            .addClass("facebook")
+            .html(total_count)
+            .appendTo($targetStats)
+          $chart.data("facebook", total_count)
+        })
+
       })()
     }
   }
-
 
   var loadOldActive = false;
   var loadOld = function() {
@@ -117,7 +134,7 @@ $(function() {
       .done(function(data) {
         renderCharts(data);
         loadOldActive = false;
-        checkScroll();
+        setTimeout(checkScroll, 1000);
       });
     tailTime = newTailTime;
   }
@@ -132,13 +149,12 @@ $(function() {
 
   }
 
-  //setInterval(loadNew, 30000);
   loadOld();
 
   $timeline = $("#timeline");
   var checkScroll = function() {
-    if($timeline[0].scrollWidth - $timeline.scrollLeft() - 1 == $timeline.outerWidth()) {
-      console.log("BOOP");
+    if($timeline[0].scrollWidth - $timeline.scrollLeft() - 1 <= $timeline.outerWidth() ||
+       $timeline[0].scrollWidth < $(document).width()) {
       loadOld();
     }
   };

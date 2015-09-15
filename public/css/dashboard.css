@@ -66,19 +66,34 @@ a {
 }
 .chart .chart-stats {
   margin: auto;
-  width: 50px;
+  width: 70px;
   margin-bottom: 20px;
   font-size: 22px;
+  position: relative;
 }
 
 .chart .chart-stats .twitter {
-  display: block;
+  display: inline-block;
   background-image: url('../img/twitter.png');
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center top;
   height: 25px;
+  width: 25px;
   text-align: center;
   padding-top: 25px;
+}
+
+.chart .chart-stats .facebook {
+  display: inline-block;
+  background-image: url('../img/facebook.png');
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center top;
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  padding-top: 25px;
+  margin: 10px;
 }
 
