@@ -12,13 +12,20 @@ var quiche = require('quiche'),
     app = require('../server').app,
     querystring = require('querystring'),
     nodemailer = require('nodemailer'),
-    sparkPostTransport = require('nodemailer-sparkpost-transport'),
     firebaseDatastore = require('../server').firebaseDatastore,
     AWS = require('aws-sdk');
 
 
 // Set up nodemailer's transporter
-var email_transporter = nodemailer.createTransport(sparkPostTransport());
+var email_transporter = nodemailer.createTransport({
+    host: process.env['SMTP_HOST'],
+    port: 465,
+    secure: true, // use SSL
+    auth: {
+        user: process.env['SMTP_USER'],
+        pass: process.env['SMTP_PASSWORD']
+    }
+});
 
 // Main route (aliases /report)
 app.get('/', function (req, res, next) {
