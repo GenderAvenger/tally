@@ -12,18 +12,13 @@ var quiche = require('quiche'),
     app = require('../server').app,
     querystring = require('querystring'),
     nodemailer = require('nodemailer'),
+    sparkPostTransport = require('nodemailer-sparkpost-transport'),
     firebaseDatastore = require('../server').firebaseDatastore,
     AWS = require('aws-sdk');
 
 
 // Set up nodemailer's transporter
-var email_transporter = nodemailer.createTransport({
-    service: 'Mandrill',
-    auth: {
-        user: process.env['MANDRILL_USERNAME'],
-        pass: process.env['MANDRILL_APIKEY']
-    }
-});
+var email_transporter = nodemailer.createTransport(sparkPostTransport());
 
 // Main route (aliases /report)
 app.get('/', function (req, res, next) {
