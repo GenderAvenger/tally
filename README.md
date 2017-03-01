@@ -1,15 +1,28 @@
-even-steven
+Gender Avenger Tally
 ===========
 
-push gender equality
-
-User provides a conference name and hashtag as well as the breakdown of male and female speakers.
-
-We return a shareable pie chart to illustrate their point.
-
-Requires imagemagick, ghostscript
+This application is a tool that makes it easy to create and share visual commentary
+on observed gender diversity in any setting.  Users submit information through a form
+which is then used to generate a visualization.  That visualization can then be shared
+through email or social media.
 
 
-## Temp Notes
+## Prerequisites
+This code base is written in Node.JS and is designed to be deployable via Heroku.
 
-- You need to install ImageMagick
+It requires imagemagick in order to generate visualizations.
+
+## Setting up (dev)
+
+1. Make sure baseline project prerequisites are installed (Node.js, Git)
+
+2. Install Imagemagick (homebrew, apt, or from binaries)
+
+3. Clone the repository
+
+4. Create and populate the credentials file: `cp creds.yaml.template creds.yaml`
+
+
+## Deploying (prod)
+
+(Insert Heroku deployment instructions here)
