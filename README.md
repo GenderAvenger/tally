@@ -22,6 +22,7 @@ It requires imagemagick in order to generate visualizations.
 
 4. Create and populate the credentials file: `cp creds.yaml.template creds.yaml`
 
+5. Install npm dependencies `npm install`
 
 ## Deploying (prod)
 
