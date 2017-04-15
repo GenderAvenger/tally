@@ -48,9 +48,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 // Set up what we need for cookie sessions (used to avoid re-showing)
-app.use(cookieParser('equalityrules'));
+app.use(cookieParser(process.env['COOKIE_SECRET']));
 app.use(cookieSession({
-  keys: ['equalityrules']
+  keys: [process.env['COOKIE_SECRET']]
 }));
 
 // Load static files from /public

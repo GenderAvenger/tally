@@ -3,128 +3,47 @@
   <!-- Head -->
   {% include "shared/header.html" %}
 
-  <body>
-
-    <!-- Facebook JS SDK -->
-    <div id="fb-root"></div>
-    <script src='/js/lib/facebook_connect.js' type="text/javascript"></script>
-
-    {% include "shared/navbar.html" %}
-
-    <div id="chart-title">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <h3>Gender at {{ hashtag }}</h3>
+  <body class="thankyou">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-offset-3 col-sm-6 text-center">
+          <div id="logo">
+            <a href="/"><img src="../img/wire_logo.png" alt="Gender Avenger"/></a>
           </div>
         </div>
       </div>
-    </div>
-    <div id="results" class="container root">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-offset-2 col-sm-8">
-            <img src="{{pie}}" id="pie-chart" class="img-responsive"/>
-          </div>
+      <div class="row">
+        <div class="col-xs-offset-2 col-xs-8 text-center">
+          <h1>Thanks for Sharing</h1>
         </div>
-        <div class="row share-buttons">
-          <div id="fb-share-button" class="col-xs-offset-0 col-xs-6 text-right">
-            <a href="https://www.facebook.com/sharer/sharer.php?u={{url_to_share}}&t=Share%20on%20Facebook"
-               onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
-               target="_blank" title="Share on Facebook"><img src="/img/facebook.png"></a>
-          </div>
-          <div id="twitter-share-button" class="col-xs-6 text-left">
-            <a href="https://twitter.com/intent/tweet?text=Check out the gender ratio at {% if has_hash %}%23{% endif %}{{hashtag_without_hash}} {{url_to_share}} via %40GenderAvenger %23genderavenger"
-               onclick="javascript:window.open(this.href, '', 'menubar=yes,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
-               target="_blank" title="Share on Twitter"><img src="/img/tweet.png"></a>
-          </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-3 col-xs-6 text-center">
+          <p class="instructions">Women as equals will become the norm when it is the norm.</p>
         </div>
-        <div class="row share-buttons">
-          <div id="make-button" class="col-xs-offset-0 col-xs-6 text-right">
-            <a href="http://app.genderavenger.com/"><img src="/img/makenewchart.png"></a>
-          </div>
-          {% if report_is_new == 1 %}
-          <div id="anonymous-button" class="col-xs-6 text-left">
-            <a href=""><img src="/img/anonymous.png"></a>
-            <div id="anonymous-confirmation"><img src="/img/requestsent.png"></div>
-          </div>
-          <script type="text/javascript">
-            $(function() {
-              // Enable the anonymous send button
-              $("#anonymous-button>a").click(function() {
-                $(this).hide();
-                $("#anonymous-confirmation").show();
-                setTimeout(function() {
-                  $("#anonymous-confirmation").fadeOut(1500);
-                }, 200);
-
-                $.ajax("/anonymous/{{pie_id}}", {
-                  method: "post",
-                })
-                return false;
-              });
-            })
-          </script>
-
-          {% endif %}
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-3 col-xs-6 text-center">
+          <div class="button">Donate $3</div>
         </div>
-        <div class="row nomobile">
-          <div id="disclaimer" class="col-sm-offset-2 col-sm-8">
-            <p><em>This chart was created by a GenderAvenger Tally user.</em></p>
-          </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-2 col-xs-8 text-center">
+          <a href="/"><div class="button">Create Another</div></a>
         </div>
-        <!-- TODO: Clean up embed code experience -->
-        <div class="row nomobile">
-          <div id="embed-share" class="col-sm-offset-2 col-sm-8">
-            <h4>Copy code to embed this report</h4>
-            <textarea cols="40" rows="2"><a id="genderavenger-tally" href="{{url_to_share}}" data-width="", data-height="" data-style="" data-tally-id="{{pie_id}}" class="genderavenger-tally">{{proportion_women}} and {{proportion_men}} were counted at {{session_text}} {{hashtag}}. Learn more at GenderAvenger Tally</a><script type="text/javascript">!function(d,s,id){var e,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'http';if(!d.getElementById(id)){e=d.createElement(s);e.id=id; e.src=p + "://{{host}}/js/lib/embed.js";f.parentNode.insertBefore(e,f);}}(document,"script","genderavenger-embed");</script></textarea>
-          </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-3 col-xs-2 col-md-offset-4 col-md-1 text-right">
+          <a class="social" href="https://www.facebook.com/sharer/sharer.php?u=http://app.genderavenger.com/share/{{ pie_id }}" title="Share on Facebook" target="_blank"><img src="../img/social_fb.png"/>
         </div>
-        <div class="row nomobile">
-          <div class="col-sm-offset-2 col-sm-8">
-            <hr>
-          </div>
+        <div class="col-xs-2 col-md-2 text-center">
+          <a class="social" href="https://twitter.com/intent/tweet?text=http://app.genderavenger.com/share/{{ pie_id }} via %40GenderAvenger %23genderavenger %23test" title="Share on Twitter" target="_blank"><img src="../img/social_twitter.png"/></a>
         </div>
-
-        {% if report_is_new == 1 %}
-        <div class="row nomobile">
-          <div id="author-instructions" class="col-sm-offset-2 col-sm-8">
-            <p>Now that you've created a visualization, here's what you can do next:</p>
-            <p>
-              <ul>
-                <li>Approach one of the conference organizers and discuss your concerns.</li>
-                <li>Let some other folks know what you are doing, so they can join and support you in these conversations.</li>
-                <li>What about those times when you look up and say, "Wow, look at all the women!"? Share positive charts, too, and reward the organizers.</li>
-              </ul>
-            </p>
-            <hr>
-          </div>
-        </div>
-        {% endif %}
-
-        <div class="row nomobile">
-          <div id="followup" class="col-sm-offset-2 col-sm-8">
-            <h2>Are You the Organizer?</h2>
-            <p>See our <a href="http://www.genderavenger.com/how-to-do-better/">How To Do Better</a> page.</p>
-
-            <h2>Correct the Record</h2>
-            <p>We recognize that gender is not simply a binary world of "male" and "female". At the same time, we don't feel comfortable inviting the public to guess as to whether or not a speaker identifies as transgender or "they". . If you believe that this chart erroneously represents someone's gender, please let us know at <a href="javascript:emailCurrentPage(false)">genderavengershares@googlegroups.com</a> and we'll correct the record.</p>
-          </div>
-        </div>
-        <div class="row nomobile">
-          <div class="col-sm-offset-2 col-sm-8">
-            <h2>Discussion</h2>
-            <div id="disqus_thread"></div>
-          </div>
+        <div class="col-xs-2 col-md-1 text-left">
+          <a class="social" href="mailto:?cc=gina@genderavenger.com&subject=Hello%20again&body=I thought you might want to see this gender breakdown: http://app.genderavenger.com/share/{{ pie_id }}" title="Share by Email"><img src="../img/social_email.png"/></a>
         </div>
       </div>
     </div>
-
-    <!-- Footer -->
-    {% include "shared/footer.html" %}
-
-    <!-- DISQUS stuff -->
-    <script type="text/javascript" src="/js/lib/disqus.js"></script>
     <script type="text/javascript" src="/js/chart_events.js"></script>
 
   </body>

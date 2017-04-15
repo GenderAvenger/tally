@@ -13,8 +13,10 @@ var quiche = require('quiche'),
     querystring = require('querystring'),
     nodemailer = require('nodemailer'),
     firebaseDatastore = require('../server').firebaseDatastore,
-    AWS = require('aws-sdk');
+    AWS = require('aws-sdk'),
+    multer  = require('multer');
 
+var upload = multer({ dest: 'uploads/' })
 
 // Set up nodemailer's transporter
 var email_transporter = nodemailer.createTransport({
@@ -27,22 +29,88 @@ var email_transporter = nodemailer.createTransport({
     }
 });
 
-// Main route (aliases /report)
+// Starting page when opening the app
 app.get('/', function (req, res, next) {
-  res.render('report.html', {
-    title: 'Report',
-    didRecaptcha: req.session.didRecaptcha
+
+  // Has the user been here before?
+  var is_returning_visitor = req.cookies.has_visited;
+  res.cookie('has_visited', true);
+
+  if(is_returning_visitor) {
+    return res.redirect('form');
+  } else {
+    return res.redirect('intro');
+  }
+});
+
+app.get('/intro', function (req, res, next) {
+  res.render('intro.html', {
+    title: 'Introduction',
   });
 });
 
-app.get('/report', function (req, res, next) {
-  res.render('report.html', {
-    title: 'Report',
-    didRecaptcha: req.session.didRecaptcha
+app.get('/form', function (req, res, next) {
+  res.render('form.html', {
+    title: 'Form',
+    men: req.session.men,
+    women: req.session.women,
+    hashtag: req.session.hashtag,
+    session_text: req.session.session_text
   });
 });
 
-app.post('/report', function (req, res, next) {
+app.get('/choice', function (req, res, next) {
+  res.render('choice.html', {
+    title: 'Photo or Chart?'
+  });
+});
+
+app.get('/photo', function (req, res, next) {
+  res.render('photo.html', {
+    title: 'Use a Photo',
+  });
+});
+
+app.get('/share/:id', function (req, res, next) {
+
+  // Get the chart
+  var pie_id = req.params.id;
+  var plotRef = firebaseDatastore.child('plots/'+pie_id);
+
+  plotRef.once('value', function (snapshot) {
+    // Firebase has a weird syntax / system. This is how we load the data in
+    var refVal = snapshot.val();
+    if (!refVal) {
+      return res.redirect('/');
+    }
+    var pie_url = refVal.pie_url;
+
+    // Check if the user just made this chart
+    var report_is_new = req.session.lastCreated == pie_url;
+    req.session.lastCreated = '';
+
+    // If the pie_url is missing, we need to regenerate it
+    if (!pie_url) {
+      // Regenerate the URL
+    }
+    return res.render('share.html', {
+      title: 'View Tally',
+      pie: pie_url,
+      pie_id: pie_id,
+      hashtag: refVal.hashtag,
+      session_text: refVal.session_text,
+      report_is_new: report_is_new
+    });
+  })
+});
+
+app.get('/thankyou/:id', function (req, res, next) {
+  res.render('thankyou.html', {
+    title: 'Report'
+  });
+});
+
+app.post('/form', function (req, res, next) {
 
   // Helper function
   var isInt = function (n) {
@@ -55,17 +123,21 @@ app.post('/report', function (req, res, next) {
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
-  var hashPattern = new RegExp(/^\#\S{1,20}$/);
-  var sessionPattern = new RegExp(/^.{0,40}$/);
-
+  var hashPattern = new RegExp(/^\#?\S{1,20}$/);
+  var sessionPattern = new RegExp(/^.{0,200}$/);
 
   // TODO - make validation DRY
-  if ((!isInt(men) || men < 0) || (!isInt(women) || women < 0) || !_.isString(session_text) || !hashtag.match(hashPattern) || !session_text.match(sessionPattern)) {
+  if ((!isInt(men) || men < 0)
+   || (!isInt(women) || women < 0)
+   || !_.isString(session_text)
+   || !hashtag.match(hashPattern)
+   || !session_text.match(sessionPattern)) {
     // Send the report page back down
-    // Really, this should be handled directly by javascript in the page
-    // Put by posting to /report, the user at least doesn't see a URL change
+    // This should also handled directly by javascript in the page
+    // Put by posting to, the user at least doesn't see a URL change
     // if we need to, re-render it with errors
-    return res.render('report.html', {
+    return res.render('form.html', {
+      title: 'Tally Form',
       men: req.body.men,
       women: req.body.women,
       hashtag: req.body.hashtag,
@@ -79,14 +151,13 @@ app.post('/report', function (req, res, next) {
     })
   }
 
-  // Handle Recaptcha
-  // See https://github.com/zeMirco/simple-recaptcha for instructions / steps
-  // You need to set this value yourself in a file called 'creds.yaml' in the root folder
-  // Mark this user as being not a robot
-  res.cookie('ishuman', 'true');
+  // This data is valid, so store it to the session and move along
+  req.session.men = men;
+  req.session.women = women;
+  req.session.session_text = session_text;
+  req.session.hashtag = hashtag;
 
-  // Since we're all good, generate and show the pie chart
-  req.session.didRecaptcha = true;
+  return res.redirect('choice');
 
   // Default to zero individuals with a non-binary gender
   var pie = generatePieChart(men, women, 0);
@@ -133,98 +204,422 @@ app.post('/report', function (req, res, next) {
   });
 });
 
-app.get('/plot/:id', function (req, res, next) {
-  // Get the pie chart
-  var pie_id = req.params.id;
-  var plotRef = firebaseDatastore.child('plots/'+pie_id);
-  plotRef.once('value', function (snapshot) {
-    // Firebase has a weird syntax / system. This is how we load the data in
-    var refVal = snapshot.val();
-    if (!refVal) {
-      return res.redirect('/');
-    }
-    var pie_url = refVal.pie_url;
-    var report_is_new = req.session.lastCreated == pie_url;
-    req.session.lastCreated = ''; // Clear this out so repeat visits don't show that text
+app.post('/chart', function (req, res, next) {
 
-    // If the pie_url is missing (meaning we need to regenerate it), generate the pie chart and re-upload to imgur
-    // This is so that if we want to "correct the record" all we need to do is update the numbers in firebase
-    // and delete the pie_url. Then the next person to visit the url will cause the chart to be regenerated
-    var host = req.get('host');
-    var fullUrl = req.protocol + '://' + host + req.originalUrl;
-    var hashtag = refVal.hashtag;
+  var file_id = uuid.v4();
+  var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
+  var card_filename = "assets/chartgen/" + file_id + "_card.png";
 
-    if (!pie_url) {
-      var pie = generatePieChart(refVal.men, refVal.women, refVal.other);
-      var proportionWomen = (refVal.women / (refVal.men + refVal.women));
-      getMagickedImage(pie, hashtag, refVal.session_text, proportionWomen, function (error, data) {
-        if (error) {
+  var proportionWomen = req.session.women / (req.session.women + req.session.men);
+
+  var image_parameters = [];
+  image_parameters.push(
+    '-gravity', 'NorthWest'
+  );
+
+  image_parameters.push('-page', '+0+0','assets/base_background.png');
+  image_parameters.push('-page', '+0+0','assets/city_background_wire_logo.png');
+  image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
+
+  // Draw the chart
+  image_parameters.push(
+    '-fill', '#ff0000',
+    '-stroke', '#ff0000',
+    '-draw', 'circle 450,500 450,700'
+  );
+
+  if(proportionWomen > 0) {
+    var degrees = (proportionWomen * 360 + 90);
+    var radians = degrees * Math.PI / 180;
+    var x = 450 + 200 * Math.cos(radians);
+    var y = 500 + 200 * Math.sin(radians);
+    console.log(degrees);
+    image_parameters.push(
+      '-fill', '#F0D35A',
+      '-stroke', '#F0D35A',
+      '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+    );
+  }
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#F0D35A',
+    '-fill', '#F0D35A',
+    '-font', 'Arial',
+    '-pointsize', '30',
+    '-annotate', '+125+630', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
+  image_parameters.push(
+    '-gravity', 'NorthEast',
+    '-stroke', '#ff0000',
+    '-fill', '#ff0000',
+    '-font', 'Arial',
+    '-pointsize', '30',
+    '-annotate', '+125+630', req.session.men + ((req.session.men == 1)?" Man":" Men"));
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#fff',
+    '-fill', '#fff',
+    '-font', 'Arial',
+    '-pointsize', '30',
+    '-annotate', '+35+50', req.session.session_text);
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#fff',
+    '-fill', '#fff',
+    '-font', 'Arial',
+    '-pointsize', '30',
+    '-annotate', '+35+85', "#" + req.session.hashtag);
+
+  if( proportionWomen > .5 ) {
+    image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+35+160', "THE PRESENT (AND ");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+35+205', "FUTURE) ARE");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#F0D35A',
+      '-fill', '#F0D35A',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+330+205', "BRIGHT");
+  } else if ( proportionWomen > .3 ) {
+    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
+
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+35+160', "CLOUDY WITH A");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+35+205', "CHANCE OF ");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#FF0000',
+      '-fill', '#FF0000',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+300+205', "PATRIARCHY");
+
+  } else {
+    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+35+160', "A THUNDERSTORM OF");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+35+205', "GENDER");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#FF0000',
+      '-fill', '#FF0000',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+230+205', "INEQUALITY");
+  }
+
+  image_parameters.push(
+    '-layers', 'flatten', card_filename
+  );
+
+  // Create the tally
+  im.convert(image_parameters, function (err, stdout) {
+    if(err)
+      return next(err);
+
+    // Upload this local file to imgur
+    imgur.setClientID(process.env['IMGUR_API_KEY']);
+    imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+      if(error || !response.data) {
+        AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
+        var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
+        var body = fs.createReadStream(path.join(__dirname, '../' + card_filename));
+        s3obj.upload({Body: body}, function(err, data) {
+          if('Location' in data && 'ETag' in data) {
+
+            pie_url = data.Location;
+            pie_id = data.ETag.slice(1,-1);
+
+            storeChart(pie_id, {
+              "session_text": req.session.session_text,
+              "hashtag": req.session.hashtag,
+              "men": req.session.men,
+              "women": req.session.women,
+              "other": 0,
+              "pie_id": pie_id,
+              "pie_url": pie_url
+            });
+
+            req.session.lastCreated = pie_url;
+            return res.redirect('/share/' + pie_id);
+          }
           return next(error);
-        }
-        // Update the pie_url to the newly created plot
-        var pie_url = data.link;
-        plotRef.child('pie_url').set(pie_url);
-
-        return res.render('thankyou.html', {
-          title: 'Thank You',
-          pie: pie_url,
-          pie_id: pie_id,
-          host: host,
-          hashtag: hashtag,
-          session_text: refVal.session_text,
-          proportion_women: refVal.women,
-          proportion_men: refVal.men,
-          total_count: refVal.women + refVal.men,
-          url_to_share: fullUrl,
-          report_is_new: report_is_new,
-          hashtag_without_hash: hashtag.substr(0,1) == '#' ? hashtag.substring(1) : hashtag,
-          has_hash: hashtag.substr(0,1) == '#'
-        })
-      });
-    } else {
-      return res.render('thankyou.html', {
-        title: 'Thank You',
-        pie: pie_url,
-        pie_id: pie_id,
-        host: host,
-        hashtag: hashtag,
-        session_text: refVal.session_text,
-        proportion_women: refVal.women,
-        proportion_men: refVal.men,
-        total_count: refVal.women + refVal.men,
-        url_to_share: fullUrl,
-        report_is_new: report_is_new,
-        hashtag_without_hash: hashtag.substr(0,1) == '#' ? hashtag.substring(1) : hashtag,
-        has_hash: hashtag.substr(0,1) == '#'
-      });
-    }
-  })
-});
-
-app.get('/embed/:id', function (req, res, next) {
-  // Route that returns just the image, so that it can be embedded
-  // FIXME(nate): If the pie_url is missing, this will fail
-
-  // Get the pie chart from firebase
-  var pie_id = req.params.id;
-  var plotRef = firebaseDatastore.child('plots/'+pie_id);
-  plotRef.once('value', function (snapshot) {
-    var refVal = snapshot.val();
-    if (!refVal) {
-      return res.redirect('/');
-    }
-    var pie_url = refVal.pie_url;
-    var fullUrl = req.protocol + '://' + req.get('host') + "/plot/" + pie_id;
-    var hashtag = refVal.hashtag;
-    var session_text = refVal.session_text;
-    return res.render('embed.html', {
-      session_text: session_text,
-      pie: pie_url,
-      full_url: fullUrl,
-      hashtag: hashtag
+        });
+      }
+      else {
+        pie_url = response.link;
+        pie_id = response.id;
+        storeChart(pie_id, {
+          "session_text": req.session.session_text,
+          "hashtag": req.session.hashtag,
+          "men": req.session.men,
+          "women": req.session.women,
+          "other": 0,
+          "pie_id": pie_id,
+          "pie_url": pie_url
+        });
+        return res.redirect('/share/' + pie_id);
+      }
     });
   });
 });
+
+app.post('/photo', upload.single('photo'), function (req, res, next) {
+
+  // Prep the output files
+  var file_id = uuid.v4();
+  var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
+  var card_filename = "assets/chartgen/" + file_id + "_card.png";
+
+  // Set up the image pieces
+  im.resize({
+    srcPath: req.file.path,
+    dstPath: req.file.path + '_resized',
+    width:   900
+  }, function(err, stdout, stderr) {
+    if (err) throw err;
+
+    var proportionWomen = req.session.women / (req.session.women + req.session.men);
+
+
+      var image_parameters = [];
+      image_parameters.push(
+        '-gravity', 'NorthWest'
+      );
+
+      image_parameters.push('-page', '+0+0','assets/base_background.png');
+      image_parameters.push('-page', '+0+0',req.file.path + "_resized");
+      image_parameters.push('-page', '+0+0','assets/photo_logo.png');
+      image_parameters.push('-page', '+0+0','assets/photo_background.png');
+
+      // Draw the chart
+      image_parameters.push(
+        '-fill', '#ff0000',
+        '-stroke', '#ff0000',
+        '-draw', 'rectangle 50,790 850,840'
+      );
+
+      if(proportionWomen > 0) {
+        var right = 50 + 800 * proportionWomen;
+        image_parameters.push(
+          '-fill', '#F0D35A',
+          '-stroke', '#F0D35A',
+          '-draw', 'rectangle 50,790 ' + right + ',840'
+        );
+      }
+
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#F0D35A',
+        '-fill', '#F0D35A',
+        '-font', 'Arial',
+        '-pointsize', '24',
+        '-annotate', '+50+845', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
+      image_parameters.push(
+        '-gravity', 'NorthEast',
+        '-stroke', '#ff0000',
+        '-fill', '#ff0000',
+        '-font', 'Arial',
+        '-pointsize', '24',
+        '-annotate', '+50+845', req.session.men + ((req.session.men == 1)?" Man":" Men"));
+
+      var text = req.session.session_text + " #" + req.session.hashtag;
+
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#fff',
+        '-fill', '#fff',
+        '-font', 'Arial',
+        '-pointsize', '30',
+        '-annotate', '+50+640', text);
+
+      if( proportionWomen > .5 ) {
+        image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#fff',
+          '-fill', '#fff',
+          '-font', 'ArialB',
+          '-pointsize', '42',
+          '-annotate', '+50+685', "THE PRESENT (AND");
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#fff',
+          '-fill', '#fff',
+          '-font', 'ArialB',
+          '-pointsize', '42',
+          '-annotate', '+50+730', "FUTURE) ARE");
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#F0D35A',
+          '-fill', '#F0D35A',
+          '-font', 'ArialB',
+          '-pointsize', '42',
+          '-annotate', '+345+730', "BRIGHT");
+      } else if ( proportionWomen > .3 ) {
+        image_parameters.push('-page', '+620+470','assets/icon_cloudy.png');
+
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#fff',
+          '-fill', '#fff',
+          '-font', 'ArialB',
+          '-pointsize', '42',
+          '-annotate', '+50+685', "CLOUDY WITH A");
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#fff',
+          '-fill', '#fff',
+          '-font', 'ArialB',
+          '-pointsize', '42',
+          '-annotate', '+50+730', "CHANCE OF ");
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#FF0000',
+          '-fill', '#FF0000',
+          '-font', 'ArialB',
+          '-pointsize', '42',
+          '-annotate', '+310+730', "PATRIARCHY");
+
+      } else {
+        image_parameters.push('-page', '+620+470','assets/icon_thunder.png');
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#fff',
+          '-fill', '#fff',
+          '-font', 'ArialB',
+          '-pointsize', '42',
+          '-annotate', '+50+685', "A THUNDERSTORM OF");
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#fff',
+          '-fill', '#fff',
+          '-font', 'ArialB',
+          '-pointsize', '42',
+          '-annotate', '+50+730', "GENDER");
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#FF0000',
+          '-fill', '#FF0000',
+          '-font', 'ArialB',
+          '-pointsize', '42',
+          '-annotate', '+245+730', "INEQUALITY");
+      }
+
+      image_parameters.push(
+        '-layers', 'flatten', card_filename
+      );
+
+      // Create the tally
+      im.convert(image_parameters, function (err, stdout) {
+        if(err) {
+          return next(err);
+        } else {
+
+          // Upload this local file to imgur
+          imgur.setClientID(process.env['IMGUR_API_KEY']);
+          imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+            if(error || !response.data) {
+              AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
+              var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
+              var body = fs.createReadStream(path.join(__dirname, '../' + card_filename));
+              s3obj.upload({Body: body}, function(err, data) {
+                if('Location' in data && 'ETag' in data) {
+
+                  pie_url = data.Location;
+                  pie_id = data.ETag.slice(1,-1);
+
+                  storeChart(pie_id, {
+                    "session_text": req.session.session_text,
+                    "hashtag": req.session.hashtag,
+                    "men": req.session.men,
+                    "women": req.session.women,
+                    "other": 0,
+                    "pie_id": pie_id,
+                    "pie_url": pie_url
+                  });
+
+                  req.session.lastCreated = pie_url;
+                  return res.redirect('/share/' + pie_id);
+                }
+                return next(error,null);
+              });
+            }
+            else {
+              pie_url = response.link;
+              pie_id = response.id;
+              storeChart(pie_id, {
+                "session_text": req.session.session_text,
+                "hashtag": req.session.hashtag,
+                "men": req.session.men,
+                "women": req.session.women,
+                "other": 0,
+                "pie_id": pie_id,
+                "pie_url": pie_url
+              });
+              return res.redirect('/share/' + pie_id);
+            }
+          });
+        }
+      });
+  });
+});
+
+function storeChart(pie_id, data) {
+
+    // Create a database entry for this pie_id
+    var plotRef = firebaseDatastore.child('plots/' + pie_id);
+
+    // And store the data in it
+    var timestamp = new Date();
+    plotRef.set({
+      timestamp: timestamp.toString(),
+      "unicode-timestamp": timestamp.getTime(),
+      pie_id: pie_id
+    });
+
+    plotRef.set(data);
+    plotRef.setPriority(timestamp.getTime());
+
+    return plotRef;
+}
 
 app.post('/anonymous/:id', function (req, res, next) {
   // Route that will generate an email request to submit things anonymously
@@ -274,34 +669,6 @@ app.post('/anonymous/:id', function (req, res, next) {
   });
 });
 
-function verifyRecaptcha(privateKey, recaptchaResponse, callback) {
-  https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + privateKey + "&response=" + recaptchaResponse, function(res) {
-  var data = "";
-  res.on('data', function (chunk) {
-    data += chunk.toString();
-  });
-  res.on('end', function() {
-    try {
-      var parsedData = JSON.parse(data);
-      if (!parsedData.success) return callback(false);
-      callback(true);
-    } catch (e) {
-      callback(false);
-    }
-    });
-  });
-
-  // An object of options to indicate where to post to
-  var options = {
-      host: 'www.google.com',
-      path: '/recaptcha/api/siteverify',
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-      }
-  };
-}
-
 function generatePieChart (men, women, other) {
   // generate pie chart from google charts API
   var pie = new quiche('pie');
@@ -320,75 +687,3 @@ function generatePieChart (men, women, other) {
   }
   return pie;
 };
-
-function getMagickedImage (pie, hashtag, session_text, proportionWomen, callback) {
-  // Callback parameters are (error, data)
-  callback = callback || function () {}; // Null callback
-  //generate UUID for filenames
-  var file_id = uuid.v4();
-  //download the pie chart to a local file
-  var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
-  var card_filename = "assets/chartgen/" + file_id + "_card.png";
-  var background_asset = 'app-bg.png'; // default to hall of fame
-  var foreground_asset = 'app-star-transparentlayer.png';
-  if (proportionWomen < 0.4) { // 40%
-    foreground_asset = proportionWomen < 0.3 ? 'app-cloud-transparentlayer.png' : 'foreground-neutral.png';
-  }
-  var file = fs.createWriteStream(chart_filename);
-  var request = http.get(pie.getUrl(true).replace("https","http"), function(response) {
-    try {
-      response.pipe(file);
-    } catch(err) {
-      return callback(err, null);
-    }
-
-    if (session_text.charAt(0) === '@') {
-      session_text = '\\' + session_text;
-    }
-
-    // ONCE THE IMAGE IS DOWNLOADED
-    response.on('end', function () {
-      im.convert(['-gravity', 'north',
-                  '-stroke', '#333333',
-                  '-font', 'AvantGarde-Book',
-                  '-pointsize', '72',
-                  '-strokewidth', '1',
-                  '-annotate', '+0+10', hashtag,
-                  '-pointsize', '42',
-                  '-annotate', '+0+90', session_text,
-                  '-page', '+0+0', 'assets/' + background_asset, // Background
-                  '-page', '+0+0', 'assets/' + 'app-GAtitle-transparentlayer.png', // Branding at bottom
-                  '-page', '+230+290', chart_filename, // Chart
-                  '-page', '+0+0', 'assets/' + foreground_asset, // Foreground
-                  '-layers', 'flatten', card_filename],
-        function (err, stdout) {
-            if (err) {
-            return callback(err, null);
-          } else {
-            // upload that local file to imgur
-            // You need to set this value yourself in a file called 'creds.yaml' in the root folder
-            imgur.setClientID(process.env['IMGUR_API_KEY']);
-            imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
-              if(error || !response.data) {
-                AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
-
-                var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
-                var body = fs.createReadStream(path.join(__dirname, '../' + card_filename));
-                s3obj.upload({Body: body}, function(err, data) {
-                  if('Location' in data && 'ETag' in data) {
-                    return callback(null, {
-                      link: data.Location,
-                      id: data.ETag.slice(1,-1)
-                    });
-                  }
-                  return callback(error,null);
-                });
-              }
-              else
-                return callback(error, response.data);
-            });
-          }
-        });
-    });
-  });
-}

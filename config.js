@@ -20,4 +20,5 @@ if (process.env.NODE_ENV == 'localDevelopment') {
   set('NEW_RELIC_LICENSE_KEY', creds['newRelicLicenseKey']);
   set('AWS_SECRET', creds['awsSecret']);
   set('AWS_ID', creds['awsId']);
+  set('COOKIE_SECRET', creds['cookieSecret']);
 }
