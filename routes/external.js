@@ -151,6 +151,10 @@ app.post('/form', function (req, res, next) {
     })
   }
 
+  // Add a hash tag if there isn't one
+  if(if(hashtag.charAt(0) != "#"))
+    hashtag = "#" + hashtag;
+
   // This data is valid, so store it to the session and move along
   req.session.men = men;
   req.session.women = women;
@@ -270,7 +274,7 @@ app.post('/chart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '30',
-    '-annotate', '+35+85', "#" + req.session.hashtag);
+    '-annotate', '+35+85', req.session.hashtag);
 
   if( proportionWomen > .5 ) {
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
@@ -460,7 +464,7 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
         '-pointsize', '24',
         '-annotate', '+50+845', req.session.men + ((req.session.men == 1)?" Man":" Men"));
 
-      var text = req.session.session_text + " #" + req.session.hashtag;
+      var text = req.session.session_text + " " + req.session.hashtag;
 
       image_parameters.push(
         '-gravity', 'NorthWest',
