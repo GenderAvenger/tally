@@ -152,7 +152,7 @@ app.post('/form', function (req, res, next) {
   }
 
   // Add a hash tag if there isn't one
-  if(if(hashtag.charAt(0) != "#"))
+  if(hashtag.charAt(0) != "#")
     hashtag = "#" + hashtag;
 
   // This data is valid, so store it to the session and move along
