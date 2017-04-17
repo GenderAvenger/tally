@@ -1,6 +1,8 @@
 node_modules
 *.swp
 assets/chartgen/*.png
+uploads/*
+!uploads/.gitkeep
 creds.yaml
 .env
 newrelic_agent.log
