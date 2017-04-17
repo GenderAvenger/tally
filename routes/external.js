@@ -130,8 +130,10 @@ app.post('/form', function (req, res, next) {
   if ((!isInt(men) || men < 0)
    || (!isInt(women) || women < 0)
    || !_.isString(session_text)
-   || !hashtag.match(hashPattern)
-   || !session_text.match(sessionPattern)) {
+   || !session_text.match(sessionPattern)
+   || !_.isString(hashtag)
+   || (hashtag != ""
+    && !hashtag.match(hashPattern))) {
     // Send the report page back down
     // This should also handled directly by javascript in the page
     // Put by posting to, the user at least doesn't see a URL change
@@ -145,14 +147,15 @@ app.post('/form', function (req, res, next) {
       error: {
         men: !isInt(men) || men < 0,
         women: !isInt(women) || women < 0 ,
-        hashtag: !hashtag.match(hashPattern),
+        hashtag: !_.isString(session_text) || (hashtag != "" && !hashtag.match(hashPattern)),
         session_text: !_.isString(session_text) || !session_text.match(sessionPattern)
       }
     })
   }
 
   // Add a hash tag if there isn't one
-  if(hashtag.charAt(0) != "#")
+  if(hashtag != ""
+  && hashtag.charAt(0) != "#")
     hashtag = "#" + hashtag;
 
   // This data is valid, so store it to the session and move along
