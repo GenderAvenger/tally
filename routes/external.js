@@ -269,7 +269,7 @@ app.post('/chart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '30',
-    '-annotate', '+35+50', req.session.session_text);
+    '-annotate', '+35+160', req.session.session_text);
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -277,7 +277,7 @@ app.post('/chart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '30',
-    '-annotate', '+35+85', req.session.hashtag);
+    '-annotate', '+35+195', req.session.hashtag);
 
   if( proportionWomen > .5 ) {
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
@@ -287,21 +287,21 @@ app.post('/chart', function (req, res, next) {
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '42',
-      '-annotate', '+35+160', "THE PRESENT (AND ");
+      '-annotate', '+35+20', "THE PRESENT (AND ");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '42',
-      '-annotate', '+35+205', "FUTURE) ARE");
+      '-annotate', '+35+65', "FUTURE) ARE");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#F0D35A',
       '-fill', '#F0D35A',
       '-font', 'ArialB',
       '-pointsize', '42',
-      '-annotate', '+330+205', "BRIGHT");
+      '-annotate', '+330+65', "BRIGHT");
   } else if ( proportionWomen > .3 ) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
 
@@ -311,21 +311,21 @@ app.post('/chart', function (req, res, next) {
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '42',
-      '-annotate', '+35+160', "CLOUDY WITH A");
+      '-annotate', '+35+20', "CLOUDY WITH A");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '42',
-      '-annotate', '+35+205', "CHANCE OF ");
+      '-annotate', '+35+65', "CHANCE OF ");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#FF0000',
       '-fill', '#FF0000',
       '-font', 'ArialB',
       '-pointsize', '42',
-      '-annotate', '+300+205', "PATRIARCHY");
+      '-annotate', '+300+65', "PATRIARCHY");
 
   } else {
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
@@ -335,21 +335,21 @@ app.post('/chart', function (req, res, next) {
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '42',
-      '-annotate', '+35+160', "A THUNDERSTORM OF");
+      '-annotate', '+35+20', "A THUNDERSTORM OF");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '42',
-      '-annotate', '+35+205', "GENDER");
+      '-annotate', '+35+65', "GENDER");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#FF0000',
       '-fill', '#FF0000',
       '-font', 'ArialB',
       '-pointsize', '42',
-      '-annotate', '+230+205', "INEQUALITY");
+      '-annotate', '+230+65', "INEQUALITY");
   }
 
   image_parameters.push(
@@ -475,7 +475,7 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
         '-fill', '#fff',
         '-font', 'Arial',
         '-pointsize', '30',
-        '-annotate', '+50+640', text);
+        '-annotate', '+50+740', text);
 
       if( proportionWomen > .5 ) {
         image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
@@ -485,21 +485,21 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
           '-fill', '#fff',
           '-font', 'ArialB',
           '-pointsize', '42',
-          '-annotate', '+50+685', "THE PRESENT (AND");
+          '-annotate', '+50+640', "THE PRESENT (AND");
         image_parameters.push(
           '-gravity', 'NorthWest',
           '-stroke', '#fff',
           '-fill', '#fff',
           '-font', 'ArialB',
           '-pointsize', '42',
-          '-annotate', '+50+730', "FUTURE) ARE");
+          '-annotate', '+50+685', "FUTURE) ARE");
         image_parameters.push(
           '-gravity', 'NorthWest',
           '-stroke', '#F0D35A',
           '-fill', '#F0D35A',
           '-font', 'ArialB',
           '-pointsize', '42',
-          '-annotate', '+345+730', "BRIGHT");
+          '-annotate', '+345+685', "BRIGHT");
       } else if ( proportionWomen > .3 ) {
         image_parameters.push('-page', '+620+470','assets/icon_cloudy.png');
 
@@ -509,21 +509,21 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
           '-fill', '#fff',
           '-font', 'ArialB',
           '-pointsize', '42',
-          '-annotate', '+50+685', "CLOUDY WITH A");
+          '-annotate', '+50+640', "CLOUDY WITH A");
         image_parameters.push(
           '-gravity', 'NorthWest',
           '-stroke', '#fff',
           '-fill', '#fff',
           '-font', 'ArialB',
           '-pointsize', '42',
-          '-annotate', '+50+730', "CHANCE OF ");
+          '-annotate', '+50+685', "CHANCE OF ");
         image_parameters.push(
           '-gravity', 'NorthWest',
           '-stroke', '#FF0000',
           '-fill', '#FF0000',
           '-font', 'ArialB',
           '-pointsize', '42',
-          '-annotate', '+310+730', "PATRIARCHY");
+          '-annotate', '+310+685', "PATRIARCHY");
 
       } else {
         image_parameters.push('-page', '+620+470','assets/icon_thunder.png');
@@ -533,21 +533,21 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
           '-fill', '#fff',
           '-font', 'ArialB',
           '-pointsize', '42',
-          '-annotate', '+50+685', "A THUNDERSTORM OF");
+          '-annotate', '+50+640', "A THUNDERSTORM OF");
         image_parameters.push(
           '-gravity', 'NorthWest',
           '-stroke', '#fff',
           '-fill', '#fff',
           '-font', 'ArialB',
           '-pointsize', '42',
-          '-annotate', '+50+730', "GENDER");
+          '-annotate', '+50+685', "GENDER");
         image_parameters.push(
           '-gravity', 'NorthWest',
           '-stroke', '#FF0000',
           '-fill', '#FF0000',
           '-font', 'ArialB',
           '-pointsize', '42',
-          '-annotate', '+245+730', "INEQUALITY");
+          '-annotate', '+245+685', "INEQUALITY");
       }
 
       image_parameters.push(
@@ -631,14 +631,6 @@ function storeChart(pie_id, data) {
 app.post('/anonymous/:id', function (req, res, next) {
   // Route that will generate an email request to submit things anonymously
 
-  // TODO: this is kind of hackish, using a cookie for non-robotness should either be discontinued or be used everywhere as part of a standard flow
-  // The original author has already been verified as "not a robot" -- check the cookie to be sure this is being accessed by a human
-  if (req.cookies.ishuman != "true") {
-    res.status(403);
-    res.send('You have not been verified as human.');
-    return next();
-  }
-
   // Get the pie chart from firebase
   // TODO: consider refactoring to have a strong model for pie charts (this isn't DRY as it stands; we lookup from firebase in many places)
   var pie_id = req.params.id;
@@ -671,8 +663,7 @@ app.post('/anonymous/:id', function (req, res, next) {
         }
     });
 
-    res.send('Request submitted.');
-    return next();
+    return res.redirect('/thankyou/'+pie_id);
   });
 });
 

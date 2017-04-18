@@ -31,6 +31,7 @@
           <a class="social" href="mailto:?cc=gina@genderavenger.com&subject=Hello%20again&body=I thought you might want to see this gender breakdown: http://app.genderavenger.com/share/{{ pie_id }}" title="Share by Email"><img src="../img/social_email_large.png"/></a>
         </div>
       </div>
+      {% if report_is_new %}
       <div class="row">
         <div class="col-xs-offset-2 col-xs-8 text-center">
           <p class="instructions">Or submit anonymously and GenderAvenger will post</p>
@@ -38,9 +39,10 @@
       </div>
       <div class="row">
         <div class="col-sm-offset-3 col-sm-6 text-center">
-          <div class="button">Submit Anonymously</div>
+          <form action="/anonymous/{{ pie_id }}" method="post"><input type="submit" value="Submit Anonymously" class="btn"/></form>
         </div>
       </div>
+      {% endif %}
     </div>
 
     <script type="text/javascript">
