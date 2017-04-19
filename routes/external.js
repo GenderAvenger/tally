@@ -268,7 +268,7 @@ app.post('/chart', function (req, res, next) {
     '-stroke', '#fff',
     '-fill', '#fff',
     '-font', 'Arial',
-    '-pointsize', '30',
+    '-pointsize', '40',
     '-annotate', '+35+160', req.session.session_text);
 
   image_parameters.push(
@@ -276,8 +276,8 @@ app.post('/chart', function (req, res, next) {
     '-stroke', '#fff',
     '-fill', '#fff',
     '-font', 'Arial',
-    '-pointsize', '30',
-    '-annotate', '+35+195', req.session.hashtag);
+    '-pointsize', '40',
+    '-annotate', '+35+210', req.session.hashtag);
 
   if( proportionWomen > .5 ) {
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
@@ -286,21 +286,21 @@ app.post('/chart', function (req, res, next) {
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
-      '-pointsize', '42',
+      '-pointsize', '40',
       '-annotate', '+35+20', "THE PRESENT (AND ");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
-      '-pointsize', '42',
+      '-pointsize', '40',
       '-annotate', '+35+65', "FUTURE) ARE");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#F0D35A',
       '-fill', '#F0D35A',
       '-font', 'ArialB',
-      '-pointsize', '42',
+      '-pointsize', '40',
       '-annotate', '+330+65', "BRIGHT");
   } else if ( proportionWomen > .3 ) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
@@ -310,14 +310,14 @@ app.post('/chart', function (req, res, next) {
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
-      '-pointsize', '42',
+      '-pointsize', '40',
       '-annotate', '+35+20', "CLOUDY WITH A");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
-      '-pointsize', '42',
+      '-pointsize', '40',
       '-annotate', '+35+65', "CHANCE OF ");
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -334,21 +334,21 @@ app.post('/chart', function (req, res, next) {
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
-      '-pointsize', '42',
+      '-pointsize', '40',
       '-annotate', '+35+20', "A THUNDERSTORM OF");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
-      '-pointsize', '42',
+      '-pointsize', '40',
       '-annotate', '+35+65', "GENDER");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#FF0000',
       '-fill', '#FF0000',
       '-font', 'ArialB',
-      '-pointsize', '42',
+      '-pointsize', '40',
       '-annotate', '+230+65', "INEQUALITY");
   }
 
@@ -474,8 +474,8 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
         '-stroke', '#fff',
         '-fill', '#fff',
         '-font', 'Arial',
-        '-pointsize', '30',
-        '-annotate', '+50+740', text);
+        '-pointsize', '40',
+        '-annotate', '+50+735', text);
 
       if( proportionWomen > .5 ) {
         image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
