@@ -34,15 +34,16 @@ app.get('/', function (req, res, next) {
 
   // Has the user been here before?
   var is_returning_visitor = false;
-  if(Number.isInteger(Number.parseInt(req.cookies.has_visited))) {
+  if(!req.cookies.has_visited
+   || !Number.isInteger(Number.parseInt(req.cookies.has_visited))) {
+    res.cookie('has_visited', 1);
+  }
+  else {
     var visit_count = Number.parseInt(req.cookies.has_visited);
     res.cookie('has_visited', visit_count + 1);
 
     // Have they been here more than 4 times?
     is_returning_visitor = visit_count > 4;
-  }
-  else {
-    res.cookie('has_visited', 1);
   }
 
   if(is_returning_visitor) {
