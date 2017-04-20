@@ -35,7 +35,7 @@ app.get('/', function (req, res, next) {
   // Has the user been here before?
   var is_returning_visitor = false;
   if(!req.cookies.has_visited
-   || !Number.isInteger(parseInt(req.cookies.has_visited))) {
+   || isNaN(parseInt(req.cookies.has_visited))) {
     res.cookie('has_visited', 1);
   }
   else {
