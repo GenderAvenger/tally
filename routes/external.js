@@ -416,11 +416,13 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
 
   // Set up the image pieces
-  im.resize({
-    srcPath: req.file.path,
-    dstPath: req.file.path + '_resized',
-    width:   900
-  }, function(err, stdout, stderr) {
+  im.convert([
+    '-auto-orient',
+    req.file.path,
+    '-resize',
+    '900',
+    req.file.path
+  ], function(err, stdout, stderr) {
     if (err) throw err;
 
     var proportionWomen = req.session.women / (req.session.women + req.session.men);
@@ -432,7 +434,7 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
       );
 
       image_parameters.push('-page', '+0+0','assets/base_background.png');
-      image_parameters.push('-page', '+0+0',req.file.path + "_resized");
+      image_parameters.push('-page', '+0+0',req.file.path);
       image_parameters.push('-page', '+0+0','assets/photo_logo.png');
       image_parameters.push('-page', '+0+0','assets/photo_background.png');
 
