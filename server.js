@@ -64,7 +64,7 @@ require('./routes')
 
 // Handle 500
 app.use(function(error, req, res, next) {
-
+  console.log(error);
   res.status(500);
   res.render('500.html', {});
 });
