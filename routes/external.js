@@ -175,50 +175,6 @@ app.post('/form', function (req, res, next) {
   req.session.hashtag = hashtag;
 
   return res.redirect('choice');
-
-  // Default to zero individuals with a non-binary gender
-  var pie = generatePieChart(men, women, 0);
-
-  // set initial pie url for redundancy's sake
-  var pie_url = pie.getUrl(true).replace("https","http");
-
-  var proportionWomen = (women / (men + women));
-
-  // Pass in a callback since we need a way to hear back from the implicit network call
-  getMagickedImage(pie, hashtag, session_text, proportionWomen, function (error, data) {
-    // the 'next' method passes this on to the next route, which should be a 404 or 500
-    if (error) {
-      return next(error);
-    }
-    if(!(data) || !("id" in data)) {
-      return next(data);
-    }
-
-
-    pie_id = data.id;
-    pie_url = data.link;
-
-    // Create a database entry for this pie_id
-    var plotRef = firebaseDatastore.child('plots/'+pie_id);
-    // And store the data in it
-    var timestamp = new Date();
-    plotRef.set({
-      timestamp: timestamp.toString(),
-      "unicode-timestamp": timestamp.getTime(),
-      session_text: session_text,
-      hashtag: hashtag,
-      men: men,
-      women: women,
-      other: 0,
-      pie_id: pie_id,
-      pie_url: pie_url
-    });
-
-    plotRef.setPriority(timestamp.getTime());
-
-    req.session.lastCreated = pie_url;
-    return res.redirect('/plot/' + pie_id);
-  });
 });
 
 app.post('/chart', function (req, res, next) {
