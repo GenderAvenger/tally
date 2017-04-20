@@ -43,7 +43,7 @@ app.get('/', function (req, res, next) {
     res.cookie('has_visited', visit_count + 1);
 
     // Have they been here more than 4 times?
-    is_returning_visitor = visit_count > 4;
+    is_returning_visitor = visit_count >= 4;
   }
 
   if(is_returning_visitor) {
