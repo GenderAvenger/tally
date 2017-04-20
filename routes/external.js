@@ -33,7 +33,7 @@ var email_transporter = nodemailer.createTransport({
 app.get('/', function (req, res, next) {
 
   // Has the user been here before?
-  var is_returning_visitor = (req.cookies.has_visited >=4);
+  var is_returning_visitor = (req.cookies.has_visited >=5);
 
   if(Number.isInteger(Number.parseInt(req.cookies.has_visited)))
     res.cookie('has_visited', Number.parseInt(req.cookies.has_visited) + 1);
