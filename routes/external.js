@@ -388,6 +388,7 @@ app.post('/chart', function (req, res, next) {
             });
 
             req.session.lastCreated = pie_url;
+            fs.unlink(path.join(__dirname, '../' + card_filename));
             return res.redirect('/share/' + pie_id);
           }
           return next(error);
@@ -405,6 +406,8 @@ app.post('/chart', function (req, res, next) {
           "pie_id": pie_id,
           "pie_url": pie_url
         });
+        fs.unlink(path.join(__dirname, '../' + card_filename));
+        req.session.lastCreated = pie_url;
         return res.redirect('/share/' + pie_id);
       }
     });
@@ -588,6 +591,8 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
                     "pie_url": pie_url
                   });
 
+                  fs.unlink(req.file.path);
+                  fs.unlink(path.join(__dirname, '../' + card_filename));
                   req.session.lastCreated = pie_url;
                   return res.redirect('/share/' + pie_id);
                 }
@@ -606,6 +611,9 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
                 "pie_id": pie_id,
                 "pie_url": pie_url
               });
+              fs.unlink(req.file.path);
+              fs.unlink(path.join(__dirname, '../' + card_filename));
+              req.session.lastCreated = pie_url;
               return res.redirect('/share/' + pie_id);
             }
           });
