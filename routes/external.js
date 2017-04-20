@@ -33,8 +33,12 @@ var email_transporter = nodemailer.createTransport({
 app.get('/', function (req, res, next) {
 
   // Has the user been here before?
-  var is_returning_visitor = req.cookies.has_visited;
-  res.cookie('has_visited', true);
+  var is_returning_visitor = (req.cookies.has_visited >=4);
+
+  if(Number.isInteger(Number.parseInt(req.cookies.has_visited)))
+    res.cookie('has_visited', Number.parseInt(req.cookies.has_visited) + 1);
+  else
+    res.cookie('has_visited', 1);
 
   if(is_returning_visitor) {
     return res.redirect('form');
@@ -240,7 +244,6 @@ app.post('/chart', function (req, res, next) {
     var radians = degrees * Math.PI / 180;
     var x = 450 + 200 * Math.cos(radians);
     var y = 500 + 200 * Math.sin(radians);
-    console.log(degrees);
     image_parameters.push(
       '-fill', '#F0D35A',
       '-stroke', '#F0D35A',
