@@ -244,7 +244,7 @@ app.post('/chart', function (req, res, next) {
     '-pointsize', '40',
     '-annotate', '+35+210', req.session.hashtag);
 
-  if( proportionWomen > .5 ) {
+  if( proportionWomen > .4 ) {
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -447,7 +447,7 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
         '-pointsize', '40',
         '-annotate', '+50+735', text);
 
-      if( proportionWomen > .5 ) {
+      if( proportionWomen > .4 ) {
         image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
         image_parameters.push(
           '-gravity', 'NorthWest',
