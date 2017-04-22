@@ -28,7 +28,7 @@
                   <label for="trigger-photo"></label>
                   <input type="file" accept="image/*" capture="camera" id="trigger-photo" name="photo" />
                 </div>
-                <div id="photo-nav">
+                <div id="photo-nav" class="hide-on-submit">
                   <div class="row">
                     <div class="col-xs-6">
                       <input type="submit" id="use-photo" class="secondary-button" value="Use this photo" />
@@ -43,13 +43,19 @@
         </div>
       </form>
 
-      <div class="row">
+      <div class="row hide-on-submit">
         <div class="col-xs-offset-2 col-xs-8 text-center">
           <p class="instructions">Or skip this, and create a photoless infographic instead</p>
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" id="submitting-message" style="display:none">
+        <div class="col-xs-offset-2 col-xs-8 text-center">
+          <p class="instructions">Submitting your photo...</p>
+        </div>
+      </div>
+
+      <div class="row hide-on-submit">
         <div class="col-xs-12 text-center">
           <form action="chart" method="post">
             <input type="submit" type="submit" value="Skip" class="btn" />
@@ -72,6 +78,8 @@
         });
 
         $("#use-photo").click(function() {
+          $("#submitting-message").show();
+          $(".hide-on-submit").hide();
           $("#photo-form").submit();
         })
       })
