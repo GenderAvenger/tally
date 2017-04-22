@@ -22,13 +22,13 @@
       </div>
       <div class="row social-share">
         <div class="col-xs-offset-3 col-xs-2 col-md-offset-4 col-md-1 text-center">
-          <a class="social" href="https://www.facebook.com/sharer/sharer.php?u=http://app.genderavenger.com/share/{{ pie_id }}" title="Share on Facebook"><img src="../img/social_fb_large.png"/></a>
+          <a class="social" href="https://www.facebook.com/sharer/sharer.php?u=http://app.genderavenger.com/share/{{ pie_id }}" title="Share on Facebook" target="_blank"><img src="../img/social_fb_large.png"/></a>
         </div>
         <div class="col-xs-2 text-center">
-          <a class="social" href="https://twitter.com/intent/tweet?text=http://app.genderavenger.com/share/{{ pie_id }} via %40GenderAvenger %23genderavenger" title="Share on Twitter"><img src="../img/social_twitter_large.png"/></a>
+          <a class="social" href="https://twitter.com/intent/tweet?text=http://app.genderavenger.com/share/{{ pie_id }} via %40GenderAvenger %23genderavenger" title="Share on Twitter" target="_blank"><img src="../img/social_twitter_large.png"/></a>
         </div>
         <div class="col-xs-2 col-md-1 text-center">
-          <a class="social" href="mailto:?cc=gina@genderavenger.com&subject=Hello%20again&body=I thought you might want to see this gender breakdown: http://app.genderavenger.com/share/{{ pie_id }}" title="Share by Email"><img src="../img/social_email_large.png"/></a>
+          <a class="social" href="mailto:?cc=gina@genderavenger.com&subject=GA%20Tally&body=I thought you might want to see this gender breakdown: http://app.genderavenger.com/share/{{ pie_id }}" title="Share by Email"><img src="../img/social_email_large.png"/></a>
         </div>
       </div>
       {% if report_is_new %}
@@ -48,9 +48,7 @@
     <script type="text/javascript">
       $(function() {
         $("a.social").click(function(e) {
-          window.open(this.href, '', 'menubar=yes,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
           window.location.href = window.location.href.replace('/share/', '/thankyou/');
-          return false;
         });
       })
     </script>
