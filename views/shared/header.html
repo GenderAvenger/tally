@@ -7,26 +7,18 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="GenderAvenger"/>
     <meta property="og:type" content="blog"/>
-    <meta property="og:description" content="{{session_text}} included {{proportion_women}} women out of {{total_count}} people. Click to join the discussion. This data was reported with GenderAvenger Tally." />
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
     <link href="/css/styles.css" type="text/css" rel="stylesheet">
 
-    {% if url_to_share %}
+    {% if is_share %}
+    <meta property="og:description" content="{{session_text}} included {{total_women}} women out of {{total_count}} people. Click to join the discussion. This data was reported with GenderAvenger Tally." />
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="Gender Avenger" />
     <meta name="twitter:title" content="Gender ratio at {{session_text}} {% if has_hash %}#{% endif %}{{hashtag_without_hash}}" />
-    <meta name="twitter:description" content="{{session_text}} included {{proportion_women}} women out of {{total_count}} people. Click to join the discussion." />
+    <meta name="twitter:description" content="{{session_text}} included {{total_women}} women out of {{total_count}} people. Click to join the discussion." />
     <meta name="twitter:image" content="{{pie}}" />
-    <meta name="twitter:url" content="{{url_to_share}}" />
-    <script language="javascript">
-      function emailCurrentPage(isShare){
-        var subject = isShare ? "Can%20you%20share%20this%20image%20for%20me?" : "Can%20you%20correct%20the%20record%20on%20this%20chart?";
-        window.open("mailto:genderavengershares@googlegroups.com?subject="+subject+"&body="+escape(window.location.href));
-      }
-    </script>
-
-
+    <meta name="twitter:url" content="http://app.genderavenger.com/share/{{ pie_id }}" />
     {% endif %}
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"

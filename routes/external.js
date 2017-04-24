@@ -105,10 +105,15 @@ app.get('/share/:id', function (req, res, next) {
     }
     return res.render('share.html', {
       title: 'View Tally',
+      is_share: true,
       pie: pie_url,
       pie_id: pie_id,
       hashtag: refVal.hashtag,
       session_text: refVal.session_text,
+      hashtag: refVal.hashtag,
+      session_text: refVal.session_text,
+      total_count: refVal.women + refVal.men + refVal.other,
+      total_women: refVal.women,
       report_is_new: report_is_new
     });
   })
