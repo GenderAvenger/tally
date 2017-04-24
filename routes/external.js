@@ -115,8 +115,10 @@ app.get('/share/:id', function (req, res, next) {
 });
 
 app.get('/thankyou/:id', function (req, res, next) {
+  var pie_id = req.params.id;
   res.render('thankyou.html', {
-    title: 'Report'
+    title: 'Thank You',
+    pie_id: pie_id
   });
 });
 
