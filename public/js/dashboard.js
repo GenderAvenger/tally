@@ -13,7 +13,7 @@ $(function() {
         chart.hashtag = "(none)"; // In case hash isn't set somehow
 
       var hashCode = chart.hashtag.replace(/[^a-zA-Z0-9]/,"");
-      var timestamp = new Date();
+      var timestamp = new Date("4/25/2017");
       if('timestamp' in chart)
         timestamp = new Date(chart.timestamp);
       var dateCode = (timestamp.getMonth() + 1) + "-" + timestamp.getDate() + "-" + timestamp.getFullYear()
