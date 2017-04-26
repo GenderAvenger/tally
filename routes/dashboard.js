@@ -32,15 +32,16 @@ app.get('/charts/:endTime?/:startTime?', function (req, res, next) {
 
 
 app.get('/clean', function (req, res, next) {
+  return next();
 
-  query = firebaseDatastore.child("plots");
+  // query = firebaseDatastore.child("plots");
 
-  query.on("child_added", function(snapshot) {
-    var val = snapshot.val();
-    var d = new Date(val.timestamp);
-    snapshot.ref().update({
-      "unicode-timestamp": d.getTime()
-    })
-    snapshot.ref().setPriority(d.getTime());
-  });
+  // query.on("child_added", function(snapshot) {
+  //   var val = snapshot.val();
+  //   var d = new Date(val.timestamp);
+  //   snapshot.ref().update({
+  //     "unicode-timestamp": d.getTime()
+  //   })
+  //   snapshot.ref().setPriority(d.getTime());
+  // });
 });

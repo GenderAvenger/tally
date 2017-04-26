@@ -596,14 +596,12 @@ function storeChart(pie_id, data) {
     // Create a database entry for this pie_id
     var plotRef = firebaseDatastore.child('plots/' + pie_id);
 
-    // And store the data in it
+    // And a timestamp
     var timestamp = new Date();
-    plotRef.set({
-      timestamp: timestamp.toString(),
-      "unicode-timestamp": timestamp.getTime(),
-      pie_id: pie_id
-    });
+    data.timestamp = timestamp.toString();
+    data["unicode-timestamp"] = timestamp.getTime();
 
+    // Save the data
     plotRef.set(data);
     plotRef.setPriority(timestamp.getTime());
 
@@ -625,7 +623,7 @@ app.post('/anonymous/:id', function (req, res, next) {
     }
 
     var pie_url = refVal.pie_url;
-    var fullUrl = req.protocol + '://' + req.get('host') + "/plot/" + pie_id;
+    var fullUrl = req.protocol + '://' + req.get('host') + "/share/" + pie_id;
     var hashtag = refVal.hashtag;
     var session_text = refVal.session_text;
 

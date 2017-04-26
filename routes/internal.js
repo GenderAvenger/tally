@@ -21,7 +21,7 @@ app.get('/data', function(req, res, next){
       var plot = snapshot.val();
       // iterate through reports and push onto report CSVs
       _.forEach(plot, function(report, key) {
-          var full_url = req.protocol + '://' + req.get('host') + "/plot/" + report.pie_id;
+          var full_url = req.protocol + '://' + req.get('host') + "/share/" + report.pie_id;
           csv_rows.push([report.timestamp, report.session_text, report.hashtag, report.women, report.men, full_url]);
       });
       res.csv(csv_rows);

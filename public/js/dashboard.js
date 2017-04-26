@@ -13,8 +13,9 @@ $(function() {
         chart.hashtag = "(none)"; // In case hash isn't set somehow
 
       var hashCode = chart.hashtag.replace(/[^a-zA-Z0-9]/,"");
-
-      var timestamp = new Date(chart.timestamp);
+      var timestamp = new Date();
+      if('timestamp' in chart)
+        timestamp = new Date(chart.timestamp);
       var dateCode = (timestamp.getMonth() + 1) + "-" + timestamp.getDate() + "-" + timestamp.getFullYear()
 
       // Does this date exist?
@@ -32,6 +33,7 @@ $(function() {
       }
 
       // Does this hashtag exist for this date?
+      hashCode = hashCode.replace(/\W/,"");
       var $hash = $("#hash-" + hashCode + "-" + dateCode);
       if($hash.length == 0) {
         $hash = $("<li>")
@@ -64,7 +66,7 @@ $(function() {
         .appendTo($chart);
 
       $chartLink = $("<a>")
-        .attr("href", "http://app.genderavenger.com/plot/" + chartCode)
+        .attr("href", "http://app.genderavenger.com/share/" + chartCode)
         .attr("target", "_blank")
         .addClass("chart-link")
         .appendTo($chart);
