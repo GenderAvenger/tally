@@ -21,28 +21,23 @@
         </div>
       </div>
       <div class="row social-share">
-        <div class="col-xs-offset-3 col-xs-2 col-md-offset-4 col-md-1 text-center">
-          <a class="social" href="https://www.facebook.com/sharer/sharer.php?u=http://app.genderavenger.com/share/{{ pie_id }}" title="Share on Facebook" target="_blank"><img src="../img/social_fb_large.png"/></a>
+        <div class="col-xs-offset-1 col-xs-5 col-sm-offset-3 col-sm-3 col-md-offset-4 col-md-2 text-center">
+          <a class="social" href="https://www.facebook.com/sharer/sharer.php?u=http://app.genderavenger.com/share/{{ pie_id }}" title="Share on Facebook" target="_blank"><div class="button">Share on <br/>Facebook</div></a>
         </div>
-        <div class="col-xs-2 text-center">
-          <a class="social" href="https://twitter.com/intent/tweet?text=http://app.genderavenger.com/share/{{ pie_id }} via %40GenderAvenger %23genderavenger" title="Share on Twitter" target="_blank"><img src="../img/social_twitter_large.png"/></a>
-        </div>
-        <div class="col-xs-2 col-md-1 text-center">
-          <a class="social" href="mailto:?cc=gina@genderavenger.com&subject=GA%20Tally&body=I thought you might want to see this gender breakdown: http://app.genderavenger.com/share/{{ pie_id }}" title="Share by Email"><img src="../img/social_email_large.png"/></a>
+        <div class="col-xs-5 col-sm-3 col-md-2 text-center">
+          <a class="social" href="https://twitter.com/intent/tweet?text=http://app.genderavenger.com/share/{{ pie_id }} via %40GenderAvenger %23genderavenger" title="Share on Twitter" target="_blank"><div class="button">Share on <br/>Twitter</div></a>
         </div>
       </div>
+      <div class="row social-share">
+        <div class="col-xs-offset-1 col-xs-5 col-sm-offset-3 col-sm-3 col-md-offset-4 col-md-2 text-center">
+          <a class="social" href="mailto:?cc=gina@genderavenger.com&subject=GA%20Tally&body=I thought you might want to see this gender breakdown: http://app.genderavenger.com/share/{{ pie_id }}" title="Share by Email"><div class="button">Share by <br />Email</div></a>
+        </div>
       {% if report_is_new %}
-      <div class="row">
-        <div class="col-xs-offset-2 col-xs-8 text-center">
-          <p class="instructions">Or submit anonymously and GenderAvenger will post</p>
+        <div class="col-xs-5 col-sm-3 col-md-2 text-center">
+          <form action="/anonymous/{{ pie_id }}" method="post"><button type="submit" class="btn">Submit<br/>Anonymously</button></form>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-offset-3 col-sm-6 text-center">
-          <form action="/anonymous/{{ pie_id }}" method="post"><input type="submit" value="Submit Anonymously" class="btn"/></form>
-        </div>
-      </div>
       {% endif %}
+      </div>
     </div>
 
     <script type="text/javascript">

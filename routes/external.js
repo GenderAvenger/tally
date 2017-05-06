@@ -141,7 +141,7 @@ app.post('/form', function (req, res, next) {
       hashtag = req.body.hashtag;
 
   var hashPattern = new RegExp(/^\#?\S{1,20}$/);
-  var sessionPattern = new RegExp(/^.{0,200}$/);
+  var sessionPattern = new RegExp(/^.{0,30}$/);
 
   // TODO - make validation DRY
   if ((!isInt(men) || men < 0)
