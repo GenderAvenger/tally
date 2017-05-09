@@ -119,6 +119,11 @@ app.get('/share/:id', function (req, res, next) {
   })
 });
 
+app.get('/plot/:id', function (req, res, next) {
+  var pie_id = req.params.id;
+  res.redirect('/share/' + pie_id);
+});
+
 app.get('/thankyou/:id', function (req, res, next) {
   var pie_id = req.params.id;
   res.render('thankyou.html', {
