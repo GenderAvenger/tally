@@ -30,7 +30,7 @@
     "nodemailer-sparkpost-transport": "^0.1.0",
     "nunjucks": "^1.0.5",
     "quiche": "*",
-    "request": "^2.42.0",
+    "request": "^2.81.0",
     "serve-favicon": "^2.0.1",
     "yamljs": "^0.1.5"
   }

@@ -21,4 +21,5 @@ if (process.env.NODE_ENV == 'localDevelopment') {
   set('AWS_SECRET', creds['awsSecret']);
   set('AWS_ID', creds['awsId']);
   set('COOKIE_SECRET', creds['cookieSecret']);
+  set('SLACK_WEBHOOK', creds['slackWebhook']);
 }

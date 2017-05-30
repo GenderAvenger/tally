@@ -14,7 +14,8 @@ var quiche = require('quiche'),
     nodemailer = require('nodemailer'),
     firebaseDatastore = require('../server').firebaseDatastore,
     AWS = require('aws-sdk'),
-    multer  = require('multer');
+    multer  = require('multer'),
+    request = require('request');
 
 var upload = multer({ dest: 'uploads/' })
 
@@ -629,23 +630,17 @@ app.post('/anonymous/:id', function (req, res, next) {
 
     var pie_url = refVal.pie_url;
     var fullUrl = req.protocol + '://' + req.get('host') + "/share/" + pie_id;
-    var hashtag = refVal.hashtag;
-    var session_text = refVal.session_text;
 
-    // Send the email
-    // TODO: convert this to a templated email
-    var mailOptions = {
-        from: process.env['ADMIN_EMAIL'],
-        to: process.env['ADMIN_EMAIL'],
-        subject: 'Anonymous Submission Request (' + pie_id + ')',
-        html: 'A new anonymous GA Tally request<br>-------------<br>Tally URL: ' + fullUrl + '<br>Hashtag: ' + hashtag + '<br>Session Text: ' + session_text,
+    // Send an anonymous submit alert
+    var data = {
+      text: 'A new anonymous GA Tally request: ' + fullUrl,
     };
-    email_transporter.sendMail(mailOptions, function(error, info) {
-        if(error){
-            console.log(error);
-        }else{
-            console.log('Message sent: ' + info.response);
-        }
+
+    request({
+      url: process.env['SLACK_WEBHOOK'],
+      method: "POST",
+      json: true,
+      body: data
     });
 
     return res.redirect('/thankyou/'+pie_id);
