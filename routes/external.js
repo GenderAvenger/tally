@@ -104,15 +104,15 @@ app.get('/share/:id', function (req, res, next) {
     if (!pie_url) {
       // Regenerate the URL
     }
+
     return res.render('share.html', {
       title: 'View Tally',
       is_share: true,
       pie: pie_url,
       pie_id: pie_id,
-      hashtag: refVal.hashtag,
       session_text: refVal.session_text,
-      hashtag: refVal.hashtag,
-      session_text: refVal.session_text,
+      hashtag: querystring.escape(refVal.hashtag),
+      session_text: querystring.escape(refVal.session_text),
       total_count: refVal.women + refVal.men + refVal.other,
       total_women: refVal.women,
       report_is_new: report_is_new
@@ -126,11 +126,34 @@ app.get('/plot/:id', function (req, res, next) {
 });
 
 app.get('/thankyou/:id', function (req, res, next) {
+
+  // Get the chart
   var pie_id = req.params.id;
-  res.render('thankyou.html', {
-    title: 'Thank You',
-    pie_id: pie_id
-  });
+  var plotRef = firebaseDatastore.child('plots/'+pie_id);
+
+  plotRef.once('value', function (snapshot) {
+    // Firebase has a weird syntax / system. This is how we load the data in
+    var refVal = snapshot.val();
+    if (!refVal) {
+      return res.redirect('/');
+    }
+    var pie_url = refVal.pie_url;
+
+    // Check if the user just made this chart
+    var report_is_new = req.session.lastCreated == pie_url;
+    req.session.lastCreated = '';
+
+    // If the pie_url is missing, we need to regenerate it
+    if (!pie_url) {
+      // Regenerate the URL
+    }
+
+    return res.render('thankyou.html', {
+      title: 'Thank You',
+      pie_id: pie_id,
+      hashtag: querystring.escape(refVal.hashtag),
+    });
+  })
 });
 
 app.post('/form', function (req, res, next) {
