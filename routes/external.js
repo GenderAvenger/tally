@@ -48,7 +48,7 @@ app.get('/', function (req, res, next) {
   }
 
   if(is_returning_visitor) {
-    return res.redirect('form');
+    return res.redirect('toolselect');
   } else {
     return res.redirect('intro');
   }
@@ -57,6 +57,12 @@ app.get('/', function (req, res, next) {
 app.get('/intro', function (req, res, next) {
   res.render('intro.html', {
     title: 'Introduction',
+  });
+});
+
+app.get('/toolselect', function (req, res, next) {
+  res.render('toolselect.html', {
+    title: 'What do you want to do?',
   });
 });
 
@@ -79,6 +85,12 @@ app.get('/choice', function (req, res, next) {
 app.get('/photo', function (req, res, next) {
   res.render('photo.html', {
     title: 'Use a Photo',
+  });
+});
+
+app.get('/whotalks', function (req, res, next) {
+  res.render('whotalks.html', {
+    title: 'Who Talks?',
   });
 });
 
@@ -212,6 +224,18 @@ app.post('/form', function (req, res, next) {
 
   return res.redirect('choice');
 });
+
+app.post('/talkschart', function (req, res, next) {
+  var dude_time = parseInt(req.body.dude_time, 10),
+      not_dude_time = parseInt(req.body.not_dude_time, 10),
+      session_text = req.body.session_text,
+      hashtag = req.body.hashtag;
+  console.log(dude_time);
+  console.log(not_dude_time);
+  console.log(session_text);
+  console.log(hashtag);
+});
+
 
 app.post('/chart', function (req, res, next) {
 
