@@ -259,3 +259,47 @@
   input[name="session_text"] {
     min-width: 166px;
   }
+
+  /* Tool Select Page */
+
+  div.wide-button {
+    min-width: 300px; /* TODO:  style this for mobile */
+    padding: 30px;
+    margin-bottom: 10px;
+    background-color: #edce63;
+    color: #1d2951;
+  }
+
+  div.wide-button:hover {
+    background-color: #f1d881;
+  }
+
+  /* Who Talks Page */
+  div.button-timer {
+    min-width: 120px;
+    padding: 12px;
+    background-color: #edce63;
+    color: #1d2951;
+    margin-bottom: 10px;
+  }
+  div.button-timer:hover {
+    background-color: #f1d881;
+  }
+  div.button-timer.pressed {
+    background-color: #b39015;
+  }
+
+  .pad-bottom {
+    margin-bottom: 40px;
+  }
+  .pad-top {
+    margin-top: 40px;
+  }
+
+  #ans {
+    color: #f1d881;
+  }
+  .display {
+    color: #f1d881;
+    font-size: 90%;
+  }
