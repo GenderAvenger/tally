@@ -230,10 +230,196 @@ app.post('/talkschart', function (req, res, next) {
       not_dude_time = parseInt(req.body.not_dude_time, 10),
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
-  console.log(dude_time);
-  console.log(not_dude_time);
-  console.log(session_text);
-  console.log(hashtag);
+  var file_id = uuid.v4();
+  var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
+  var card_filename = "assets/chartgen/" + file_id + "_card.png";
+
+  var proportionWomen = not_dude_time / (not_dude_time + dude_time);
+
+  var image_parameters = [];
+  image_parameters.push(
+    '-gravity', 'NorthWest'
+  );
+
+  image_parameters.push('-page', '+0+0','assets/base_background.png');
+  image_parameters.push('-page', '+0+0','assets/city_background_wire_logo.png');
+  image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
+
+  // Draw the chart
+  image_parameters.push(
+    '-fill', '#ff0000',
+    '-stroke', '#ff0000',
+    '-draw', 'circle 450,450 450,625'
+  );
+
+  if(proportionWomen > 0) {
+    var degrees = (proportionWomen * 360 + 90);
+    var radians = degrees * Math.PI / 180;
+    var x = 450 + 175 * Math.cos(radians);
+    var y = 450 + 175 * Math.sin(radians);
+    image_parameters.push(
+      '-fill', '#F0D35A',
+      '-stroke', '#F0D35A',
+      '-draw', 'path \'M 450,450 L 450,625 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+    );
+  }
+
+  image_parameters.push(
+    '-gravity', 'Center',
+    '-stroke', '#ff0000',
+    '-fill', '#ff0000',
+    '-font', 'Arial',
+    '-pointsize', '42',
+    '-annotate', '+0+236', "Men spoke " + Math.round((1 - proportionWomen) * 100,0) + "% of the time.");
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#fff',
+    '-fill', '#fff',
+    '-font', 'Arial',
+    '-pointsize', '40',
+    '-annotate', '+35+160', session_text);
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#fff',
+    '-fill', '#fff',
+    '-font', 'Arial',
+    '-pointsize', '40',
+    '-annotate', '+35+210', hashtag);
+
+  if( proportionWomen > .4 ) {
+    image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "THE PRESENT (AND ");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "FUTURE) ARE");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#F0D35A',
+      '-fill', '#F0D35A',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+330+65', "BRIGHT");
+  } else if ( proportionWomen > .3 ) {
+    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
+
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "CLOUDY WITH A");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "CHANCE OF ");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#FF0000',
+      '-fill', '#FF0000',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+300+65', "PATRIARCHY");
+
+  } else {
+    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "A THUNDERSTORM OF");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "GENDER");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#FF0000',
+      '-fill', '#FF0000',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+230+65', "INEQUALITY");
+  }
+
+  image_parameters.push(
+    '-layers', 'flatten', card_filename
+  );
+
+  // Create the tally
+  im.convert(image_parameters, function (err, stdout) {
+    if(err)
+      return next(err);
+
+    // Upload this local file to imgur
+    imgur.setClientID(process.env['IMGUR_API_KEY']);
+    imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+      if(error || !response.data) {
+        AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
+        var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
+        var body = fs.createReadStream(path.join(__dirname, '../' + card_filename));
+        s3obj.upload({Body: body}, function(err, data) {
+          if('Location' in data && 'ETag' in data) {
+
+            pie_url = data.Location;
+            pie_id = data.ETag.slice(1,-1);
+
+            storeChart(pie_id, {
+              "session_text": session_text,
+              "hashtag": hashtag,
+              "men": dude_time,
+              "women": not_dude_time,
+              "other": 0,
+              "type": "whotalks",
+              "pie_id": pie_id,
+              "pie_url": pie_url
+            });
+
+            req.session.lastCreated = pie_url;
+            fs.unlink(path.join(__dirname, '../' + card_filename));
+            return res.redirect('/share/' + pie_id);
+          }
+          return next(error);
+        });
+      }
+      else {
+        pie_url = response.link;
+        pie_id = response.id;
+        storeChart(pie_id, {
+          "session_text": session_text,
+          "hashtag": hashtag,
+          "men": dude_time,
+          "women": not_dude_time,
+          "other": 0,
+          "type": "whotalks",
+          "pie_id": pie_id,
+          "pie_url": pie_url
+        });
+        fs.unlink(path.join(__dirname, '../' + card_filename));
+        req.session.lastCreated = pie_url;
+        return res.redirect('/share/' + pie_id);
+      }
+    });
+  });
 });
 
 
