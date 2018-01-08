@@ -73,6 +73,10 @@
     text-transform: uppercase;
   }
 
+  .larger {
+    font-size: 120%;
+  }
+
   .secondary-button {
     background: #fff;
     color: #EDCE64;
@@ -141,7 +145,7 @@
   }
 
   .landing p {
-    margin-bottom: 50px;
+    margin-bottom: 26px;
   }
 
   /* Form Page */
@@ -260,19 +264,6 @@
     min-width: 166px;
   }
 
-  /* Tool Select Page */
-
-  div.wide-button {
-    min-width: 300px; /* TODO:  style this for mobile */
-    padding: 30px;
-    margin-bottom: 10px;
-    background-color: #edce63;
-    color: #1d2951;
-  }
-
-  div.wide-button:hover {
-    background-color: #f1d881;
-  }
 
   /* Who Talks Page */
   div.button-timer {
@@ -302,4 +293,8 @@
   .display {
     color: #f1d881;
     font-size: 90%;
+  }
+
+  div.btn-pad {
+    margin: 4px;
   }
