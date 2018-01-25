@@ -73,6 +73,10 @@
     text-transform: uppercase;
   }
 
+  .larger {
+    font-size: 120%;
+  }
+
   .secondary-button {
     background: #fff;
     color: #EDCE64;
@@ -141,7 +145,7 @@
   }
 
   .landing p {
-    margin-bottom: 50px;
+    margin-bottom: 26px;
   }
 
   /* Form Page */
@@ -258,4 +262,39 @@
 
   input[name="session_text"] {
     min-width: 166px;
+  }
+
+
+  /* Who Talks Page */
+  div.button-timer {
+    min-width: 120px;
+    padding: 12px;
+    background-color: #edce63;
+    color: #1d2951;
+    margin-bottom: 10px;
+  }
+  div.button-timer:hover {
+    background-color: #f1d881;
+  }
+  div.button-timer.pressed {
+    background-color: #b39015;
+  }
+
+  .pad-bottom {
+    margin-bottom: 40px;
+  }
+  .pad-top {
+    margin-top: 40px;
+  }
+
+  #ans {
+    color: #f1d881;
+  }
+  .display {
+    color: #f1d881;
+    font-size: 90%;
+  }
+
+  div.btn-pad {
+    margin: 4px;
   }
