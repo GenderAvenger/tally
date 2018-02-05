@@ -270,7 +270,7 @@ app.post('/talkschart', function (req, res, next) {
     '-fill', '#ff0000',
     '-font', 'Arial',
     '-pointsize', '42',
-    '-annotate', '+0+236', "Men spoke " + Math.round((1 - proportionWomen) * 100,0) + "% of the time.");
+    '-annotate', '+0+236', 'Men spoke ' + Math.round((1 - proportionWomen) * 100,0) + '%% of the time.');
 
   image_parameters.push(
     '-gravity', 'NorthWest',
