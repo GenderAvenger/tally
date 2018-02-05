@@ -65,12 +65,13 @@
     background: #EF4C29;
     color: #fff;
     font-family: 'Futura',Arial,sans-serif;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
     display: inline-block;
     padding: 5px 20px;
     cursor: pointer;
     text-transform: uppercase;
+    margin: 5px 0px;
   }
 
   .larger {
