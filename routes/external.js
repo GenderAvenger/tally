@@ -71,6 +71,7 @@ app.get('/form', function (req, res, next) {
     title: 'Form',
     men: req.session.men,
     women: req.session.women,
+    womenofcolor: req.session.womenofcolor,
     hashtag: req.session.hashtag,
     session_text: req.session.session_text
   });
@@ -127,6 +128,7 @@ app.get('/share/:id', function (req, res, next) {
       session_text: querystring.escape(refVal.session_text),
       total_count: refVal.women + refVal.men + refVal.other,
       total_women: refVal.women,
+      total_womenofcolor: refVal.womenofcolor,
       report_is_new: report_is_new
     });
   })
@@ -178,6 +180,7 @@ app.post('/form', function (req, res, next) {
   // Validate input
   var men = parseInt(req.body.men, 10),
       women = parseInt(req.body.women, 10),
+      womenofcolor = parseInt(req.body.womenofcolor, 10),
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
@@ -187,6 +190,7 @@ app.post('/form', function (req, res, next) {
   // TODO - make validation DRY
   if ((!isInt(men) || men < 0)
    || (!isInt(women) || women < 0)
+   || (!isInt(womenofcolor) || womenofcolor < 0)
    || !_.isString(session_text)
    || !session_text.match(sessionPattern)
    || !_.isString(hashtag)
@@ -200,11 +204,13 @@ app.post('/form', function (req, res, next) {
       title: 'Tally Form',
       men: req.body.men,
       women: req.body.women,
+      womenofcolor: req.body.womenofcolor,
       hashtag: req.body.hashtag,
       session_text: req.body.session_text,
       error: {
         men: !isInt(men) || men < 0,
         women: !isInt(women) || women < 0 ,
+        womenofcolor: !isInt(womenofcolor) || womenofcolor < 0 ,
         hashtag: !_.isString(session_text) || (hashtag != "" && !hashtag.match(hashPattern)),
         session_text: !_.isString(session_text) || !session_text.match(sessionPattern)
       }
@@ -219,6 +225,7 @@ app.post('/form', function (req, res, next) {
   // This data is valid, so store it to the session and move along
   req.session.men = men;
   req.session.women = women;
+  req.session.womenofcolor = womenofcolor;
   req.session.session_text = session_text;
   req.session.hashtag = hashtag;
 
@@ -430,6 +437,7 @@ app.post('/chart', function (req, res, next) {
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
 
   var proportionWomen = req.session.women / (req.session.women + req.session.men);
+  var proportionWomenOfColor = req.session.womenofcolor / (req.session.women + req.session.men);
 
   var image_parameters = [];
   image_parameters.push(
@@ -458,6 +466,17 @@ app.post('/chart', function (req, res, next) {
       '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
     );
   }
+  if(proportionWomenOfColor > 0) {
+    var degrees = (proportionWomenOfColor * 360 + 90);
+    var radians = degrees * Math.PI / 180;
+    var x = 450 + 190 * Math.cos(radians);
+    var y = 500 + 190 * Math.sin(radians);
+    image_parameters.push(
+      '-fill', '#d87111',
+      '-stroke', '#d87111',
+      '-draw', 'path \'M 450,500 L 450,690 A 190,190 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+    );
+  }
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -465,7 +484,14 @@ app.post('/chart', function (req, res, next) {
     '-fill', '#F0D35A',
     '-font', 'Arial',
     '-pointsize', '30',
-    '-annotate', '+125+630', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
+    '-annotate', '+75+630', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#d87111',
+    '-fill', '#d87111',
+    '-font', 'Arial',
+    '-pointsize', '30',
+    '-annotate', '+75+670', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
   image_parameters.push(
     '-gravity', 'NorthEast',
     '-stroke', '#ff0000',

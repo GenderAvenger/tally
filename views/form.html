@@ -37,8 +37,12 @@
               <textarea class="form-control" id="session_text" name="session_text" placeholder="e.g. a panel, a conference, a list?">{% if session_text %}{{ session_text }}{% endif %}</textarea>
             </div>
             <div class="form-group {% if error.women %}error{% endif %}">
-              <label for="women">How many women?</label>
+              <label for="women">How many women total?</label>
               <input type="number" class="form-control" id="women" name="women" placeholder="0" {% if women %}value="{{ women }}"{% endif %}/>
+            </div>
+            <div class="form-group {% if error.women %}error{% endif %}">
+              <label for="womenofcolor">How many women of color?</label>
+              <input type="number" class="form-control" id="womenofcolor" name="womenofcolor" placeholder="0" {% if womenofcolor %}value="{{ womenofcolor }}"{% endif %}/>
             </div>
             <div class="form-group {% if error.men %} error {% endif %}">
               <label for="men">How many men?</label>
