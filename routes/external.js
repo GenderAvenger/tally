@@ -450,8 +450,8 @@ app.post('/chart', function (req, res, next) {
 
   // Draw the chart
   image_parameters.push(
-    '-fill', '#ff0000',
-    '-stroke', '#ff0000',
+    '-fill', '#FF0000',
+    '-stroke', '#FF0000',
     '-draw', 'circle 450,500 450,700'
   );
 
@@ -469,12 +469,11 @@ app.post('/chart', function (req, res, next) {
   if(proportionWomenOfColor > 0) {
     var degrees = (proportionWomenOfColor * 360 + 90);
     var radians = degrees * Math.PI / 180;
-    var x = 450 + 190 * Math.cos(radians);
-    var y = 500 + 190 * Math.sin(radians);
+    var x = 450 + 200 * Math.cos(radians);
+    var y = 500 + 200 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#d87111',
-      '-stroke', '#d87111',
-      '-draw', 'path \'M 450,500 L 450,690 A 190,190 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+      '-tile', 'assets/stripes.gif',
+      '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
     );
   }
 
@@ -482,20 +481,37 @@ app.post('/chart', function (req, res, next) {
     '-gravity', 'NorthWest',
     '-stroke', '#F0D35A',
     '-fill', '#F0D35A',
+    '+tile',
     '-font', 'Arial',
     '-pointsize', '30',
     '-annotate', '+75+630', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
-  image_parameters.push(
-    '-gravity', 'NorthWest',
-    '-stroke', '#d87111',
-    '-fill', '#d87111',
-    '-font', 'Arial',
-    '-pointsize', '30',
-    '-annotate', '+75+670', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
+
+  if(req.session.womenofcolor == 0) {
+    image_parameters.push(
+      '-stroke', '#000000',
+      '-fill', '#d87111',
+      '-draw', 'rectangle 65,665 360,707');
+
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#ffffff',
+      '-fill', '#ffffff',
+      '-font', 'Arial',
+      '-pointsize', '30',
+      '-annotate', '+75+670', "No Women of Color!");
+  } else {
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#d87111',
+      '-fill', '#d87111',
+      '-font', 'Arial',
+      '-pointsize', '30',
+      '-annotate', '+75+670', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
+  }
   image_parameters.push(
     '-gravity', 'NorthEast',
-    '-stroke', '#ff0000',
-    '-fill', '#ff0000',
+    '-stroke', '#FF0000',
+    '-fill', '#FF0000',
     '-font', 'Arial',
     '-pointsize', '30',
     '-annotate', '+125+630', req.session.men + ((req.session.men == 1)?" Man":" Men"));
@@ -524,21 +540,38 @@ app.post('/chart', function (req, res, next) {
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+20', "THE PRESENT (AND ");
+      '-annotate', '+35+20', "THE PRESENT AND FUTURE");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+65', "FUTURE) ARE");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#F0D35A',
-      '-fill', '#F0D35A',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+330+65', "BRIGHT");
+      '-annotate', '+35+65', "ARE");
+    if(req.session.womenofcolor == 0) {
+      image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#d87111',
+          '-fill', '#d87111',
+          '-font', 'ArialB',
+          '-pointsize', '40',
+          '-annotate', '+130+65', "ALMOST");
+      image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#F0D35A',
+          '-fill', '#F0D35A',
+          '-font', 'ArialB',
+          '-pointsize', '40',
+          '-annotate', '+310+65', "BRIGHT");
+    } else {
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#F0D35A',
+        '-fill', '#F0D35A',
+        '-font', 'ArialB',
+        '-pointsize', '40',
+        '-annotate', '+130+65', "BRIGHT");
+    }
   } else if ( proportionWomen > .3 ) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
 
