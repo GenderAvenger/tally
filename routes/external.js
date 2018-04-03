@@ -192,6 +192,7 @@ app.post('/form', function (req, res, next) {
    || (!isInt(women) || women < 0)
    || (!isInt(womenofcolor) || womenofcolor < 0)
    || !_.isString(session_text)
+   || session_text == ""
    || !session_text.match(sessionPattern)
    || !_.isString(hashtag)
    || (hashtag != ""
@@ -212,7 +213,8 @@ app.post('/form', function (req, res, next) {
         women: !isInt(women) || women < 0 ,
         womenofcolor: !isInt(womenofcolor) || womenofcolor < 0 ,
         hashtag: !_.isString(session_text) || (hashtag != "" && !hashtag.match(hashPattern)),
-        session_text: !_.isString(session_text) || !session_text.match(sessionPattern)
+        session_text: !_.isString(session_text) || !session_text.match(sessionPattern),
+        no_session: session_text == ""
       }
     })
   }
@@ -436,6 +438,10 @@ app.post('/chart', function (req, res, next) {
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
 
+
+  if(req.session.womenofcolor > req.session.women) {
+    req.session.women += req.session.womenofcolor;
+  }
   var proportionWomen = req.session.women / (req.session.women + req.session.men);
   var proportionWomenOfColor = req.session.womenofcolor / (req.session.women + req.session.men);
 
@@ -698,8 +704,11 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
   ], function(err, stdout, stderr) {
     if (err) throw err;
 
+    if(req.session.womenofcolor > req.session.women) {
+      req.session.women += req.session.womenofcolor;
+    }
     var proportionWomen = req.session.women / (req.session.women + req.session.men);
-
+    var proportionWomenOfColor = req.session.womenofcolor / (req.session.women + req.session.men);
 
       var image_parameters = [];
       image_parameters.push(
@@ -726,7 +735,14 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
           '-draw', 'rectangle 50,790 ' + right + ',840'
         );
       }
-
+      if(proportionWomenOfColor > 0) {
+        var right = 50 + 800 * proportionWomenOfColor;
+        image_parameters.push(
+          '-fill', '#d87111',
+          '-stroke', '#d87111',
+          '-draw', 'rectangle 50,790 ' + right + ',840'
+        );
+      }
       image_parameters.push(
         '-gravity', 'NorthWest',
         '-stroke', '#F0D35A',
@@ -734,6 +750,29 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
         '-font', 'Arial',
         '-pointsize', '24',
         '-annotate', '+50+845', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
+
+      if(req.session.womenofcolor == 0) {
+        image_parameters.push(
+          '-stroke', '#000000',
+          '-fill', '#d87111',
+          '-draw', 'rectangle 40,871 280,900');
+
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#ffffff',
+          '-fill', '#ffffff',
+          '-font', 'Arial',
+          '-pointsize', '24',
+          '-annotate', '+50+873', "No Women of Color!");
+      } else {
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#d87111',
+          '-fill', '#d87111',
+          '-font', 'Arial',
+          '-pointsize', '24',
+          '-annotate', '+50+875', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
+      }
       image_parameters.push(
         '-gravity', 'NorthEast',
         '-stroke', '#ff0000',
@@ -759,22 +798,39 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
           '-stroke', '#fff',
           '-fill', '#fff',
           '-font', 'ArialB',
-          '-pointsize', '42',
-          '-annotate', '+50+640', "THE PRESENT (AND");
+          '-pointsize', '40',
+          '-annotate', '+50+640', "THE PRESENT AND FUTURE");
         image_parameters.push(
           '-gravity', 'NorthWest',
           '-stroke', '#fff',
           '-fill', '#fff',
           '-font', 'ArialB',
-          '-pointsize', '42',
-          '-annotate', '+50+685', "FUTURE) ARE");
-        image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#F0D35A',
-          '-fill', '#F0D35A',
-          '-font', 'ArialB',
-          '-pointsize', '42',
-          '-annotate', '+345+685', "BRIGHT");
+          '-pointsize', '40',
+          '-annotate', '+50+685', "ARE");
+        if(req.session.womenofcolor == 0) {
+          image_parameters.push(
+              '-gravity', 'NorthWest',
+              '-stroke', '#d87111',
+              '-fill', '#d87111',
+              '-font', 'ArialB',
+              '-pointsize', '40',
+              '-annotate', '+145+685', "ALMOST");
+          image_parameters.push(
+              '-gravity', 'NorthWest',
+              '-stroke', '#F0D35A',
+              '-fill', '#F0D35A',
+              '-font', 'ArialB',
+              '-pointsize', '40',
+              '-annotate', '+325+685', "BRIGHT");
+        } else {
+          image_parameters.push(
+            '-gravity', 'NorthWest',
+            '-stroke', '#F0D35A',
+            '-fill', '#F0D35A',
+            '-font', 'ArialB',
+            '-pointsize', '40',
+            '-annotate', '+145+685', "BRIGHT");
+        }
       } else if ( proportionWomen > .3 ) {
         image_parameters.push('-page', '+620+470','assets/icon_cloudy.png');
 
