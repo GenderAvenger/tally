@@ -496,7 +496,7 @@ app.post('/chart', function (req, res, next) {
     image_parameters.push(
       '-stroke', '#000000',
       '-fill', '#d87111',
-      '-draw', 'rectangle 65,660 360,702');
+      '-draw', 'rectangle 65,665 360,707');
 
     image_parameters.push(
       '-gravity', 'NorthWest',
