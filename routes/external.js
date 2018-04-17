@@ -242,7 +242,8 @@ app.post('/talkschart', function (req, res, next) {
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
 
-  var proportionWomen = not_dude_time / (not_dude_time + dude_time);
+  var totalTime = Math.max(1, (not_dude_time + dude_time));
+  var proportionWomen = not_dude_time / totalTime;
 
   var image_parameters = [];
   image_parameters.push(
@@ -495,7 +496,7 @@ app.post('/chart', function (req, res, next) {
     image_parameters.push(
       '-stroke', '#000000',
       '-fill', '#d87111',
-      '-draw', 'rectangle 65,665 360,707');
+      '-draw', 'rectangle 65,660 360,702');
 
     image_parameters.push(
       '-gravity', 'NorthWest',
