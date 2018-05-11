@@ -95,6 +95,33 @@ app.get('/whotalks', function (req, res, next) {
   });
 });
 
+// Helper function
+var isInt = function (n) {
+  return typeof n === 'number' && n % 1 == 0;
+}
+
+app.post('/whotalks', function (req, res, next) {
+  // Validate input
+  var dude_time = parseInt(req.body.dude_time, 10),
+      not_dude_time = parseInt(req.body.not_dude_time, 10);
+
+  // This data is valid, so store it to the session and move along
+  req.session.dude_time = dude_time;
+  req.session.not_dude_time = not_dude_time;
+
+  if(dude_time + not_dude_time == 0) {
+    return res.redirect('whotalks');
+  } else {
+    return res.redirect('whotalksheadcount');
+  }
+});
+
+app.get('/whotalksheadcount', function (req, res, next) {
+  res.render('whotalks-headcount.html', {
+    title: 'Who Talks?',
+  });
+});
+
 app.get('/share/:id', function (req, res, next) {
 
   // Get the chart
@@ -171,11 +198,6 @@ app.get('/thankyou/:id', function (req, res, next) {
 
 app.post('/form', function (req, res, next) {
 
-  // Helper function
-  var isInt = function (n) {
-    return typeof n === 'number' && n % 1 == 0;
-  }
-
   // Validate input
   var men = parseInt(req.body.men, 10),
       women = parseInt(req.body.women, 10),
@@ -234,16 +256,65 @@ app.post('/form', function (req, res, next) {
 });
 
 app.post('/talkschart', function (req, res, next) {
-  var dude_time = parseInt(req.body.dude_time, 10),
-      not_dude_time = parseInt(req.body.not_dude_time, 10),
+  var dude_time = req.session.dude_time;
+  var not_dude_time = req.session.not_dude_time;
+  var men = parseInt(req.body.dudecount, 10),
+      women = parseInt(req.body.notdudecount, 10),
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
+
+  var hashPattern = new RegExp(/^\#?\S{1,20}$/);
+  var sessionPattern = new RegExp(/^.{0,30}$/);
+
+  // TODO - make validation DRY
+  if ((!isInt(men) || men < 0)
+   || (!isInt(women) || women < 0)
+   || !_.isString(session_text)
+   || session_text == ""
+   || !session_text.match(sessionPattern)
+   || !_.isString(hashtag)
+   || (hashtag != ""
+    && !hashtag.match(hashPattern))) {
+    // Send the report page back down
+    // This should also handled directly by javascript in the page
+    // Put by posting to, the user at least doesn't see a URL change
+    // if we need to, re-render it with errors
+    return res.render('whotalks-headcount.html', {
+      title: 'Who Talks?',
+      dudecount: men,
+      notdudecount: women,
+      hashtag: req.body.hashtag,
+      session_text: req.body.session_text,
+      error: {
+        dudecount: !isInt(men) || men < 0,
+        notdudecount: !isInt(women) || women < 0 ,
+        hashtag: !_.isString(session_text) || (hashtag != "" && !hashtag.match(hashPattern)),
+        session_text: !_.isString(session_text) || !session_text.match(sessionPattern),
+        no_session: session_text == ""
+      }
+    })
+  }
+
+  // Add a hash tag if there isn't one
+  if(hashtag != ""
+  && hashtag.charAt(0) != "#")
+    hashtag = "#" + hashtag;
+
+  // Valid at this point, save
+  req.session.men = men;
+  req.session.women = women;
+  req.session.session_text = session_text;
+  req.session.hashtag = hashtag;
+
   var file_id = uuid.v4();
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
 
+  var totalParticipants = men + women;
+  var proportionWomen = women / totalParticipants;
+
   var totalTime = Math.max(1, (not_dude_time + dude_time));
-  var proportionWomen = not_dude_time / totalTime;
+  var proportionWomenTime = not_dude_time / totalTime;
 
   var image_parameters = [];
   image_parameters.push(
@@ -261,8 +332,32 @@ app.post('/talkschart', function (req, res, next) {
     '-draw', 'circle 450,450 450,625'
   );
 
-  if(proportionWomen > 0) {
+  if(proportionWomen == 1) {
+    image_parameters.push(
+      '-fill', '#663333',
+      '-stroke', '#663333',
+      '-draw', 'circle 450,450 450,625'
+    );
+  } else if(proportionWomen > 0) {
     var degrees = (proportionWomen * 360 + 90);
+    var radians = degrees * Math.PI / 180;
+    var x = 450 + 175 * Math.cos(radians);
+    var y = 450 + 175 * Math.sin(radians);
+    image_parameters.push(
+      '-fill', '#663333',
+      '-stroke', '#663333',
+      '-draw', 'path \'M 450,450 L 450,625 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+    );
+  }
+
+  if(proportionWomenTime == 1) {
+    image_parameters.push(
+      '-fill', '#F0D35A',
+      '-stroke', '#F0D35A',
+      '-draw', 'circle 450,450 450,625'
+    );
+  } else if(proportionWomenTime > 0) {
+    var degrees = (proportionWomenTime * 360 + 90);
     var radians = degrees * Math.PI / 180;
     var x = 450 + 175 * Math.cos(radians);
     var y = 450 + 175 * Math.sin(radians);
@@ -273,13 +368,36 @@ app.post('/talkschart', function (req, res, next) {
     );
   }
 
+  if(proportionWomenTime > .4) {
+    image_parameters.push(
+      '-gravity', 'Center',
+      '-stroke', '#F0D35A',
+      '-fill', '#F0D35A',
+      '-font', 'Arial',
+      '-pointsize', '42',
+      '-annotate', '+0+206', 'Women spoke ' + Math.round((proportionWomenTime) * 100,0) + '%% of the time.');
+  } else {
+    image_parameters.push(
+      '-gravity', 'Center',
+      '-stroke', '#ff0000',
+      '-fill', '#ff0000',
+      '-font', 'Arial',
+      '-pointsize', '42',
+      '-annotate', '+0+206', 'Men spoke ' + Math.round((1 - proportionWomenTime) * 100,0) + '%% of the time.');
+  }
+
+  image_parameters.push(
+    '-stroke', '#ffffff',
+    '-fill', '#663333',
+    '-draw', 'rectangle 260,687 640,726');
+
   image_parameters.push(
     '-gravity', 'Center',
-    '-stroke', '#ff0000',
-    '-fill', '#ff0000',
+    '-stroke', '#ffffff',
+    '-fill', '#ffffff',
     '-font', 'Arial',
-    '-pointsize', '42',
-    '-annotate', '+0+236', 'Men spoke ' + Math.round((1 - proportionWomen) * 100,0) + '%% of the time.');
+    '-pointsize', '24',
+    '-annotate', '+0+256', Math.round((proportionWomen) * 100,0) + '%% of the group were women.');
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -297,7 +415,8 @@ app.post('/talkschart', function (req, res, next) {
     '-pointsize', '40',
     '-annotate', '+35+210', hashtag);
 
-  if( proportionWomen > .4 ) {
+  if( proportionWomen > .4
+  && proportionWomenTime >= proportionWomen) {
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -320,7 +439,10 @@ app.post('/talkschart', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+330+65', "BRIGHT");
-  } else if ( proportionWomen > .3 ) {
+  } else if (proportionWomen > .3
+    && proportionWomen < .4
+    && proportionWomenTime < .4
+    && proportionWomenTime > .3) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
 
     image_parameters.push(
@@ -344,8 +466,8 @@ app.post('/talkschart', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '42',
       '-annotate', '+300+65', "PATRIARCHY");
-
-  } else {
+  } else if (proportionWomen < .3
+    && proportionWomenTime < .3) {
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -368,6 +490,42 @@ app.post('/talkschart', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+230+65', "INEQUALITY");
+  } else if (
+    proportionWomen > .40
+  && proportionWomenTime < proportionWomen) {
+    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "WOMEN WERE REPRESENTED,");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "BUT MEN TALKED TOO MUCH");
+  } else if (proportionWomen < .4
+    && proportionWomenTime > .4) {
+    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "THEIR VOICES RANG THROUGH");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "DESPITE THE ODDS");
+
   }
 
   image_parameters.push(
