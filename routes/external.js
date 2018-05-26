@@ -326,78 +326,64 @@ app.post('/talkschart', function (req, res, next) {
   image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
 
   // Draw the chart
-  image_parameters.push(
-    '-fill', '#ff0000',
-    '-stroke', '#ff0000',
-    '-draw', 'circle 450,450 450,625'
-  );
+  // Start by assuming only men
 
-  if(proportionWomen == 1) {
+  console.log(proportionWomenTime);
+  console.log(proportionWomen * .8);
+  console.log(proportionWomen);
+
+  if(proportionWomenTime < (proportionWomen * .8)) {
     image_parameters.push(
-      '-fill', '#663333',
-      '-stroke', '#663333',
-      '-draw', 'circle 450,450 450,625'
+      '-stroke', '#ff4820',
+      '-fill', '#ff4820',
+      '-tile', 'assets/stripes_talks.gif',
+      '-draw', 'circle 450,500 450,675'
     );
-  } else if(proportionWomen > 0) {
-    var degrees = (proportionWomen * 360 + 90);
-    var radians = degrees * Math.PI / 180;
-    var x = 450 + 175 * Math.cos(radians);
-    var y = 450 + 175 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#663333',
-      '-stroke', '#663333',
-      '-draw', 'path \'M 450,450 L 450,625 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+      '+tile'
+    );
+  } else {
+    image_parameters.push(
+      '-stroke', '#ff4820',
+      '-fill', '#ff4820',
+      '-draw', 'circle 450,500 450,675'
     );
   }
 
+  // Draw in the time women spoke
   if(proportionWomenTime == 1) {
     image_parameters.push(
-      '-fill', '#F0D35A',
-      '-stroke', '#F0D35A',
-      '-draw', 'circle 450,450 450,625'
+      '-fill', '#edce63',
+      '-stroke', '#edce63',
+      '-draw', 'circle 450,500 450,675'
     );
   } else if(proportionWomenTime > 0) {
     var degrees = (proportionWomenTime * 360 + 90);
     var radians = degrees * Math.PI / 180;
     var x = 450 + 175 * Math.cos(radians);
-    var y = 450 + 175 * Math.sin(radians);
+    var y = 500 + 175 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#F0D35A',
-      '-stroke', '#F0D35A',
-      '-draw', 'path \'M 450,450 L 450,625 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+      '-fill', '#edce63',
+      '-stroke', '#edce63',
+      '-draw', 'path \'M 450,500 L 450,675 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
     );
   }
-
-  if(proportionWomenTime > .4) {
-    image_parameters.push(
-      '-gravity', 'Center',
-      '-stroke', '#F0D35A',
-      '-fill', '#F0D35A',
-      '-font', 'Arial',
-      '-pointsize', '42',
-      '-annotate', '+0+206', 'Women spoke ' + Math.round((proportionWomenTime) * 100,0) + '%% of the time.');
-  } else {
-    image_parameters.push(
-      '-gravity', 'Center',
-      '-stroke', '#ff0000',
-      '-fill', '#ff0000',
-      '-font', 'Arial',
-      '-pointsize', '42',
-      '-annotate', '+0+206', 'Men spoke ' + Math.round((1 - proportionWomenTime) * 100,0) + '%% of the time.');
-  }
-
-  image_parameters.push(
-    '-stroke', '#ffffff',
-    '-fill', '#663333',
-    '-draw', 'rectangle 260,687 640,726');
 
   image_parameters.push(
     '-gravity', 'Center',
     '-stroke', '#ffffff',
     '-fill', '#ffffff',
     '-font', 'Arial',
-    '-pointsize', '24',
-    '-annotate', '+0+256', Math.round((proportionWomen) * 100,0) + '%% of the group were women.');
+    '-pointsize', '42',
+    '-annotate', '+0-240', 'Men made up ' + Math.round((1 - proportionWomen) * 100,0) + '%% of the group.');
+
+  image_parameters.push(
+    '-gravity', 'Center',
+    '-stroke', '#ff4820',
+    '-fill', '#ff4820',
+    '-font', 'Arial',
+    '-pointsize', '42',
+    '-annotate', '+0-190', 'Men spoke ' + Math.round((1 - proportionWomenTime) * 100,0) + '%% of the time.');
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -405,7 +391,7 @@ app.post('/talkschart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '40',
-    '-annotate', '+35+160', session_text);
+    '-annotate', '+35+15', session_text);
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -413,120 +399,7 @@ app.post('/talkschart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '40',
-    '-annotate', '+35+210', hashtag);
-
-  if( proportionWomen > .4
-  && proportionWomenTime >= proportionWomen) {
-    image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+20', "THE PRESENT (AND ");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+65', "FUTURE) ARE");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#F0D35A',
-      '-fill', '#F0D35A',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+330+65', "BRIGHT");
-  } else if (proportionWomen > .3
-    && proportionWomen < .4
-    && proportionWomenTime < .4
-    && proportionWomenTime > .3) {
-    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
-
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+20', "CLOUDY WITH A");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+65', "CHANCE OF ");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
-      '-font', 'ArialB',
-      '-pointsize', '42',
-      '-annotate', '+300+65', "PATRIARCHY");
-  } else if (proportionWomen < .3
-    && proportionWomenTime < .3) {
-    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+20', "A THUNDERSTORM OF");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+65', "GENDER");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+230+65', "INEQUALITY");
-  } else if (
-    proportionWomen > .40
-  && proportionWomenTime < proportionWomen) {
-    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+20', "WOMEN WERE REPRESENTED,");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+65', "BUT MEN TALKED TOO MUCH");
-  } else if (proportionWomen < .4
-    && proportionWomenTime > .4) {
-    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+20', "THEIR VOICES RANG THROUGH");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+65', "DESPITE THE ODDS");
-
-  }
+    '-annotate', '+35+65', hashtag);
 
   image_parameters.push(
     '-layers', 'flatten', card_filename
@@ -625,8 +498,8 @@ app.post('/chart', function (req, res, next) {
     var x = 450 + 200 * Math.cos(radians);
     var y = 500 + 200 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#F0D35A',
-      '-stroke', '#F0D35A',
+      '-fill', '#edce63',
+      '-stroke', '#edce63',
       '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
     );
   }
@@ -643,8 +516,8 @@ app.post('/chart', function (req, res, next) {
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#F0D35A',
-    '-fill', '#F0D35A',
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
     '+tile',
     '-font', 'Arial',
     '-pointsize', '30',
@@ -722,16 +595,16 @@ app.post('/chart', function (req, res, next) {
           '-annotate', '+130+65', "ALMOST");
       image_parameters.push(
           '-gravity', 'NorthWest',
-          '-stroke', '#F0D35A',
-          '-fill', '#F0D35A',
+          '-stroke', '#edce63',
+          '-fill', '#edce63',
           '-font', 'ArialB',
           '-pointsize', '40',
           '-annotate', '+310+65', "BRIGHT");
     } else {
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#F0D35A',
-        '-fill', '#F0D35A',
+        '-stroke', '#edce63',
+        '-fill', '#edce63',
         '-font', 'ArialB',
         '-pointsize', '40',
         '-annotate', '+130+65', "BRIGHT");
@@ -880,16 +753,16 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
 
       // Draw the chart
       image_parameters.push(
-        '-fill', '#ff0000',
-        '-stroke', '#ff0000',
+        '-fill', '#ff4820',
+        '-stroke', '#ff4820',
         '-draw', 'rectangle 50,790 850,840'
       );
 
       if(proportionWomen > 0) {
         var right = 50 + 800 * proportionWomen;
         image_parameters.push(
-          '-fill', '#F0D35A',
-          '-stroke', '#F0D35A',
+          '-fill', '#edce63',
+          '-stroke', '#edce63',
           '-draw', 'rectangle 50,790 ' + right + ',840'
         );
       }
@@ -903,8 +776,8 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
       }
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#F0D35A',
-        '-fill', '#F0D35A',
+        '-stroke', '#edce63',
+        '-fill', '#edce63',
         '-font', 'Arial',
         '-pointsize', '24',
         '-annotate', '+50+845', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
@@ -933,8 +806,8 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
       }
       image_parameters.push(
         '-gravity', 'NorthEast',
-        '-stroke', '#ff0000',
-        '-fill', '#ff0000',
+        '-stroke', '#ff4820',
+        '-fill', '#ff4820',
         '-font', 'Arial',
         '-pointsize', '24',
         '-annotate', '+50+845', req.session.men + ((req.session.men == 1)?" Man":" Men"));
@@ -975,16 +848,16 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
               '-annotate', '+145+685', "ALMOST");
           image_parameters.push(
               '-gravity', 'NorthWest',
-              '-stroke', '#F0D35A',
-              '-fill', '#F0D35A',
+              '-stroke', '#edce63',
+              '-fill', '#edce63',
               '-font', 'ArialB',
               '-pointsize', '40',
               '-annotate', '+325+685', "BRIGHT");
         } else {
           image_parameters.push(
             '-gravity', 'NorthWest',
-            '-stroke', '#F0D35A',
-            '-fill', '#F0D35A',
+            '-stroke', '#edce63',
+            '-fill', '#edce63',
             '-font', 'ArialB',
             '-pointsize', '40',
             '-annotate', '+145+685', "BRIGHT");
