@@ -95,6 +95,33 @@ app.get('/whotalks', function (req, res, next) {
   });
 });
 
+// Helper function
+var isInt = function (n) {
+  return typeof n === 'number' && n % 1 == 0;
+}
+
+app.post('/whotalks', function (req, res, next) {
+  // Validate input
+  var dude_time = parseInt(req.body.dude_time, 10),
+      not_dude_time = parseInt(req.body.not_dude_time, 10);
+
+  // This data is valid, so store it to the session and move along
+  req.session.dude_time = dude_time;
+  req.session.not_dude_time = not_dude_time;
+
+  if(dude_time + not_dude_time == 0) {
+    return res.redirect('whotalks');
+  } else {
+    return res.redirect('whotalksheadcount');
+  }
+});
+
+app.get('/whotalksheadcount', function (req, res, next) {
+  res.render('whotalks-headcount.html', {
+    title: 'Who Talks?',
+  });
+});
+
 app.get('/share/:id', function (req, res, next) {
 
   // Get the chart
@@ -171,11 +198,6 @@ app.get('/thankyou/:id', function (req, res, next) {
 
 app.post('/form', function (req, res, next) {
 
-  // Helper function
-  var isInt = function (n) {
-    return typeof n === 'number' && n % 1 == 0;
-  }
-
   // Validate input
   var men = parseInt(req.body.men, 10),
       women = parseInt(req.body.women, 10),
@@ -234,16 +256,65 @@ app.post('/form', function (req, res, next) {
 });
 
 app.post('/talkschart', function (req, res, next) {
-  var dude_time = parseInt(req.body.dude_time, 10),
-      not_dude_time = parseInt(req.body.not_dude_time, 10),
+  var dude_time = req.session.dude_time;
+  var not_dude_time = req.session.not_dude_time;
+  var men = parseInt(req.body.dudecount, 10),
+      women = parseInt(req.body.notdudecount, 10),
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
+
+  var hashPattern = new RegExp(/^\#?\S{1,20}$/);
+  var sessionPattern = new RegExp(/^.{0,30}$/);
+
+  // TODO - make validation DRY
+  if ((!isInt(men) || men < 0)
+   || (!isInt(women) || women < 0)
+   || !_.isString(session_text)
+   || session_text == ""
+   || !session_text.match(sessionPattern)
+   || !_.isString(hashtag)
+   || (hashtag != ""
+    && !hashtag.match(hashPattern))) {
+    // Send the report page back down
+    // This should also handled directly by javascript in the page
+    // Put by posting to, the user at least doesn't see a URL change
+    // if we need to, re-render it with errors
+    return res.render('whotalks-headcount.html', {
+      title: 'Who Talks?',
+      dudecount: men,
+      notdudecount: women,
+      hashtag: req.body.hashtag,
+      session_text: req.body.session_text,
+      error: {
+        dudecount: !isInt(men) || men < 0,
+        notdudecount: !isInt(women) || women < 0 ,
+        hashtag: !_.isString(session_text) || (hashtag != "" && !hashtag.match(hashPattern)),
+        session_text: !_.isString(session_text) || !session_text.match(sessionPattern),
+        no_session: session_text == ""
+      }
+    })
+  }
+
+  // Add a hash tag if there isn't one
+  if(hashtag != ""
+  && hashtag.charAt(0) != "#")
+    hashtag = "#" + hashtag;
+
+  // Valid at this point, save
+  req.session.men = men;
+  req.session.women = women;
+  req.session.session_text = session_text;
+  req.session.hashtag = hashtag;
+
   var file_id = uuid.v4();
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
 
+  var totalParticipants = men + women;
+  var proportionWomen = women / totalParticipants;
+
   var totalTime = Math.max(1, (not_dude_time + dude_time));
-  var proportionWomen = not_dude_time / totalTime;
+  var proportionWomenTime = not_dude_time / totalTime;
 
   var image_parameters = [];
   image_parameters.push(
@@ -255,31 +326,64 @@ app.post('/talkschart', function (req, res, next) {
   image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
 
   // Draw the chart
-  image_parameters.push(
-    '-fill', '#ff0000',
-    '-stroke', '#ff0000',
-    '-draw', 'circle 450,450 450,625'
-  );
+  // Start by assuming only men
 
-  if(proportionWomen > 0) {
-    var degrees = (proportionWomen * 360 + 90);
+  console.log(proportionWomenTime);
+  console.log(proportionWomen * .8);
+  console.log(proportionWomen);
+
+  if(proportionWomenTime < (proportionWomen * .8)) {
+    image_parameters.push(
+      '-stroke', '#ff4820',
+      '-fill', '#ff4820',
+      '-tile', 'assets/stripes_talks.gif',
+      '-draw', 'circle 450,500 450,675'
+    );
+    image_parameters.push(
+      '+tile'
+    );
+  } else {
+    image_parameters.push(
+      '-stroke', '#ff4820',
+      '-fill', '#ff4820',
+      '-draw', 'circle 450,500 450,675'
+    );
+  }
+
+  // Draw in the time women spoke
+  if(proportionWomenTime == 1) {
+    image_parameters.push(
+      '-fill', '#edce63',
+      '-stroke', '#edce63',
+      '-draw', 'circle 450,500 450,675'
+    );
+  } else if(proportionWomenTime > 0) {
+    var degrees = (proportionWomenTime * 360 + 90);
     var radians = degrees * Math.PI / 180;
     var x = 450 + 175 * Math.cos(radians);
-    var y = 450 + 175 * Math.sin(radians);
+    var y = 500 + 175 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#F0D35A',
-      '-stroke', '#F0D35A',
-      '-draw', 'path \'M 450,450 L 450,625 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+      '-fill', '#edce63',
+      '-stroke', '#edce63',
+      '-draw', 'path \'M 450,500 L 450,675 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
     );
   }
 
   image_parameters.push(
     '-gravity', 'Center',
-    '-stroke', '#ff0000',
-    '-fill', '#ff0000',
+    '-stroke', '#ffffff',
+    '-fill', '#ffffff',
     '-font', 'Arial',
     '-pointsize', '42',
-    '-annotate', '+0+236', 'Men spoke ' + Math.round((1 - proportionWomen) * 100,0) + '%% of the time.');
+    '-annotate', '+0-240', 'Men made up ' + Math.round((1 - proportionWomen) * 100,0) + '%% of the group.');
+
+  image_parameters.push(
+    '-gravity', 'Center',
+    '-stroke', '#ff4820',
+    '-fill', '#ff4820',
+    '-font', 'Arial',
+    '-pointsize', '42',
+    '-annotate', '+0-190', 'Men spoke ' + Math.round((1 - proportionWomenTime) * 100,0) + '%% of the time.');
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -287,7 +391,7 @@ app.post('/talkschart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '40',
-    '-annotate', '+35+160', session_text);
+    '-annotate', '+35+15', session_text);
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -295,80 +399,7 @@ app.post('/talkschart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '40',
-    '-annotate', '+35+210', hashtag);
-
-  if( proportionWomen > .4 ) {
-    image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+20', "THE PRESENT (AND ");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+65', "FUTURE) ARE");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#F0D35A',
-      '-fill', '#F0D35A',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+330+65', "BRIGHT");
-  } else if ( proportionWomen > .3 ) {
-    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
-
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+20', "CLOUDY WITH A");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+65', "CHANCE OF ");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
-      '-font', 'ArialB',
-      '-pointsize', '42',
-      '-annotate', '+300+65', "PATRIARCHY");
-
-  } else {
-    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+20', "A THUNDERSTORM OF");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+65', "GENDER");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+230+65', "INEQUALITY");
-  }
+    '-annotate', '+35+65', hashtag);
 
   image_parameters.push(
     '-layers', 'flatten', card_filename
@@ -467,8 +498,8 @@ app.post('/chart', function (req, res, next) {
     var x = 450 + 200 * Math.cos(radians);
     var y = 500 + 200 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#F0D35A',
-      '-stroke', '#F0D35A',
+      '-fill', '#edce63',
+      '-stroke', '#edce63',
       '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
     );
   }
@@ -485,8 +516,8 @@ app.post('/chart', function (req, res, next) {
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#F0D35A',
-    '-fill', '#F0D35A',
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
     '+tile',
     '-font', 'Arial',
     '-pointsize', '30',
@@ -564,16 +595,16 @@ app.post('/chart', function (req, res, next) {
           '-annotate', '+130+65', "ALMOST");
       image_parameters.push(
           '-gravity', 'NorthWest',
-          '-stroke', '#F0D35A',
-          '-fill', '#F0D35A',
+          '-stroke', '#edce63',
+          '-fill', '#edce63',
           '-font', 'ArialB',
           '-pointsize', '40',
           '-annotate', '+310+65', "BRIGHT");
     } else {
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#F0D35A',
-        '-fill', '#F0D35A',
+        '-stroke', '#edce63',
+        '-fill', '#edce63',
         '-font', 'ArialB',
         '-pointsize', '40',
         '-annotate', '+130+65', "BRIGHT");
@@ -722,16 +753,16 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
 
       // Draw the chart
       image_parameters.push(
-        '-fill', '#ff0000',
-        '-stroke', '#ff0000',
+        '-fill', '#ff4820',
+        '-stroke', '#ff4820',
         '-draw', 'rectangle 50,790 850,840'
       );
 
       if(proportionWomen > 0) {
         var right = 50 + 800 * proportionWomen;
         image_parameters.push(
-          '-fill', '#F0D35A',
-          '-stroke', '#F0D35A',
+          '-fill', '#edce63',
+          '-stroke', '#edce63',
           '-draw', 'rectangle 50,790 ' + right + ',840'
         );
       }
@@ -745,8 +776,8 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
       }
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#F0D35A',
-        '-fill', '#F0D35A',
+        '-stroke', '#edce63',
+        '-fill', '#edce63',
         '-font', 'Arial',
         '-pointsize', '24',
         '-annotate', '+50+845', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
@@ -775,8 +806,8 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
       }
       image_parameters.push(
         '-gravity', 'NorthEast',
-        '-stroke', '#ff0000',
-        '-fill', '#ff0000',
+        '-stroke', '#ff4820',
+        '-fill', '#ff4820',
         '-font', 'Arial',
         '-pointsize', '24',
         '-annotate', '+50+845', req.session.men + ((req.session.men == 1)?" Man":" Men"));
@@ -817,16 +848,16 @@ app.post('/photo', upload.single('photo'), function (req, res, next) {
               '-annotate', '+145+685', "ALMOST");
           image_parameters.push(
               '-gravity', 'NorthWest',
-              '-stroke', '#F0D35A',
-              '-fill', '#F0D35A',
+              '-stroke', '#edce63',
+              '-fill', '#edce63',
               '-font', 'ArialB',
               '-pointsize', '40',
               '-annotate', '+325+685', "BRIGHT");
         } else {
           image_parameters.push(
             '-gravity', 'NorthWest',
-            '-stroke', '#F0D35A',
-            '-fill', '#F0D35A',
+            '-stroke', '#edce63',
+            '-fill', '#edce63',
             '-font', 'ArialB',
             '-pointsize', '40',
             '-annotate', '+145+685', "BRIGHT");

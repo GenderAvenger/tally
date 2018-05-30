@@ -33,16 +33,7 @@
       </div>
       <div class="row">
         <div class="col-xs-offset-1 col-xs-10 text-center">
-          <form method="post" id="chart-form" action="talkschart">
-            <div class="form-group {% if error.session_text %} error {% endif %}">
-              <label for="session_text">Title your results</label>
-              <textarea class="form-control" id="session_text" name="session_text" placeholder="e.g. the name of an meeting, show, event">{% if session_text %}{{ session_text }}{% endif %}</textarea>
-            </div>
-            <div class="form-group {% if error.hashtag %} error {% endif %}">
-              <label for="hashtag">Is there a hashtag?</label>
-              <input type="text" class="form-control" name="hashtag" id="hashtag" placeholder="optional" {% if hashtag %}value="{{ hashtag }}"{% endif %}/>
-            </div>
-
+          <form method="post" id="chart-form" action="whotalks">
             <div class="form-group">
               <input type="hidden" name="not_dude_time" value="0" id="not-dude-input" />
               <input type="hidden" name="dude_time" value="0" id="dude-input" />
