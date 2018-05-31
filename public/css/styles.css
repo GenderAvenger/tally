@@ -300,3 +300,8 @@
   div.btn-pad {
     margin: 4px;
   }
+
+ div.footer a { color: #fff; }
+ div.footer {
+  padding: 10px;
+ }
