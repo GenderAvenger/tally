@@ -426,8 +426,10 @@ app.post('/talkschart', function (req, res, next) {
             storeChart(pie_id, {
               "session_text": session_text,
               "hashtag": hashtag,
-              "men": dude_time,
-              "women": not_dude_time,
+              "men": men,
+              "women": women,
+              "men_time": dude_time,
+              "women_time": not_dude_time,
               "other": 0,
               "type": "whotalks",
               "pie_id": pie_id,
