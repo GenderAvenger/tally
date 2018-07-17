@@ -72,6 +72,13 @@ app.get('/form', function (req, res, next) {
     men: req.session.men,
     women: req.session.women,
     womenofcolor: req.session.womenofcolor,
+    nonbinary: req.session.nonbinary,
+  });
+});
+
+app.get('/tally-details', function (req, res, next) {
+  res.render('tally-details.html', {
+    title: 'Event Details',
     hashtag: req.session.hashtag,
     session_text: req.session.session_text
   });
@@ -202,37 +209,57 @@ app.post('/form', function (req, res, next) {
   var men = parseInt(req.body.men, 10),
       women = parseInt(req.body.women, 10),
       womenofcolor = parseInt(req.body.womenofcolor, 10),
-      session_text = req.body.session_text,
+      nonbinary = parseInt(req.body.nonbinary, 10);
+
+  // TODO - make validation DRY
+  if ((!isInt(men) || men < 0)
+   || (!isInt(women) || women < 0)
+   || (!isInt(womenofcolor) || womenofcolor < 0)
+   || (!isInt(nonbinary) || nonbinary < 0)) {
+    return res.render('form.html', {
+      title: 'Tally Form',
+      men: req.body.men,
+      women: req.body.women,
+      womenofcolor: req.body.womenofcolor,
+      nonbinary: req.body.nonbinary,
+      error: {
+        men: !isInt(men) || men < 0,
+        women: !isInt(women) || women < 0 ,
+        womenofcolor: !isInt(womenofcolor) || womenofcolor < 0 ,
+        nonbinary: !isInt(nonbinary) || nonbinary < 0
+      }
+    })
+  }
+
+  // This data is valid, so store it to the session and move along
+  req.session.men = men;
+  req.session.women = women;
+  req.session.womenofcolor = womenofcolor;
+  req.session.nonbinary = nonbinary;
+  return res.redirect('tally-details');
+});
+
+app.post('/tally-details', function (req, res, next) {
+
+  // Validate input
+  var session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
   var hashPattern = new RegExp(/^\#?\S{1,20}$/);
   var sessionPattern = new RegExp(/^.{0,30}$/);
 
   // TODO - make validation DRY
-  if ((!isInt(men) || men < 0)
-   || (!isInt(women) || women < 0)
-   || (!isInt(womenofcolor) || womenofcolor < 0)
-   || !_.isString(session_text)
+  if (!_.isString(session_text)
    || session_text == ""
    || !session_text.match(sessionPattern)
    || !_.isString(hashtag)
    || (hashtag != ""
     && !hashtag.match(hashPattern))) {
-    // Send the report page back down
-    // This should also handled directly by javascript in the page
-    // Put by posting to, the user at least doesn't see a URL change
-    // if we need to, re-render it with errors
-    return res.render('form.html', {
-      title: 'Tally Form',
-      men: req.body.men,
-      women: req.body.women,
-      womenofcolor: req.body.womenofcolor,
+    return res.render('tally-details.html', {
+      title: 'Event Details',
       hashtag: req.body.hashtag,
       session_text: req.body.session_text,
       error: {
-        men: !isInt(men) || men < 0,
-        women: !isInt(women) || women < 0 ,
-        womenofcolor: !isInt(womenofcolor) || womenofcolor < 0 ,
         hashtag: !_.isString(session_text) || (hashtag != "" && !hashtag.match(hashPattern)),
         session_text: !_.isString(session_text) || !session_text.match(sessionPattern),
         no_session: session_text == ""
@@ -246,9 +273,6 @@ app.post('/form', function (req, res, next) {
     hashtag = "#" + hashtag;
 
   // This data is valid, so store it to the session and move along
-  req.session.men = men;
-  req.session.women = women;
-  req.session.womenofcolor = womenofcolor;
   req.session.session_text = session_text;
   req.session.hashtag = hashtag;
 
@@ -325,19 +349,102 @@ app.post('/talkschart', function (req, res, next) {
   image_parameters.push('-page', '+0+0','assets/city_background_wire_logo.png');
   image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
 
+  // Draw the labels
+  if (proportionWomen > .4
+  &&  proportionWomenTime >= .9 * proportionWomen) {
+    image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "THE PRESENT AND FUTURE");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "ARE");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#edce63',
+      '-fill', '#edce63',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+130+65', "BRIGHT");
+  } else if (proportionWomen > .4
+  &&  proportionWomenTime < .9 * proportionWomen) {
+    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
+
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "WOMEN WERE THERE, BUT");
+
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#FF0000',
+      '-fill', '#FF0000',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "MEN TALKED TOO MUCH");
+  } else if (proportionWomen < .4
+  &&  proportionWomenTime > .9 * proportionWomen) {
+    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
+
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "WOMEN SPOKE, BUT THERE");
+
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "WERE TOO MANY MEN");
+  } else {
+    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "A THUNDERSTORM OF");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "GENDER");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#FF0000',
+      '-fill', '#FF0000',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+230+65', "INEQUALITY");
+  }
+
   // Draw the chart
   // Start by assuming only men
-
-  console.log(proportionWomenTime);
-  console.log(proportionWomen * .8);
-  console.log(proportionWomen);
-
-  if(proportionWomenTime < (proportionWomen * .8)) {
+  if(proportionWomenTime < (proportionWomen * .9)) {
     image_parameters.push(
       '-stroke', '#ff4820',
       '-fill', '#ff4820',
       '-tile', 'assets/stripes_talks.gif',
-      '-draw', 'circle 450,500 450,675'
+      '-draw', 'circle 450,535 450,710'
     );
     image_parameters.push(
       '+tile'
@@ -346,7 +453,7 @@ app.post('/talkschart', function (req, res, next) {
     image_parameters.push(
       '-stroke', '#ff4820',
       '-fill', '#ff4820',
-      '-draw', 'circle 450,500 450,675'
+      '-draw', 'circle 450,535 450,710'
     );
   }
 
@@ -355,17 +462,17 @@ app.post('/talkschart', function (req, res, next) {
     image_parameters.push(
       '-fill', '#edce63',
       '-stroke', '#edce63',
-      '-draw', 'circle 450,500 450,675'
+      '-draw', 'circle 450,535 450,710'
     );
   } else if(proportionWomenTime > 0) {
     var degrees = (proportionWomenTime * 360 + 90);
     var radians = degrees * Math.PI / 180;
     var x = 450 + 175 * Math.cos(radians);
-    var y = 500 + 175 * Math.sin(radians);
+    var y = 535 + 175 * Math.sin(radians);
     image_parameters.push(
       '-fill', '#edce63',
       '-stroke', '#edce63',
-      '-draw', 'path \'M 450,500 L 450,675 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+      '-draw', 'path \'M 450,535 L 450,710 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
     );
   }
 
@@ -374,16 +481,16 @@ app.post('/talkschart', function (req, res, next) {
     '-stroke', '#ffffff',
     '-fill', '#ffffff',
     '-font', 'Arial',
-    '-pointsize', '42',
-    '-annotate', '+0-240', 'Men made up ' + Math.round((1 - proportionWomen) * 100,0) + '%% of the group.');
+    '-pointsize', '32',
+    '-annotate', '+0-160', 'Men made up ' + Math.round((1 - proportionWomen) * 100,0) + '%% of the group.');
 
   image_parameters.push(
     '-gravity', 'Center',
     '-stroke', '#ff4820',
     '-fill', '#ff4820',
     '-font', 'Arial',
-    '-pointsize', '42',
-    '-annotate', '+0-190', 'Men spoke ' + Math.round((1 - proportionWomenTime) * 100,0) + '%% of the time.');
+    '-pointsize', '32',
+    '-annotate', '+0-120', 'Men spoke ' + Math.round((1 - proportionWomenTime) * 100,0) + '%% of the time.');
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -391,7 +498,7 @@ app.post('/talkschart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '40',
-    '-annotate', '+35+15', session_text);
+    '-annotate', '+35+160', req.session.session_text);
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -399,7 +506,7 @@ app.post('/talkschart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '40',
-    '-annotate', '+35+65', hashtag);
+    '-annotate', '+35+210', req.session.hashtag);
 
   image_parameters.push(
     '-layers', 'flatten', card_filename
@@ -475,8 +582,9 @@ app.post('/chart', function (req, res, next) {
   if(req.session.womenofcolor > req.session.women) {
     req.session.women += req.session.womenofcolor;
   }
-  var proportionWomen = req.session.women / (req.session.women + req.session.men);
-  var proportionWomenOfColor = req.session.womenofcolor / (req.session.women + req.session.men);
+  var proportionWomen = req.session.women / (req.session.women + req.session.men + req.session.nonbinary);
+  var proportionWomenOfColor = req.session.womenofcolor / (req.session.women + req.session.men + req.session.nonbinary);
+  var proportionNonbinary = req.session.nonbinary / (req.session.women + req.session.men + req.session.nonbinary);
 
   var image_parameters = [];
   image_parameters.push(
@@ -512,7 +620,31 @@ app.post('/chart', function (req, res, next) {
     var y = 500 + 200 * Math.sin(radians);
     image_parameters.push(
       '-tile', 'assets/stripes.gif',
-      '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+      '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\'',
+      '+tile'
+    );
+  }
+
+  if(proportionNonbinary > 0) {
+    var degrees = (proportionNonbinary * 360 + 90);
+    var radians = degrees * Math.PI / 180;
+    var x = 450 - 200 * Math.cos(radians);
+    var y = 500 + 200 * Math.sin(radians);
+    image_parameters.push(
+      '-fill', '#9E84CB',
+      '-stroke', '#9E84CB',
+      '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',' + ((degrees > 270)?0:0)  + ' ' + x + ',' + y + ' Z\''
+    );
+  }
+  if(proportionNonbinary == 1) {
+    var degrees = (proportionNonbinary * 360 + 90);
+    var radians = degrees * Math.PI / 180;
+    var x = 450 - 200 * Math.cos(radians);
+    var y = 500 + 200 * Math.sin(radians);
+    image_parameters.push(
+      '-fill', '#9E84CB',
+      '-stroke', '#9E84CB',
+      '-draw', 'circle 450,500 450,700'
     );
   }
 
@@ -520,10 +652,19 @@ app.post('/chart', function (req, res, next) {
     '-gravity', 'NorthWest',
     '-stroke', '#edce63',
     '-fill', '#edce63',
-    '+tile',
     '-font', 'Arial',
     '-pointsize', '30',
     '-annotate', '+75+630', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
+
+  if(req.session.nonbinary > 0) {
+    image_parameters.push(
+      '-gravity', 'NorthEast',
+      '-stroke', '#9E84CB',
+      '-fill', '#9E84CB',
+      '-font', 'Arial',
+      '-pointsize', '30',
+      '-annotate', '+25+670', req.session.nonbinary + ((req.session.nonbinary == 1)?" Nonbinary Person":" Nonbinary Persons"));
+  }
 
   if(req.session.womenofcolor == 0) {
     image_parameters.push(
@@ -571,7 +712,7 @@ app.post('/chart', function (req, res, next) {
     '-pointsize', '40',
     '-annotate', '+35+210', req.session.hashtag);
 
-  if( proportionWomen > .4 ) {
+  if( proportionWomen + proportionNonbinary > .4 ) {
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -611,7 +752,7 @@ app.post('/chart', function (req, res, next) {
         '-pointsize', '40',
         '-annotate', '+130+65', "BRIGHT");
     }
-  } else if ( proportionWomen > .3 ) {
+  } else if ( proportionWomen + proportionNonbinary > .3 ) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
 
     image_parameters.push(
