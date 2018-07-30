@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Head -->
+  {% include "shared/header.html" %}
+
+  <body class="thankyou">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-offset-3 col-sm-6 text-center">
+          <div id="logo">
+            <a href="/"><img src="../img/wire_logo.png" alt="Gender Avenger"/></a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-2 col-xs-8 text-center">
+          <h1>Thanks for Sharing</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-3 col-xs-6 text-center">
+          <p class="instructions">Support Gender Avenger today and help us ensure that women's voices count, always.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-3 col-xs-6 text-center">
+          <a href="https://www.genderavenger.com/support-us/" target="_blank"><div class="button">Donate $3</div></a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-2 col-xs-8 text-center">
+          <a href="/"><div class="button">Create Another</div></a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-2 col-xs-8 text-center">
+          <p class="instructions">Share Again</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-3 col-xs-2 col-md-offset-4 col-md-1 text-right">
+          <a class="social" href="https://www.facebook.com/sharer/sharer.php?u=http://app.genderavenger.com/share/{{ pie_id }}" title="Share on Facebook" target="_blank"><img src="../img/social_fb.png"/>
+        </div>
+        <div class="col-xs-2 col-md-2 text-center">
+          <a class="social" href="https://twitter.com/intent/tweet?text=http://app.genderavenger.com/share/{{ pie_id }} via %40GenderAvenger %23genderavenger {{ hashtag }}" title="Share on Twitter" target="_blank"><img src="../img/social_twitter.png"/></a>
+        </div>
+        <div class="col-xs-2 col-md-1 text-left">
+          <a class="social" href="mailto:?cc=gina@genderavenger.com&subject=Hello%20again&body=I thought you might want to see this gender breakdown: http://app.genderavenger.com/share/{{ pie_id }}" title="Share by Email"><img src="../img/social_email.png"/></a>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="/js/chart_events.js"></script>
+  </body>
+</html>

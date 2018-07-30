@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Head -->
+  {% include "shared/header.html" %}
+  <body class="photo">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-offset-3 col-sm-6 text-center">
+          <div id="logo">
+            <a href="/"><img src="img/wire_logo.png" alt="Gender Avenger"/></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-offset-3 col-sm-6 text-center">
+          <h2>Use a photo</h2>
+        </div>
+      </div>
+
+      <form id="photo_form" method="post" enctype="multipart/form-data" >
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-6 instructions text-center">
+              <div id="photo-canvas">
+                <div id="photo-preview"></div>
+                <div id="photo-button">
+                  <label for="trigger-photo"></label>
+                  <input type="file" accept="image/*" capture="camera" id="trigger-photo" name="photo" />
+                </div>
+                <div id="photo-nav" class="hide-on-submit">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <input type="submit" id="use-photo" class="secondary-button" value="Use this photo" />
+                    </div>
+                    <div class="col-xs-6">
+                      <label for="trigger-photo"><div id="take-another" class="secondary-button">Take another</div></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </form>
+
+      <div class="row hide-on-submit">
+        <div class="col-xs-offset-2 col-xs-8 text-center">
+          <p class="instructions">Or skip this, and create a photoless infographic instead</p>
+        </div>
+      </div>
+
+      <div class="row" id="submitting-message" style="display:none">
+        <div class="col-xs-offset-2 col-xs-8 text-center">
+          <p class="instructions">Submitting your photo...</p>
+        </div>
+      </div>
+
+      <div class="row hide-on-submit">
+        <div class="col-xs-12 text-center">
+          <form action="/tally/chart" method="post">
+            <input type="submit" type="submit" value="Skip" class="btn" />
+          </form>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      $(function() {
+        $input = $("#trigger-photo");
+        $preview_div = $("#photo-preview");
+
+        $input.change(function(e) {
+          $img = $("<img>");
+          $img.attr("src", URL.createObjectURL(e.target.files[0]));
+          $preview_div.empty();
+          $preview_div.append($img);
+          $("#photo-button").hide();
+          $("#photo-nav").show();
+        });
+
+        $("#use-photo").click(function() {
+          $("#submitting-message").show();
+          $(".hide-on-submit").hide();
+          $("#photo-form").submit();
+        })
+      })
+      </script>
+    </script>
+
+    <script type="text/javascript" src="/js/index_events.js"></script>
+  </body>
+</html>

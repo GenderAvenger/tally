@@ -55,20 +55,20 @@ app.get('/', function (req, res, next) {
 });
 
 app.get('/intro', function (req, res, next) {
-  res.render('intro.html', {
+  res.render('core/intro.html', {
     title: 'Introduction',
   });
 });
 
 app.get('/toolselect', function (req, res, next) {
-  res.render('toolselect.html', {
+  res.render('core/tool_select.html', {
     title: 'What do you want to do?',
   });
 });
 
-app.get('/form', function (req, res, next) {
-  res.render('form.html', {
-    title: 'Form',
+app.get('/tally', function (req, res, next) {
+  res.render('tally/headcount.html', {
+    title: 'GA Tally',
     men: req.session.men,
     women: req.session.women,
     womenofcolor: req.session.womenofcolor,
@@ -76,28 +76,28 @@ app.get('/form', function (req, res, next) {
   });
 });
 
-app.get('/tally-details', function (req, res, next) {
-  res.render('tally-details.html', {
+app.get('/tally/details', function (req, res, next) {
+  res.render('tally/details.html', {
     title: 'Event Details',
     hashtag: req.session.hashtag,
     session_text: req.session.session_text
   });
 });
 
-app.get('/choice', function (req, res, next) {
-  res.render('choice.html', {
+app.get('/tally/photochoice', function (req, res, next) {
+  res.render('tally/photo_choice.html', {
     title: 'Photo or Chart?'
   });
 });
 
-app.get('/photo', function (req, res, next) {
-  res.render('photo.html', {
+app.get('/tally/photo', function (req, res, next) {
+  res.render('tally/photo.html', {
     title: 'Use a Photo',
   });
 });
 
 app.get('/whotalks', function (req, res, next) {
-  res.render('whotalks.html', {
+  res.render('whotalks/timer.html', {
     title: 'Who Talks?',
   });
 });
@@ -119,12 +119,12 @@ app.post('/whotalks', function (req, res, next) {
   if(dude_time + not_dude_time == 0) {
     return res.redirect('whotalks');
   } else {
-    return res.redirect('whotalksheadcount');
+    return res.redirect('whotalks/headcount');
   }
 });
 
-app.get('/whotalksheadcount', function (req, res, next) {
-  res.render('whotalks-headcount.html', {
+app.get('/whotalks/headcount', function (req, res, next) {
+  res.render('whotalks/headcount.html', {
     title: 'Who Talks?',
   });
 });
@@ -152,7 +152,7 @@ app.get('/share/:id', function (req, res, next) {
       // Regenerate the URL
     }
 
-    return res.render('share.html', {
+    return res.render('core/share.html', {
       title: 'View Tally',
       is_share: true,
       pie: pie_url,
@@ -195,7 +195,7 @@ app.get('/thankyou/:id', function (req, res, next) {
       // Regenerate the URL
     }
 
-    return res.render('thankyou.html', {
+    return res.render('core/thankyou.html', {
       title: 'Thank You',
       pie_id: pie_id,
       hashtag: querystring.escape(refVal.hashtag),
@@ -203,7 +203,7 @@ app.get('/thankyou/:id', function (req, res, next) {
   })
 });
 
-app.post('/form', function (req, res, next) {
+app.post('/tally', function (req, res, next) {
 
   // Validate input
   var men = parseInt(req.body.men, 10),
@@ -216,7 +216,7 @@ app.post('/form', function (req, res, next) {
    || (!isInt(women) || women < 0)
    || (!isInt(womenofcolor) || womenofcolor < 0)
    || (!isInt(nonbinary) || nonbinary < 0)) {
-    return res.render('form.html', {
+    return res.render('tally/headcount.html', {
       title: 'Tally Form',
       men: req.body.men,
       women: req.body.women,
@@ -236,10 +236,10 @@ app.post('/form', function (req, res, next) {
   req.session.women = women;
   req.session.womenofcolor = womenofcolor;
   req.session.nonbinary = nonbinary;
-  return res.redirect('tally-details');
+  return res.redirect('tally/details');
 });
 
-app.post('/tally-details', function (req, res, next) {
+app.post('/tally/details', function (req, res, next) {
 
   // Validate input
   var session_text = req.body.session_text,
@@ -255,7 +255,7 @@ app.post('/tally-details', function (req, res, next) {
    || !_.isString(hashtag)
    || (hashtag != ""
     && !hashtag.match(hashPattern))) {
-    return res.render('tally-details.html', {
+    return res.render('tally/details.html', {
       title: 'Event Details',
       hashtag: req.body.hashtag,
       session_text: req.body.session_text,
@@ -276,10 +276,10 @@ app.post('/tally-details', function (req, res, next) {
   req.session.session_text = session_text;
   req.session.hashtag = hashtag;
 
-  return res.redirect('choice');
+  return res.redirect('/tally/photochoice');
 });
 
-app.post('/talkschart', function (req, res, next) {
+app.post('/whotalks/chart', function (req, res, next) {
   var dude_time = req.session.dude_time;
   var not_dude_time = req.session.not_dude_time;
   var men = parseInt(req.body.dudecount, 10),
@@ -572,7 +572,7 @@ app.post('/talkschart', function (req, res, next) {
 });
 
 
-app.post('/chart', function (req, res, next) {
+app.post('/tally/chart', function (req, res, next) {
 
   var file_id = uuid.v4();
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
@@ -861,7 +861,7 @@ app.post('/chart', function (req, res, next) {
   });
 });
 
-app.post('/photo', upload.single('photo'), function (req, res, next) {
+app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
 
   // Prep the output files
   var file_id = uuid.v4();
