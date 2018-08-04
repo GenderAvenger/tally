@@ -269,7 +269,7 @@
 
   /* Who Talks Page */
   div.button-timer {
-    min-width: 120px;
+    min-width: 180px;
     padding: 12px;
     background-color: #edce63;
     color: #1d2951;
@@ -279,7 +279,23 @@
     background-color: #f1d881;
   }
   div.button-timer.pressed {
-    background-color: #b39015;
+    background-color: #DC5239;
+  }
+
+  div.button-pause {
+    width: 60px;
+    padding: 12px;
+    background-color: #DC5239;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+
+  #activity-talker {
+    font-size: 16px;
+    font-weight: normal;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    color: #fff;
   }
 
   .pad-bottom {
