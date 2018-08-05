@@ -884,238 +884,238 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
     var proportionWomen = req.session.women / (req.session.women + req.session.men);
     var proportionWomenOfColor = req.session.womenofcolor / (req.session.women + req.session.men);
 
-      var image_parameters = [];
+    var image_parameters = [];
+    image_parameters.push(
+      '-gravity', 'NorthWest'
+    );
+
+    image_parameters.push('-page', '+0+0','assets/base_background.png');
+    image_parameters.push('-page', '+0+0',req.file.path);
+    image_parameters.push('-page', '+0+0','assets/photo_logo.png');
+    image_parameters.push('-page', '+0+0','assets/photo_background.png');
+
+    // Draw the chart
+    image_parameters.push(
+      '-fill', '#ff4820',
+      '-stroke', '#ff4820',
+      '-draw', 'rectangle 50,790 850,840'
+    );
+
+    if(proportionWomen > 0) {
+      var right = 50 + 800 * proportionWomen;
       image_parameters.push(
-        '-gravity', 'NorthWest'
+        '-fill', '#edce63',
+        '-stroke', '#edce63',
+        '-draw', 'rectangle 50,790 ' + right + ',840'
       );
-
-      image_parameters.push('-page', '+0+0','assets/base_background.png');
-      image_parameters.push('-page', '+0+0',req.file.path);
-      image_parameters.push('-page', '+0+0','assets/photo_logo.png');
-      image_parameters.push('-page', '+0+0','assets/photo_background.png');
-
-      // Draw the chart
+    }
+    if(proportionWomenOfColor > 0) {
+      var right = 50 + 800 * proportionWomenOfColor;
       image_parameters.push(
-        '-fill', '#ff4820',
-        '-stroke', '#ff4820',
-        '-draw', 'rectangle 50,790 850,840'
+        '-fill', '#d87111',
+        '-stroke', '#d87111',
+        '-draw', 'rectangle 50,790 ' + right + ',840'
       );
+    }
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#edce63',
+      '-fill', '#edce63',
+      '-font', 'Arial',
+      '-pointsize', '24',
+      '-annotate', '+50+845', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
 
-      if(proportionWomen > 0) {
-        var right = 50 + 800 * proportionWomen;
-        image_parameters.push(
-          '-fill', '#edce63',
-          '-stroke', '#edce63',
-          '-draw', 'rectangle 50,790 ' + right + ',840'
-        );
-      }
-      if(proportionWomenOfColor > 0) {
-        var right = 50 + 800 * proportionWomenOfColor;
-        image_parameters.push(
-          '-fill', '#d87111',
-          '-stroke', '#d87111',
-          '-draw', 'rectangle 50,790 ' + right + ',840'
-        );
-      }
+    if(req.session.womenofcolor == 0) {
+      image_parameters.push(
+        '-stroke', '#000000',
+        '-fill', '#d87111',
+        '-draw', 'rectangle 40,871 280,900');
+
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#edce63',
-        '-fill', '#edce63',
+        '-stroke', '#ffffff',
+        '-fill', '#ffffff',
         '-font', 'Arial',
         '-pointsize', '24',
-        '-annotate', '+50+845', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
-
-      if(req.session.womenofcolor == 0) {
-        image_parameters.push(
-          '-stroke', '#000000',
-          '-fill', '#d87111',
-          '-draw', 'rectangle 40,871 280,900');
-
-        image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#ffffff',
-          '-fill', '#ffffff',
-          '-font', 'Arial',
-          '-pointsize', '24',
-          '-annotate', '+50+873', "No Women of Color!");
-      } else {
-        image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#d87111',
-          '-fill', '#d87111',
-          '-font', 'Arial',
-          '-pointsize', '24',
-          '-annotate', '+50+875', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
-      }
+        '-annotate', '+50+873', "No Women of Color!");
+    } else {
       image_parameters.push(
-        '-gravity', 'NorthEast',
-        '-stroke', '#ff4820',
-        '-fill', '#ff4820',
+        '-gravity', 'NorthWest',
+        '-stroke', '#d87111',
+        '-fill', '#d87111',
         '-font', 'Arial',
         '-pointsize', '24',
-        '-annotate', '+50+845', req.session.men + ((req.session.men == 1)?" Man":" Men"));
+        '-annotate', '+50+875', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
+    }
+    image_parameters.push(
+      '-gravity', 'NorthEast',
+      '-stroke', '#ff4820',
+      '-fill', '#ff4820',
+      '-font', 'Arial',
+      '-pointsize', '24',
+      '-annotate', '+50+845', req.session.men + ((req.session.men == 1)?" Man":" Men"));
 
-      var text = req.session.session_text + " " + req.session.hashtag;
+    var text = req.session.session_text + " " + req.session.hashtag;
 
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'Arial',
+      '-pointsize', '40',
+      '-annotate', '+50+735', text);
+
+    if( proportionWomen > .4 ) {
+      image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
       image_parameters.push(
         '-gravity', 'NorthWest',
         '-stroke', '#fff',
         '-fill', '#fff',
-        '-font', 'Arial',
+        '-font', 'ArialB',
         '-pointsize', '40',
-        '-annotate', '+50+735', text);
-
-      if( proportionWomen > .4 ) {
-        image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
+        '-annotate', '+50+640', "THE PRESENT AND FUTURE");
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#fff',
+        '-fill', '#fff',
+        '-font', 'ArialB',
+        '-pointsize', '40',
+        '-annotate', '+50+685', "ARE");
+      if(req.session.womenofcolor == 0) {
         image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#fff',
-          '-fill', '#fff',
-          '-font', 'ArialB',
-          '-pointsize', '40',
-          '-annotate', '+50+640', "THE PRESENT AND FUTURE");
+            '-gravity', 'NorthWest',
+            '-stroke', '#d87111',
+            '-fill', '#d87111',
+            '-font', 'ArialB',
+            '-pointsize', '40',
+            '-annotate', '+145+685', "ALMOST");
         image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#fff',
-          '-fill', '#fff',
-          '-font', 'ArialB',
-          '-pointsize', '40',
-          '-annotate', '+50+685', "ARE");
-        if(req.session.womenofcolor == 0) {
-          image_parameters.push(
-              '-gravity', 'NorthWest',
-              '-stroke', '#d87111',
-              '-fill', '#d87111',
-              '-font', 'ArialB',
-              '-pointsize', '40',
-              '-annotate', '+145+685', "ALMOST");
-          image_parameters.push(
-              '-gravity', 'NorthWest',
-              '-stroke', '#edce63',
-              '-fill', '#edce63',
-              '-font', 'ArialB',
-              '-pointsize', '40',
-              '-annotate', '+325+685', "BRIGHT");
-        } else {
-          image_parameters.push(
             '-gravity', 'NorthWest',
             '-stroke', '#edce63',
             '-fill', '#edce63',
             '-font', 'ArialB',
             '-pointsize', '40',
-            '-annotate', '+145+685', "BRIGHT");
-        }
-      } else if ( proportionWomen > .3 ) {
-        image_parameters.push('-page', '+620+470','assets/icon_cloudy.png');
-
-        image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#fff',
-          '-fill', '#fff',
-          '-font', 'ArialB',
-          '-pointsize', '42',
-          '-annotate', '+50+640', "CLOUDY WITH A");
-        image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#fff',
-          '-fill', '#fff',
-          '-font', 'ArialB',
-          '-pointsize', '42',
-          '-annotate', '+50+685', "CHANCE OF ");
-        image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#FF0000',
-          '-fill', '#FF0000',
-          '-font', 'ArialB',
-          '-pointsize', '42',
-          '-annotate', '+310+685', "PATRIARCHY");
-
+            '-annotate', '+325+685', "BRIGHT");
       } else {
-        image_parameters.push('-page', '+620+470','assets/icon_thunder.png');
         image_parameters.push(
           '-gravity', 'NorthWest',
-          '-stroke', '#fff',
-          '-fill', '#fff',
+          '-stroke', '#edce63',
+          '-fill', '#edce63',
           '-font', 'ArialB',
-          '-pointsize', '42',
-          '-annotate', '+50+640', "A THUNDERSTORM OF");
-        image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#fff',
-          '-fill', '#fff',
-          '-font', 'ArialB',
-          '-pointsize', '42',
-          '-annotate', '+50+685', "GENDER");
-        image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#FF0000',
-          '-fill', '#FF0000',
-          '-font', 'ArialB',
-          '-pointsize', '42',
-          '-annotate', '+245+685', "INEQUALITY");
+          '-pointsize', '40',
+          '-annotate', '+145+685', "BRIGHT");
       }
+    } else if ( proportionWomen > .3 ) {
+      image_parameters.push('-page', '+620+470','assets/icon_cloudy.png');
 
       image_parameters.push(
-        '-layers', 'flatten', card_filename
-      );
+        '-gravity', 'NorthWest',
+        '-stroke', '#fff',
+        '-fill', '#fff',
+        '-font', 'ArialB',
+        '-pointsize', '42',
+        '-annotate', '+50+640', "CLOUDY WITH A");
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#fff',
+        '-fill', '#fff',
+        '-font', 'ArialB',
+        '-pointsize', '42',
+        '-annotate', '+50+685', "CHANCE OF ");
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#FF0000',
+        '-fill', '#FF0000',
+        '-font', 'ArialB',
+        '-pointsize', '42',
+        '-annotate', '+310+685', "PATRIARCHY");
 
-      // Create the tally
-      im.convert(image_parameters, function (err, stdout) {
-        if(err) {
-          return next(err);
-        } else {
+    } else {
+      image_parameters.push('-page', '+620+470','assets/icon_thunder.png');
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#fff',
+        '-fill', '#fff',
+        '-font', 'ArialB',
+        '-pointsize', '42',
+        '-annotate', '+50+640', "A THUNDERSTORM OF");
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#fff',
+        '-fill', '#fff',
+        '-font', 'ArialB',
+        '-pointsize', '42',
+        '-annotate', '+50+685', "GENDER");
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#FF0000',
+        '-fill', '#FF0000',
+        '-font', 'ArialB',
+        '-pointsize', '42',
+        '-annotate', '+245+685', "INEQUALITY");
+    }
 
-          // Upload this local file to imgur
-          imgur.setClientID(process.env['IMGUR_API_KEY']);
-          imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
-            if(error || !response.data) {
-              AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
-              var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
-              var body = fs.createReadStream(path.join(__dirname, '../' + card_filename));
-              s3obj.upload({Body: body}, function(err, data) {
-                if('Location' in data && 'ETag' in data) {
+    image_parameters.push(
+      '-layers', 'flatten', card_filename
+    );
 
-                  pie_url = data.Location;
-                  pie_id = data.ETag.slice(1,-1);
+    // Create the tally
+    im.convert(image_parameters, function (err, stdout) {
+      if(err) {
+        return next(err);
+      } else {
 
-                  storeChart(pie_id, {
-                    "session_text": req.session.session_text,
-                    "hashtag": req.session.hashtag,
-                    "men": req.session.men,
-                    "women": req.session.women,
-                    "other": 0,
-                    "pie_id": pie_id,
-                    "pie_url": pie_url
-                  });
+        // Upload this local file to imgur
+        imgur.setClientID(process.env['IMGUR_API_KEY']);
+        imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+          if(error || !response.data) {
+            AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
+            var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
+            var body = fs.createReadStream(path.join(__dirname, '../' + card_filename));
+            s3obj.upload({Body: body}, function(err, data) {
+              if('Location' in data && 'ETag' in data) {
 
-                  fs.unlinkSync(req.file.path);
-                  fs.unlinkSync(path.join(__dirname, '../' + card_filename));
-                  req.session.lastCreated = pie_url;
-                  return res.redirect('/share/' + pie_id);
-                }
-                return next(error,null);
-              });
-            }
-            else {
-              pie_url = response.link;
-              pie_id = response.id;
-              storeChart(pie_id, {
-                "session_text": req.session.session_text,
-                "hashtag": req.session.hashtag,
-                "men": req.session.men,
-                "women": req.session.women,
-                "other": 0,
-                "pie_id": pie_id,
-                "pie_url": pie_url
-              });
-              fs.unlinkSync(req.file.path);
-              fs.unlinkSync(path.join(__dirname, '../' + card_filename));
-              req.session.lastCreated = pie_url;
-              return res.redirect('/share/' + pie_id);
-            }
-          });
-        }
-      });
+                pie_url = data.Location;
+                pie_id = data.ETag.slice(1,-1);
+
+                storeChart(pie_id, {
+                  "session_text": req.session.session_text,
+                  "hashtag": req.session.hashtag,
+                  "men": req.session.men,
+                  "women": req.session.women,
+                  "other": 0,
+                  "pie_id": pie_id,
+                  "pie_url": pie_url
+                });
+
+                fs.unlinkSync(req.file.path);
+                fs.unlinkSync(path.join(__dirname, '../' + card_filename));
+                req.session.lastCreated = pie_url;
+                return res.redirect('/share/' + pie_id);
+              }
+              return next(error,null);
+            });
+          }
+          else {
+            pie_url = response.link;
+            pie_id = response.id;
+            storeChart(pie_id, {
+              "session_text": req.session.session_text,
+              "hashtag": req.session.hashtag,
+              "men": req.session.men,
+              "women": req.session.women,
+              "other": 0,
+              "pie_id": pie_id,
+              "pie_url": pie_url
+            });
+            fs.unlinkSync(req.file.path);
+            fs.unlinkSync(path.join(__dirname, '../' + card_filename));
+            req.session.lastCreated = pie_url;
+            return res.redirect('/share/' + pie_id);
+          }
+        });
+      }
+    });
   });
 });
 
