@@ -881,8 +881,10 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
     if(req.session.womenofcolor > req.session.women) {
       req.session.women += req.session.womenofcolor;
     }
-    var proportionWomen = req.session.women / (req.session.women + req.session.men);
-    var proportionWomenOfColor = req.session.womenofcolor / (req.session.women + req.session.men);
+    var totalCount = req.session.women + req.session.men + req.session.nonbinary;
+    var proportionWomen = req.session.women / totalCount;
+    var proportionWomenOfColor = req.session.womenofcolor / totalCount;
+    var proportionNonbinary = req.session.nonbinary / totalCount;
 
     var image_parameters = [];
     image_parameters.push(
@@ -917,6 +919,14 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
         '-draw', 'rectangle 50,790 ' + right + ',840'
       );
     }
+    if(proportionNonbinary > 0) {
+      var left = 850 - 800 * proportionWomenOfColor
+      image_parameters.push(
+        '-fill', '#9E84CB',
+        '-stroke', '#9E84CB',
+        '-draw', 'rectangle ' + left + ',790 850,840'
+      );
+    }
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#edce63',
@@ -945,7 +955,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
         '-fill', '#d87111',
         '-font', 'Arial',
         '-pointsize', '24',
-        '-annotate', '+50+875', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
+        '-annotate', '+50+870', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
     }
     image_parameters.push(
       '-gravity', 'NorthEast',
@@ -954,6 +964,16 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
       '-font', 'Arial',
       '-pointsize', '24',
       '-annotate', '+50+845', req.session.men + ((req.session.men == 1)?" Man":" Men"));
+
+    if(req.session.nonbinary > 0) {
+      image_parameters.push(
+        '-gravity', 'NorthEast',
+        '-stroke', '#9E84CB',
+        '-fill', '#9E84CB',
+        '-font', 'Arial',
+        '-pointsize', '24',
+        '-annotate', '+50+870', req.session.nonbinary + ((req.session.nonbinary == 1)?" Nonbinary Person":" Nonbinary Persons"));
+    }
 
     var text = req.session.session_text + " " + req.session.hashtag;
 
@@ -965,7 +985,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
       '-pointsize', '40',
       '-annotate', '+50+735', text);
 
-    if( proportionWomen > .4 ) {
+    if( proportionWomen + proportionNonbinary > .4 ) {
       image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
       image_parameters.push(
         '-gravity', 'NorthWest',
@@ -1005,7 +1025,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
           '-pointsize', '40',
           '-annotate', '+145+685', "BRIGHT");
       }
-    } else if ( proportionWomen > .3 ) {
+    } else if ( proportionWomen + proportionNonbinary > .3 ) {
       image_parameters.push('-page', '+620+470','assets/icon_cloudy.png');
 
       image_parameters.push(
