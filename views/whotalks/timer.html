@@ -11,9 +11,10 @@
           </div>
         </div>
       </div>
-      <div class="row pad-top">
+      <div class="row">
         <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6 text-center">
-          <h2>Who's Talking?</h2>
+          <h2 id="activity-title">Who's Talking?</h2>
+          <h4 id="activity-talker">&nbsp;</h4>
         </div>
       </div>
       <div class="row">
@@ -21,7 +22,7 @@
           <p id="ans">&nbsp;</p>
         </div>
       </div>
-      <div class="row pad-bottom">
+      <div class="row">
         <div class="col-xs-offset-2 col-xs-8 col-sm-offset-2 col-sm-4 text-center">
           <div class="button button-timer" id="dude">A Dude</div>
           <p id="dude-display" class="display">00:00</p>
@@ -69,6 +70,7 @@
         var $ans = $('#ans');
         var $dude = $('#dude');
         var $not_dude = $('#not-dude');
+        var $activity_talker = $('#activity-talker');
 
         var $dude_input = $('#dude-input');
         var $dude_input = $('#not-dude-input');
@@ -110,11 +112,16 @@
           if (dude.active === true) {
             dude.active = false;
             clearInterval(dude_t);
+            $dude.text("A Dude");
+            $activity_talker.html("&nbsp;");
           } else {
             dude.active = true;
+            $dude.html("<span class='glyphicon glyphicon-pause'></span>");
+            $activity_talker.html("A dude.");
             if (not_dude.active === true) {
               $not_dude.toggleClass('pressed');
               not_dude.active = false;
+              $not_dude.text("Not a Dude");
               clearInterval(not_dude_t);
             }
             dude_t = setInterval(function() {
@@ -127,11 +134,16 @@
           if (not_dude.active === true) {
             not_dude.active = false;
             clearInterval(not_dude_t);
+            $not_dude.text("Not a Dude");
+            $activity_talker.html("&nbsp;");
           } else {
             not_dude.active = true;
+            $not_dude.html("<span class='glyphicon glyphicon-pause'></span>");
+            $activity_talker.html("Not a dude.");
             if (dude.active === true) {
               $dude.toggleClass('pressed');
               dude.active = false;
+              $dude.text("A Dude");
               clearInterval(dude_t);
             }
             not_dude_t = setInterval(function() {
