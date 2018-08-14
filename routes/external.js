@@ -350,7 +350,7 @@ app.post('/whotalks/chart', function (req, res, next) {
   image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
 
   // Draw the labels
-  if (proportionWomen > .4
+  if (proportionWomen >= .4
   &&  proportionWomenTime >= .9 * proportionWomen) {
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
     image_parameters.push(
@@ -374,7 +374,7 @@ app.post('/whotalks/chart', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+130+65', "BRIGHT");
-  } else if (proportionWomen > .4
+  } else if (proportionWomen >= .4
   &&  proportionWomenTime < .9 * proportionWomen) {
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
 
@@ -712,7 +712,7 @@ app.post('/tally/chart', function (req, res, next) {
     '-pointsize', '40',
     '-annotate', '+35+210', req.session.hashtag);
 
-  if( proportionWomen + proportionNonbinary > .4 ) {
+  if( proportionWomen + proportionNonbinary >= .4 ) {
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -985,7 +985,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
       '-pointsize', '40',
       '-annotate', '+50+735', text);
 
-    if( proportionWomen + proportionNonbinary > .4 ) {
+    if( proportionWomen + proportionNonbinary >= .4 ) {
       image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
       image_parameters.push(
         '-gravity', 'NorthWest',
