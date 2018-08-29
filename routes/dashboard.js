@@ -3,7 +3,7 @@ var app = require('../server').app,
 
 app.get('/dashboard', function (req, res, next) {
 
-  res.render('dashboard.html', {
+  res.render('admin/dashboard.html', {
   });
 
 });
