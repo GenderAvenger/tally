@@ -195,7 +195,7 @@ app.get('/thankyou/:id', function (req, res, next) {
       // Regenerate the URL
     }
 
-    return res.render('core/thankyou.html', {
+    return res.render('core/thanks.html', {
       title: 'Thank You',
       pie_id: pie_id,
       hashtag: querystring.escape(refVal.hashtag),
