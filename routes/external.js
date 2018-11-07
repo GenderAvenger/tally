@@ -303,7 +303,7 @@ app.post('/whotalks/chart', function (req, res, next) {
     // This should also handled directly by javascript in the page
     // Put by posting to, the user at least doesn't see a URL change
     // if we need to, re-render it with errors
-    return res.render('whotalks-headcount.html', {
+    return res.render('whotalks/headcount.html', {
       title: 'Who Talks?',
       dudecount: men,
       notdudecount: women,
