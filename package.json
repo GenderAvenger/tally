@@ -4,7 +4,7 @@
   "version": "0.0.2",
   "private": true,
   "engines": {
-    "node": "0.10.30"
+    "node": ">=11"
   },
   "scripts": {
     "start": "node server.js"
