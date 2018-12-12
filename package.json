@@ -19,7 +19,6 @@
     "express": "^4.16.2",
     "firebase": "^1.2.0",
     "imgur-upload": "^0.1.2",
-    "lodash": "^2.4.1",
     "morgan": "^1.9.0",
     "multer": "^1.3.0",
     "newrelic": "^1.40.0",

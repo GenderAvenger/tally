@@ -1,7 +1,6 @@
 var quiche = require('quiche'),
     http   = require('http'),
     https   = require('https'),
-    _      = require('lodash'),
     fs     = require('fs'),
     imgur  = require('imgur-upload'),
     path   = require('path'),
@@ -248,10 +247,10 @@ app.post('/tally/details', function (req, res, next) {
   var sessionPattern = new RegExp(/^.{0,30}$/);
 
   // TODO - make validation DRY
-  if (!_.isString(session_text)
+  if (typeof session_text !== "string"
    || session_text == ""
    || !session_text.match(sessionPattern)
-   || !_.isString(hashtag)
+   || typeof hashtag !== "string"
    || (hashtag != ""
     && !hashtag.match(hashPattern))) {
     return res.render('tally/details.html', {
@@ -259,8 +258,8 @@ app.post('/tally/details', function (req, res, next) {
       hashtag: req.body.hashtag,
       session_text: req.body.session_text,
       error: {
-        hashtag: !_.isString(session_text) || (hashtag != "" && !hashtag.match(hashPattern)),
-        session_text: !_.isString(session_text) || !session_text.match(sessionPattern),
+        hashtag: (typeof session_text !== "string") || (hashtag != "" && !hashtag.match(hashPattern)),
+        session_text: (typeof session_text !== "string") || !session_text.match(sessionPattern),
         no_session: session_text == ""
       }
     })
@@ -292,10 +291,10 @@ app.post('/whotalks/chart', function (req, res, next) {
   // TODO - make validation DRY
   if ((!isInt(men) || men < 0)
    || (!isInt(women) || women < 0)
-   || !_.isString(session_text)
+   || (typeof session_text !== "string")
    || session_text == ""
    || !session_text.match(sessionPattern)
-   || !_.isString(hashtag)
+   || (typeof hashtag !== "string")
    || (hashtag != ""
     && !hashtag.match(hashPattern))) {
     // Send the report page back down
@@ -311,8 +310,8 @@ app.post('/whotalks/chart', function (req, res, next) {
       error: {
         dudecount: !isInt(men) || men < 0,
         notdudecount: !isInt(women) || women < 0 ,
-        hashtag: !_.isString(session_text) || (hashtag != "" && !hashtag.match(hashPattern)),
-        session_text: !_.isString(session_text) || !session_text.match(sessionPattern),
+        hashtag: (typeof session_text !== "string") || (hashtag != "" && !hashtag.match(hashPattern)),
+        session_text: (typeof session_text !== "string") || !session_text.match(sessionPattern),
         no_session: session_text == ""
       }
     })
