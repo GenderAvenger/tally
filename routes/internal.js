@@ -1,7 +1,6 @@
 var _      = require('lodash'),
     fs     = require('fs'),
     Firebase = require('firebase'),
-    csv = require('express-csv'),
     app = require('../server').app,
     firebaseDatastore = require('../server').firebaseDatastore;
 
