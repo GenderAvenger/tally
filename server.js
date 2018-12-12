@@ -2,7 +2,7 @@
 require('./config');
 
 // Load in newrelic
-require('newrelic');
+// require('newrelic');
 
 var express = require('express')
   , http = require('http')
