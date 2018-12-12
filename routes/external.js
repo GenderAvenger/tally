@@ -1,5 +1,4 @@
-var quiche = require('quiche'),
-    http   = require('http'),
+var http   = require('http'),
     https   = require('https'),
     fs     = require('fs'),
     imgur  = require('imgur-upload'),
@@ -1186,22 +1185,3 @@ app.post('/anonymous/:id', function (req, res, next) {
     return res.redirect('/thankyou/'+pie_id);
   });
 });
-
-function generatePieChart (men, women, other) {
-  // generate pie chart from google charts API
-  var pie = new quiche('pie');
-  pie.setTransparentBackground(); // Make background transparent
-  pie.setLegendBottom();
-  pie.setLegendSize(42);
-  pie.setLegendColor("333333");
-  pie.setWidth(540);
-  pie.setHeight(540);
-  var wLabel = women != 1 ? 'women' : 'woman';
-  var mLabel = men != 1 ? 'men' : 'man';
-  pie.addData(women, women + ' ' + wLabel, 'f44820');
-  pie.addData(men, men + ' ' +mLabel, '7fc8b4');
-  if (other > 0) {
-    pie.addData(other, other + ' other', '444444');
-  }
-  return pie;
-};
