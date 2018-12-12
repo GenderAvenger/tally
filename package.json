@@ -25,7 +25,6 @@
     "node-imagemagick": "^0.1.8",
     "node-uuid": "^1.4.7",
     "nodemailer": "^1.11.0",
-    "nodemailer-sparkpost-transport": "^0.1.2",
     "nunjucks": "^3.0.1",
     "quiche": "^0.2.0",
     "request": "2.81.0",
