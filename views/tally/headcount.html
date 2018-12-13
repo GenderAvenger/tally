@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6 text-center">
+          <div class="col-xs-offset-1 col-xs-10 col-sm-offset-4 col-sm-4" text-center">
             {% if error.women %}
             <p class="error">Oops! Women must be a number.</p>
             {% elif error.men %}
@@ -23,36 +23,54 @@
             {% elif error.nonbinary %}
             <p class="error">Oops! Nonbinary must be a number.</p>
             {% else %}
-              <p class="instructions">Women missing on a panel, list, or someplace else? Share what you are seeing.</p>
+              <p class="instructions text-center">Women missing on a panel, list, or someplace else?</p>
+              <p class="instructions text-center">Share what you are seeing.</p>
             {% endif %}
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
-          <form id="tally_form" method="post" role="form">
+      <form id="tally_form" method="post" role="form">
+        <div class="row">
+          <div class="col-xs-offset-1 col-xs-10 col-sm-offset-4 col-sm-4">
             <div class="form-group {% if error.women %}error{% endif %}">
               <label for="women">How many women total?</label>
               <input type="number" class="form-control" id="women" name="women" placeholder="0" value="{% if women %}{{ women }}{% else %}0{% endif %}"/>
             </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-offset-1 col-xs-10 col-sm-offset-4 col-sm-4">
             <div class="form-group {% if error.women %}error{% endif %}">
               <label for="womenofcolor">How many women of color?</label>
               <input type="number" class="form-control" id="womenofcolor" name="womenofcolor" placeholder="0" value="{% if womenofcolor %}{{ womenofcolor }}{% else %}0{% endif %}"/>
             </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-offset-1 col-xs-10 col-sm-offset-4 col-sm-4">
             <div class="form-group {% if error.men %} error {% endif %}">
               <label for="men">How many men?</label>
               <input type="number" class="form-control" id="men" name="men" placeholder="0" value="{% if men %}{{ men }}{% else %}0{% endif %}"/>
             </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-offset-1 col-xs-10 col-sm-offset-4 col-sm-4">
             <div class="form-group {% if error.nonbinary %} error {% endif %}">
               <label for="nonbinary">How many nonbinary persons?</label>
               <input type="number" class="form-control" id="nonbinary" name="nonbinary" placeholder="0" value="{% if nonbinary %}{{ nonbinary }}{% else %}0{% endif %}"/>
             </div>
-            <div class="form-group">
-              <input class="btn btn-default btn-lg" type="submit" value="Submit"/>
-            </div>
-          </form>
+          </div>
         </div>
-      </div>
+        <div class="row">
+          <div class="col-xs-offset-1 col-xs-5 col-sm-offset-4 col-sm-2">
+            <a href="/"><div class="btn btn-default btn-lg">Back</div></a>
+          </div>
+          <div class="col-xs-5 col-sm-2 text-right">
+            <input class="btn btn-default btn-lg" type="submit" value="Submit"/>
+          </div>
+        </div>
+      </form>
     </div>
 
     <div id="cityscape"></div>
