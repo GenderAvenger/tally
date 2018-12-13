@@ -1,11 +1,10 @@
 var http   = require('http'),
     https   = require('https'),
     fs     = require('fs'),
-    imgur  = require('imgur-upload'),
+    imgur  = require('imgur'),
     path   = require('path'),
     im     = require('node-imagemagick'),
     uuid   = require('uuid'),
-    Firebase = require('firebase'),
     app = require('../server').app,
     querystring = require('querystring'),
     nodemailer = require('nodemailer'),
@@ -130,7 +129,7 @@ app.get('/share/:id', function (req, res, next) {
 
   // Get the chart
   var pie_id = req.params.id;
-  var plotRef = firebaseDatastore.child('plots/'+pie_id);
+  var plotRef = firebaseDatastore.ref('plots/'+pie_id);
 
   plotRef.once('value', function (snapshot) {
     // Firebase has a weird syntax / system. This is how we load the data in
@@ -173,7 +172,7 @@ app.get('/thankyou/:id', function (req, res, next) {
 
   // Get the chart
   var pie_id = req.params.id;
-  var plotRef = firebaseDatastore.child('plots/'+pie_id);
+  var plotRef = firebaseDatastore.ref('plots/'+pie_id);
 
   plotRef.once('value', function (snapshot) {
     // Firebase has a weird syntax / system. This is how we load the data in
@@ -515,8 +514,9 @@ app.post('/whotalks/chart', function (req, res, next) {
       return next(err);
 
     // Upload this local file to imgur
-    imgur.setClientID(process.env['IMGUR_API_KEY']);
-    imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+    imgur.setClientId(process.env['IMGUR_API_KEY']);
+    imgur.uploadFile(path.join(__dirname, '../' + card_filename))
+      .then(function(error, response) {
       if(error || !response.data) {
         AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
         var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
@@ -574,7 +574,6 @@ app.post('/tally/chart', function (req, res, next) {
   var file_id = uuid.v4();
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
-
 
   if(req.session.womenofcolor > req.session.women) {
     req.session.women += req.session.womenofcolor;
@@ -809,8 +808,9 @@ app.post('/tally/chart', function (req, res, next) {
       return next(err);
 
     // Upload this local file to imgur
-    imgur.setClientID(process.env['IMGUR_API_KEY']);
-    imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+    imgur.setClientId(process.env['IMGUR_API_KEY']);
+    imgur.uploadFile(path.join(__dirname, '../' + card_filename))
+      .then(function(error, response) {
       if(error || !response.data) {
         AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
         var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
@@ -1083,8 +1083,9 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
       } else {
 
         // Upload this local file to imgur
-        imgur.setClientID(process.env['IMGUR_API_KEY']);
-        imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+        imgur.setClientId(process.env['IMGUR_API_KEY']);
+        imgur.uploadFile(path.join(__dirname, '../' + card_filename))
+          .then(function(error, response) {
           if(error || !response.data) {
             AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
             var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
@@ -1139,7 +1140,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
 function storeChart(pie_id, data) {
 
     // Create a database entry for this pie_id
-    var plotRef = firebaseDatastore.child('plots/' + pie_id);
+    var plotRef = firebaseDatastore.ref('plots/' + pie_id);
 
     // And a timestamp
     var timestamp = new Date();
@@ -1159,7 +1160,7 @@ app.post('/anonymous/:id', function (req, res, next) {
   // Get the pie chart from firebase
   // TODO: consider refactoring to have a strong model for pie charts (this isn't DRY as it stands; we lookup from firebase in many places)
   var pie_id = req.params.id;
-  var plotRef = firebaseDatastore.child('plots/'+pie_id);
+  var plotRef = firebaseDatastore.ref('plots/'+pie_id);
 
   plotRef.once('value', function (snapshot) {
     var refVal = snapshot.val();

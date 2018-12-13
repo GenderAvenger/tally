@@ -1,11 +1,10 @@
 var fs     = require('fs'),
-    Firebase = require('firebase'),
     app = require('../server').app,
     firebaseDatastore = require('../server').firebaseDatastore;
 
 app.get('/data', function(req, res, next){
   // fetch all plots
-  var plotRef = firebaseDatastore.child('plots/');
+  var plotRef = firebaseDatastore.ref('plots/');
 
   // set up row headers
   csv_rows = [

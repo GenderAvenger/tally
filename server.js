@@ -8,7 +8,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , nunjucks = require('nunjucks')
-  , Firebase = require('firebase');
+  , firebase = require('firebase-admin');
 
 // Express 3.x to 4.x Migration
 var bodyParser = require('body-parser')
@@ -31,15 +31,12 @@ njglobals.recaptcha_public_key = process.env['RECAPTCHA_PUBLIC_KEY'];
 app.set('views', __dirname + '/views');
 
 // Connect to firebase
-var firebaseDatastore = new Firebase(process.env['FIREBASE_STORE'])
-firebaseDatastore.auth(process.env['FIREBASE_SECRET'], function(error) {
-  if(error) {
-    console.log("Login Failed!", error);
-  } else {
-    console.log("Login Succeeded!");
-  }
-});
-module.exports.firebaseDatastore = firebaseDatastore;
+firebase.initializeApp({
+  credential: firebase.credential.cert(JSON.parse(process.env['FIREBASE_CERT'])),
+  databaseURL: process.env['FIREBASE_STORE']
+})
+
+module.exports.firebaseDatastore = firebase.database();
 
 // Set up the flavicon
 app.use(favicon(__dirname + "/public/favicon.ico"));
