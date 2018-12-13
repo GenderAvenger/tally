@@ -1,13 +1,10 @@
-var _      = require('lodash'),
-    fs     = require('fs'),
-    Firebase = require('firebase'),
-    csv = require('express-csv'),
+var fs     = require('fs'),
     app = require('../server').app,
     firebaseDatastore = require('../server').firebaseDatastore;
 
 app.get('/data', function(req, res, next){
   // fetch all plots
-  var plotRef = firebaseDatastore.child('plots/');
+  var plotRef = firebaseDatastore.ref('plots/');
 
   // set up row headers
   csv_rows = [
@@ -20,7 +17,7 @@ app.get('/data', function(req, res, next){
   plotRef.once('value', function(snapshot) {
       var plot = snapshot.val();
       // iterate through reports and push onto report CSVs
-      _.forEach(plot, function(report, key) {
+      plot.forEach(function(report, key) {
           var full_url = req.protocol + '://' + req.get('host') + "/share/" + report.pie_id;
           csv_rows.push([report.timestamp, report.session_text, report.hashtag, report.women, report.men, full_url]);
       });

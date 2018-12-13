@@ -22,7 +22,7 @@ app.get('/charts/:endTime?/:startTime?', function (req, res, next) {
     start = end - 86400000 * 5; // get a five day window day by default
 
   console.log (start + ":" + end);
-  firebaseDatastore.child("plots")
+  firebaseDatastore.ref("plots")
     .startAt(start)
     .endAt(end)
     .once("value", function(snapshot) {

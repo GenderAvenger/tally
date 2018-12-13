@@ -1,14 +1,10 @@
-var quiche = require('quiche'),
-    http   = require('http'),
+var http   = require('http'),
     https   = require('https'),
-    _      = require('lodash'),
     fs     = require('fs'),
-    imgur  = require('imgur-upload'),
+    imgur  = require('imgur'),
     path   = require('path'),
     im     = require('node-imagemagick'),
-    uuid   = require('node-uuid'),
-    Firebase = require('firebase'),
-    csv = require('express-csv'),
+    uuid   = require('uuid'),
     app = require('../server').app,
     querystring = require('querystring'),
     nodemailer = require('nodemailer'),
@@ -133,7 +129,7 @@ app.get('/share/:id', function (req, res, next) {
 
   // Get the chart
   var pie_id = req.params.id;
-  var plotRef = firebaseDatastore.child('plots/'+pie_id);
+  var plotRef = firebaseDatastore.ref('plots/'+pie_id);
 
   plotRef.once('value', function (snapshot) {
     // Firebase has a weird syntax / system. This is how we load the data in
@@ -176,7 +172,7 @@ app.get('/thankyou/:id', function (req, res, next) {
 
   // Get the chart
   var pie_id = req.params.id;
-  var plotRef = firebaseDatastore.child('plots/'+pie_id);
+  var plotRef = firebaseDatastore.ref('plots/'+pie_id);
 
   plotRef.once('value', function (snapshot) {
     // Firebase has a weird syntax / system. This is how we load the data in
@@ -249,10 +245,10 @@ app.post('/tally/details', function (req, res, next) {
   var sessionPattern = new RegExp(/^.{0,30}$/);
 
   // TODO - make validation DRY
-  if (!_.isString(session_text)
+  if (typeof session_text !== "string"
    || session_text == ""
    || !session_text.match(sessionPattern)
-   || !_.isString(hashtag)
+   || typeof hashtag !== "string"
    || (hashtag != ""
     && !hashtag.match(hashPattern))) {
     return res.render('tally/details.html', {
@@ -260,8 +256,8 @@ app.post('/tally/details', function (req, res, next) {
       hashtag: req.body.hashtag,
       session_text: req.body.session_text,
       error: {
-        hashtag: !_.isString(session_text) || (hashtag != "" && !hashtag.match(hashPattern)),
-        session_text: !_.isString(session_text) || !session_text.match(sessionPattern),
+        hashtag: (typeof session_text !== "string") || (hashtag != "" && !hashtag.match(hashPattern)),
+        session_text: (typeof session_text !== "string") || !session_text.match(sessionPattern),
         no_session: session_text == ""
       }
     })
@@ -293,10 +289,10 @@ app.post('/whotalks/chart', function (req, res, next) {
   // TODO - make validation DRY
   if ((!isInt(men) || men < 0)
    || (!isInt(women) || women < 0)
-   || !_.isString(session_text)
+   || (typeof session_text !== "string")
    || session_text == ""
    || !session_text.match(sessionPattern)
-   || !_.isString(hashtag)
+   || (typeof hashtag !== "string")
    || (hashtag != ""
     && !hashtag.match(hashPattern))) {
     // Send the report page back down
@@ -312,8 +308,8 @@ app.post('/whotalks/chart', function (req, res, next) {
       error: {
         dudecount: !isInt(men) || men < 0,
         notdudecount: !isInt(women) || women < 0 ,
-        hashtag: !_.isString(session_text) || (hashtag != "" && !hashtag.match(hashPattern)),
-        session_text: !_.isString(session_text) || !session_text.match(sessionPattern),
+        hashtag: (typeof session_text !== "string") || (hashtag != "" && !hashtag.match(hashPattern)),
+        session_text: (typeof session_text !== "string") || !session_text.match(sessionPattern),
         no_session: session_text == ""
       }
     })
@@ -518,8 +514,9 @@ app.post('/whotalks/chart', function (req, res, next) {
       return next(err);
 
     // Upload this local file to imgur
-    imgur.setClientID(process.env['IMGUR_API_KEY']);
-    imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+    imgur.setClientId(process.env['IMGUR_API_KEY']);
+    imgur.uploadFile(path.join(__dirname, '../' + card_filename))
+      .then(function(error, response) {
       if(error || !response.data) {
         AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
         var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
@@ -577,7 +574,6 @@ app.post('/tally/chart', function (req, res, next) {
   var file_id = uuid.v4();
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
-
 
   if(req.session.womenofcolor > req.session.women) {
     req.session.women += req.session.womenofcolor;
@@ -812,8 +808,9 @@ app.post('/tally/chart', function (req, res, next) {
       return next(err);
 
     // Upload this local file to imgur
-    imgur.setClientID(process.env['IMGUR_API_KEY']);
-    imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+    imgur.setClientId(process.env['IMGUR_API_KEY']);
+    imgur.uploadFile(path.join(__dirname, '../' + card_filename))
+      .then(function(error, response) {
       if(error || !response.data) {
         AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
         var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
@@ -1086,8 +1083,9 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
       } else {
 
         // Upload this local file to imgur
-        imgur.setClientID(process.env['IMGUR_API_KEY']);
-        imgur.upload(path.join(__dirname, '../' + card_filename), function(error, response) {
+        imgur.setClientId(process.env['IMGUR_API_KEY']);
+        imgur.uploadFile(path.join(__dirname, '../' + card_filename))
+          .then(function(error, response) {
           if(error || !response.data) {
             AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
             var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
@@ -1142,7 +1140,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
 function storeChart(pie_id, data) {
 
     // Create a database entry for this pie_id
-    var plotRef = firebaseDatastore.child('plots/' + pie_id);
+    var plotRef = firebaseDatastore.ref('plots/' + pie_id);
 
     // And a timestamp
     var timestamp = new Date();
@@ -1162,7 +1160,7 @@ app.post('/anonymous/:id', function (req, res, next) {
   // Get the pie chart from firebase
   // TODO: consider refactoring to have a strong model for pie charts (this isn't DRY as it stands; we lookup from firebase in many places)
   var pie_id = req.params.id;
-  var plotRef = firebaseDatastore.child('plots/'+pie_id);
+  var plotRef = firebaseDatastore.ref('plots/'+pie_id);
 
   plotRef.once('value', function (snapshot) {
     var refVal = snapshot.val();
@@ -1188,22 +1186,3 @@ app.post('/anonymous/:id', function (req, res, next) {
     return res.redirect('/thankyou/'+pie_id);
   });
 });
-
-function generatePieChart (men, women, other) {
-  // generate pie chart from google charts API
-  var pie = new quiche('pie');
-  pie.setTransparentBackground(); // Make background transparent
-  pie.setLegendBottom();
-  pie.setLegendSize(42);
-  pie.setLegendColor("333333");
-  pie.setWidth(540);
-  pie.setHeight(540);
-  var wLabel = women != 1 ? 'women' : 'woman';
-  var mLabel = men != 1 ? 'men' : 'man';
-  pie.addData(women, women + ' ' + wLabel, 'f44820');
-  pie.addData(men, men + ' ' +mLabel, '7fc8b4');
-  if (other > 0) {
-    pie.addData(other, other + ' other', '444444');
-  }
-  return pie;
-};
