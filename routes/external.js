@@ -29,6 +29,13 @@ var email_transporter = nodemailer.createTransport({
 // Starting page when opening the app
 app.get('/', function (req, res, next) {
 
+  // Is a version being passed?
+  var version = parseInt(req.query.version);
+  if(!version) {
+    version = 0;
+  }
+  res.cookie('version', version);
+
   // Has the user been here before?
   var is_returning_visitor = false;
   if(!req.cookies.has_visited
@@ -158,7 +165,8 @@ app.get('/share/:id', function (req, res, next) {
       total_count: refVal.women + refVal.men + refVal.other,
       total_women: refVal.women,
       total_womenofcolor: refVal.womenofcolor,
-      report_is_new: report_is_new
+      report_is_new: report_is_new,
+      version: req.cookies['version'],
     });
   })
 });
