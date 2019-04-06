@@ -31,10 +31,9 @@ app.get('/', function (req, res, next) {
 
   // Is a version being passed?
   var version = parseInt(req.query.version);
-  if(!version) {
-    version = 0;
+  if(version) {
+    res.cookie('version', version);
   }
-  res.cookie('version', version);
 
   // Has the user been here before?
   var is_returning_visitor = false;
