@@ -52,7 +52,7 @@
         var dude = {
           time: {
             minutes: 0,
-            seconds: 0,
+            seconds: {{dude_time}},
             hours: 0
           },
           active: false
@@ -60,7 +60,7 @@
         var not_dude = {
           time: {
             minutes: 0,
-            seconds: 0,
+            seconds: {{not_dude_time}},
             hours: 0
           },
           active: false
@@ -82,15 +82,14 @@
             return num;
           }
         }
-        function add(tally, display_sel, input_sel) {
-          tally.seconds++;
+        function setTime(tally, display_sel, input_sel) {
           if (tally.seconds >= 60) {
-            tally.minutes++;
-            tally.seconds = 0;
+            tally.minutes += Math.floor(tally.seconds / 60);
+            tally.seconds = tally.seconds % 60;
           }
           if (tally.minutes >= 60) {
-            tally.hours++;
-            tally.minutes = 0;
+            tally.hours += Math.floor(tally.minutes / 60);
+            tally.minutes = tally.minutes % 60;
           }
           if (tally.hours !== 0) {
             $(display_sel).html(num_pad(tally.hours) + ':' + num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
@@ -104,8 +103,10 @@
 
           var d_tot = (dude.time.hours * 3600) + (dude.time.minutes * 60) + dude.time.seconds;
           var l_tot = (not_dude.time.hours * 3600) + (not_dude.time.minutes * 60) + not_dude.time.seconds;
-          var pct = parseInt(d_tot / (d_tot + l_tot) * 100, 10);
-          $ans.html('<span id="pct">' + pct + '</span>% men');
+          if(d_tot + l_tot > 0) {
+            var pct = parseInt(d_tot / (d_tot + l_tot) * 100, 10);
+            $ans.html('<span id="pct">' + pct + '</span>% men');
+          }
         }
         $dude.click(function() {
           $dude.toggleClass('pressed');
@@ -125,7 +126,8 @@
               clearInterval(not_dude_t);
             }
             dude_t = setInterval(function() {
-              add(dude.time, '#dude-display', '#dude-input');
+              dude.time.seconds++;
+              setTime(dude.time, '#dude-display', '#dude-input');
             }, 1000);
           }
         });
@@ -147,7 +149,8 @@
               clearInterval(dude_t);
             }
             not_dude_t = setInterval(function() {
-              add(not_dude.time, '#not-dude-display', '#not-dude-input');
+              not_dude.time.seconds++;
+              setTime(not_dude.time, '#not-dude-display', '#not-dude-input');
             }, 1000);
           }
         });
@@ -158,6 +161,10 @@
             $not_dude.trigger('click');
           }
         });
+
+
+        setTime(not_dude.time, '#not-dude-display', '#not-dude-input');
+        setTime(dude.time, '#dude-display', '#dude-input');
       });
     </script>
   </body>

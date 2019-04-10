@@ -99,8 +99,14 @@ app.get('/tally/photo', function (req, res, next) {
 });
 
 app.get('/whotalks', function (req, res, next) {
+  // It's OK to use || since falsy values *should* default to 0
+  var not_dude_time = req.session.not_dude_time || 0;
+  var dude_time = req.session.dude_time || 0;
+
   res.render('whotalks/timer.html', {
     title: 'Who Talks?',
+    dude_time: dude_time,
+    not_dude_time: not_dude_time
   });
 });
 
@@ -285,6 +291,8 @@ app.post('/tally/details', function (req, res, next) {
 app.post('/whotalks/chart', function (req, res, next) {
   var dude_time = req.session.dude_time;
   var not_dude_time = req.session.not_dude_time;
+  req.session.not_dude_time = 0;
+  req.session.dude_time = 0;
   var men = parseInt(req.body.dudecount, 10),
       women = parseInt(req.body.notdudecount, 10),
       session_text = req.body.session_text,
