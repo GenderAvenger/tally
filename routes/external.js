@@ -607,12 +607,19 @@ app.post('/tally/chart', function (req, res, next) {
   image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
 
   // Draw the chart
-  image_parameters.push(
-    '-fill', '#FF0000',
-    '-stroke', '#FF0000',
-    '-draw', 'circle 450,500 450,700'
-  );
-
+  if(req.session.men == 0) {
+    image_parameters.push(
+      '-fill', '#edce63',
+      '-stroke', '#edce63',
+      '-draw', 'circle 450,500 450,700'
+    );
+  } else {
+    image_parameters.push(
+      '-fill', '#FF0000',
+      '-stroke', '#FF0000',
+      '-draw', 'circle 450,500 450,700'
+    );
+  }
   if(proportionWomen > 0) {
     var degrees = (proportionWomen * 360 + 90);
     var radians = degrees * Math.PI / 180;
