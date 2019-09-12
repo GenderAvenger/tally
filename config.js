@@ -22,4 +22,5 @@ if (process.env.NODE_ENV == 'localDevelopment') {
   set('AWS_ID', creds['awsId']);
   set('COOKIE_SECRET', creds['cookieSecret']);
   set('SLACK_WEBHOOK', creds['slackWebhook']);
+  set('BALLOT_LOOKUP_TOKEN', creds['ballotLookupToken'])
 }
