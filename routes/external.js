@@ -11,7 +11,8 @@ var http   = require('http'),
     firebaseDatastore = require('../server').firebaseDatastore,
     AWS = require('aws-sdk'),
     multer  = require('multer'),
-    request = require('request');
+    request = require('request'),
+    BallotLookup = require('../lib/BallotLookup');
 
 var upload = multer({ dest: 'uploads/' })
 
@@ -107,6 +108,304 @@ app.get('/whotalks', function (req, res, next) {
     title: 'Who Talks?',
     dude_time: dude_time,
     not_dude_time: not_dude_time
+  });
+});
+
+app.get('/ballotmania', function (req, res, next) {
+  var zip = req.session.zip || '';
+
+  res.render('ballotmania/zip.html', {
+    zip: zip,
+  })
+});
+
+app.post('/ballotmania', function (req, res, next) {
+  var zip = req.body.zip;
+  req.session.zip = zip;
+  var zipPattern = new RegExp(/^\d{5}$/);
+  if (!zip.match(zipPattern)) {
+    return res.render('ballotmania/zip.html', {
+      title: 'Zip Entry',
+      zip: zip,
+      error: {
+        zip: !zip.match(zipPattern),
+      }
+    })
+  }
+
+  var ballotLookup = new BallotLookup(zip);
+  ballotLookup.run(function(candidates) {
+    req.session.candidates = candidates;
+    res.redirect('ballotmania/ballot');
+  })
+});
+
+app.get('/ballotmania/ballot', function (req, res, next) {
+  var candidates = req.session.candidates || [];
+  res.render('ballotmania/ballot.html', {
+    candidates: candidates,
+    noCandidates: candidates.length === 0,
+  })
+})
+
+app.post('/ballotmania/ballot', function (req, res, next) {
+  var file_id = uuid.v4();
+  var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
+  var card_filename = "assets/chartgen/" + file_id + "_card.png";
+  req.session.women = parseInt(req.body.women, 10);
+  req.session.men = parseInt(req.body.men, 10);
+  req.session.nonbinary = parseInt(req.body.nonbinary, 10);
+  req.session.hashtag = "#BallotMANia";
+  req.session.session_text = "Candidates in " + req.session.zip;
+  var proportionWomen = req.session.women / (req.session.women + req.session.men + req.session.nonbinary);
+  var proportionNonbinary = req.session.nonbinary / (req.session.women + req.session.men + req.session.nonbinary);
+  var image_parameters = [];
+  image_parameters.push(
+    '-gravity', 'NorthWest'
+  );
+
+  image_parameters.push('-page', '+0+0','assets/base_background.png');
+  image_parameters.push('-page', '+0+0','assets/city_background_wire_logo.png');
+  image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
+
+  // Draw the chart
+  if(req.session.men == 0) {
+    image_parameters.push(
+      '-fill', '#edce63',
+      '-stroke', '#edce63',
+      '-draw', 'circle 450,500 450,700'
+    );
+  } else {
+    image_parameters.push(
+      '-fill', '#FF0000',
+      '-stroke', '#FF0000',
+      '-draw', 'circle 450,500 450,700'
+    );
+  }
+  if(proportionWomen > 0) {
+    var degrees = (proportionWomen * 360 + 90);
+    var radians = degrees * Math.PI / 180;
+    var x = 450 + 200 * Math.cos(radians);
+    var y = 500 + 200 * Math.sin(radians);
+    image_parameters.push(
+      '-fill', '#edce63',
+      '-stroke', '#edce63',
+      '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+    );
+  }
+
+  if(proportionNonbinary > 0) {
+    var degrees = (proportionNonbinary * 360 + 90);
+    var radians = degrees * Math.PI / 180;
+    var x = 450 - 200 * Math.cos(radians);
+    var y = 500 + 200 * Math.sin(radians);
+    image_parameters.push(
+      '-fill', '#9E84CB',
+      '-stroke', '#9E84CB',
+      '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',' + ((degrees > 270)?0:0)  + ' ' + x + ',' + y + ' Z\''
+    );
+  }
+  if(proportionNonbinary == 1) {
+    var degrees = (proportionNonbinary * 360 + 90);
+    var radians = degrees * Math.PI / 180;
+    var x = 450 - 200 * Math.cos(radians);
+    var y = 500 + 200 * Math.sin(radians);
+    image_parameters.push(
+      '-fill', '#9E84CB',
+      '-stroke', '#9E84CB',
+      '-draw', 'circle 450,500 450,700'
+    );
+  }
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
+    '-font', 'Arial',
+    '-pointsize', '30',
+    '-annotate', '+75+630', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
+
+  if(req.session.nonbinary > 0) {
+    image_parameters.push(
+      '-gravity', 'NorthEast',
+      '-stroke', '#9E84CB',
+      '-fill', '#9E84CB',
+      '-font', 'Arial',
+      '-pointsize', '30',
+      '-annotate', '+25+670', req.session.nonbinary + ((req.session.nonbinary == 1)?" Nonbinary Person":" Nonbinary Persons"));
+  }
+
+  image_parameters.push(
+    '-gravity', 'NorthEast',
+    '-stroke', '#FF0000',
+    '-fill', '#FF0000',
+    '-font', 'Arial',
+    '-pointsize', '30',
+    '-annotate', '+125+630', req.session.men + ((req.session.men == 1)?" Man":" Men"));
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#fff',
+    '-fill', '#fff',
+    '-font', 'Arial',
+    '-pointsize', '40',
+    '-annotate', '+35+160', req.session.session_text);
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#fff',
+    '-fill', '#fff',
+    '-font', 'Arial',
+    '-pointsize', '40',
+    '-annotate', '+35+210', req.session.hashtag);
+
+  if( proportionWomen + proportionNonbinary >= .4 ) {
+    image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "THE PRESENT AND FUTURE");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "ARE");
+    if(req.session.womenofcolor == 0) {
+      image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#d87111',
+          '-fill', '#d87111',
+          '-font', 'ArialB',
+          '-pointsize', '40',
+          '-annotate', '+130+65', "ALMOST");
+      image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#edce63',
+          '-fill', '#edce63',
+          '-font', 'ArialB',
+          '-pointsize', '40',
+          '-annotate', '+310+65', "BRIGHT");
+    } else {
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#edce63',
+        '-fill', '#edce63',
+        '-font', 'ArialB',
+        '-pointsize', '40',
+        '-annotate', '+130+65', "BRIGHT");
+    }
+  } else if ( proportionWomen + proportionNonbinary > .3 ) {
+    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
+
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "CLOUDY WITH A");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "CHANCE OF ");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#FF0000',
+      '-fill', '#FF0000',
+      '-font', 'ArialB',
+      '-pointsize', '42',
+      '-annotate', '+300+65', "PATRIARCHY");
+
+  } else {
+    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "A THUNDERSTORM OF");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "GENDER");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#FF0000',
+      '-fill', '#FF0000',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+230+65', "INEQUALITY");
+  }
+
+  image_parameters.push(
+    '-layers', 'flatten', card_filename
+  );
+
+  // Create the tally
+  im.convert(image_parameters, function (err, stdout) {
+    if(err)
+      return next(err);
+
+    // Upload this local file to imgur
+    imgur.setClientId(process.env['IMGUR_API_KEY']);
+    imgur.uploadFile(path.join(__dirname, '../' + card_filename))
+      .then(function(error, response) {
+      if(error || !response.data) {
+        AWS.config.update({accessKeyId: process.env['AWS_ID'], secretAccessKey: process.env['AWS_SECRET']});
+        var s3obj = new AWS.S3({params: {Bucket: 'app.genderavenger.org', Key: card_filename}});
+        var body = fs.createReadStream(path.join(__dirname, '../' + card_filename));
+        s3obj.upload({Body: body}, function(err, data) {
+          if('Location' in data && 'ETag' in data) {
+
+            pie_url = data.Location;
+            pie_id = data.ETag.slice(1,-1);
+
+            storeChart(pie_id, {
+              "session_text": req.session.session_text,
+              "hashtag": req.session.hashtag,
+              "men": req.session.men,
+              "women": req.session.women,
+              "other": 0,
+              "pie_id": pie_id,
+              "pie_url": pie_url
+            });
+
+            req.session.lastCreated = pie_url;
+            fs.unlinkSync(path.join(__dirname, '../' + card_filename));
+            return res.redirect('/share/' + pie_id);
+          }
+          return next(error);
+        });
+      }
+      else {
+        pie_url = response.link;
+        pie_id = response.id;
+        storeChart(pie_id, {
+          "session_text": req.session.session_text,
+          "hashtag": req.session.hashtag,
+          "men": req.session.men,
+          "women": req.session.women,
+          "other": 0,
+          "pie_id": pie_id,
+          "pie_url": pie_url
+        });
+        fs.unlinkSync(path.join(__dirname, '../' + card_filename));
+        req.session.lastCreated = pie_url;
+        return res.redirect('/share/' + pie_id);
+      }
+    });
   });
 });
 
