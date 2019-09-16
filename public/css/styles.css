@@ -168,6 +168,14 @@
     height: 64px;
   }
 
+  /* BallotMANia Page */
+  .ballotmania #logo {
+    margin-bottom: 5px;
+  }
+  .ballotmania #logo img {
+    height: 80px;
+  }
+
   /* Choice Page */
   .choice #logo {
     margin-bottom: 20px;
@@ -306,6 +314,21 @@
     text-transform: uppercase;
     margin-bottom: 5px;
     color: #fff;
+  }
+
+  /* Ballotmania Page */
+  div.ballot-button {
+    min-width: 120px;
+    padding: 3px;
+    background-color: #edce63;
+    color: #1d2951;
+    font-size: 12px;
+  }
+  div.ballot-button:hover {
+    background-color: #f1d881;
+  }
+  div.ballot-button.pressed {
+    background-color: #DC5239;
   }
 
   .pad-bottom {
