@@ -17,29 +17,57 @@
         </div>
       </div>
       <form method="post" id="zip-form" action="/ballotmania/ballot">
-        {% for candidate in candidates %}
-          <div class="row">
-            <div class="col-xs-offset-1 col-xs-10 text-center">
-              <label>{{ candidate }}</label>
-            </div>
-            <div class="col-xs-offset-2 col-xs-8 col-sm-offset-3 col-sm-6 text-center">
-              <div class="row">
-                <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-4">
-                  <div class="button ballot-button man-button" id="man-{{loop.index}}">Man</div>
-                </div>
-                <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-4">
-                  <div class="button ballot-button woman-button" id="woman-{{loop.index}}">Woman</div>
-                </div>
-                <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-4">
-                  <div class="button ballot-button nonbinary-button" id="nonbinary-{{loop.index}}">Nonbinary</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-1 text-center">
-            </div>
-            <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-1 text-center">
+        {% set index = -1 %}
+        {% for race in offices %}
+          <div class="row office text-center">
+            <div class="co-xs-12">
+              <h3>{{ race.office.name }}</h3>
             </div>
           </div>
+          {% for candidate in race.candidates %}
+          {% set index = index + 1 %}
+          <div class="text-center">
+            <div class="row candidate">
+              <div class="col-xs-4 text-center">
+                {% if candidate.person.image.url %}
+                  <img
+                    src="{{ candidate.person.image.url }}"
+                    alt="{{ candidate.person.name }} photo" />
+                {% endif %}
+              </div>
+              <div class="col-xs-8">
+                <div class="row">
+                  <div class="col-xs-12 text-center">
+                    <h4>{{ candidate.person.name }}</h4>
+                    <div class="party">({{ candidate.party_affiliation.name }})</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12 text-center">
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <div class="button ballot-button woman-of-color-button" id="woman-of-color-{{index}}">Woman of color</div>
+                      </div>
+                      <div class="col-xs-12">
+                        <div class="button ballot-button white-woman-button" id="white-woman-{{index}}">White woman</div>
+                      </div>
+                      <div class="col-xs-12">
+                        <div class="button ballot-button man-button" id="man-{{index}}">Man</div>
+                      </div>
+                      <div class="col-xs-12">
+                        <div class="button ballot-button nonbinary-button" id="nonbinary-{{index}}">Nonbinary</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-1 text-center">
+              </div>
+              <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-1 text-center">
+              </div>
+            </div>
+          </div>
+          {% endfor %}
         {% endfor %}
         {% if noCandidates %}
           <div class="row">
@@ -61,7 +89,8 @@
             </div>
             <div class="col-xs-5 col-sm-3 text-left">
               <input type="hidden" name="men" value="0" id="men" />
-              <input type="hidden" name="women" value="0" id="women" />
+              <input type="hidden" name="whiteWomen" value="0" id="white-women" />
+              <input type="hidden" name="womenOfColor" value="0" id="women-of-color" />
               <input type="hidden" name="nonbinary" value="0" id="nonbinary" />
               <input class="btn btn-default btn-lg" type="submit" value="Submit"/>
             </div>
@@ -71,9 +100,25 @@
     </div>
     <script type="text/javascript">
 
+      function verifyTotalCount() {
+        var candidateCount = $(".candidate").length;
+        var selectionCount =
+          $("#men").val() +
+          $("#white-women").val() +
+          $("#women-of-color").val() +
+          $("#nonbinary").val();
+
+        if(selectionCount < candidateCount) {
+          alert("You must make a choice for each candidate.")
+          return false;
+        }
+        return true;
+      }
+
       function resetButtonsByIndex(index) {
         $("#man-" + index).removeClass("pressed");
-        $("#woman-" + index).removeClass("pressed");
+        $("#white-woman-" + index).removeClass("pressed");
+        $("#woman-of-color-" + index).removeClass("pressed");
         $("#nonbinary-" + index).removeClass("pressed");
       }
 
@@ -87,8 +132,13 @@
             return total + 1;
           return total;
         }, 0)
-        var womanCount = selections.reduce(function(total, selection) {
-          if (selection === "w")
+        var whiteWomanCount = selections.reduce(function(total, selection) {
+          if (selection === "ww")
+            return total + 1;
+          return total;
+        }, 0)
+        var womanOfColorCount = selections.reduce(function(total, selection) {
+          if (selection === "woc")
             return total + 1;
           return total;
         }, 0)
@@ -99,13 +149,15 @@
         }, 0)
 
         $("#men").val(manCount);
-        $("#women").val(womanCount);
+        $("#white-women").val(whiteWomanCount);
+        $("#women-of-color").val(womanOfColorCount);
         $("#nonbinary").val(nonbinaryCount);
       }
 
       $(function() {
         var manButtons = $(".man-button");
-        var womanButtons = $(".woman-button");
+        var wwButtons = $(".white-woman-button");
+        var wocButtons = $(".woman-of-color-button");
         var nonbinaryButtons = $(".nonbinary-button");
         var selections = [];
 
@@ -118,13 +170,22 @@
           selections[index] = 'm';
           setCounts(selections);
         })
-        womanButtons.click(function() {
+        wwButtons.click(function() {
           var $this = $(this);
           var id = $this.attr("id");
-          var index = parseInt(id.slice(6), 10);
+          var index = parseInt(id.slice(12), 10);
           resetButtonsByIndex(index);
           activateButton($this);
-          selections[index] = 'w';
+          selections[index] = 'ww';
+          setCounts(selections);
+        })
+        wocButtons.click(function() {
+          var $this = $(this);
+          var id = $this.attr("id");
+          var index = parseInt(id.slice(15), 10);
+          resetButtonsByIndex(index);
+          activateButton($this);
+          selections[index] = 'woc';
           setCounts(selections);
         })
         nonbinaryButtons.click(function() {
@@ -136,6 +197,7 @@
           selections[index] = 'n';
           setCounts(selections);
         })
+        $("form").submit(verifyTotalCount);
       });
     </script>
     {% include "shared/footer.html" %}

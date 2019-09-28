@@ -129,6 +129,11 @@
     width: 75px;
   }
 
+  .tool-list {
+    max-width: 750px;
+    margin:auto;
+  }
+
   .btn {
     background: #EF4C29;
     color: #fff;
@@ -317,8 +322,37 @@
   }
 
   /* Ballotmania Page */
+  div.candidate {
+    max-width: 400px;
+    margin: auto;
+    padding: 10px 0px;
+    margin-bottom: 10px;
+  }
+  div.candidate img {
+    max-width: 100%;
+    max-height: 150px;
+    margin-top: 15px;
+  }
+  div.candidate {
+    background-color: #3152A4;
+    border: 3px solid #fff;
+  }
+  div.office {
+    color: #fff;
+  }
+  div.candidate h4 {
+    color: #fff;
+    margin-bottom: 0px;
+  }
+  div.candidate div.party {
+    font-size: .7em;
+    margin-bottom: 2px;
+    color: #fff;
+    font-weight: normal;
+  }
   div.ballot-button {
-    min-width: 120px;
+    width: 100%;
+    max-width: 200px;
     padding: 3px;
     background-color: #edce63;
     color: #1d2951;

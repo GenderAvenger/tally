@@ -13,7 +13,7 @@ var express = require('express')
 // Express 3.x to 4.x Migration
 var bodyParser = require('body-parser')
   , cookieParser = require('cookie-parser')
-  , cookieSession = require('cookie-session')
+  , session = require('express-session')
   , morgan = require('morgan') // replaced express.logger
   , favicon = require('serve-favicon');
 
@@ -46,8 +46,16 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // Set up what we need for cookie sessions (used to avoid re-showing)
 app.use(cookieParser(process.env['COOKIE_SECRET']));
-app.use(cookieSession({
-  keys: [process.env['COOKIE_SECRET']]
+// app.use(cookieSession({
+//   keys: [process.env['COOKIE_SECRET']]
+// }));
+
+// Set up sessions
+app.use(session({
+    secret: process.env['COOKIE_SECRET'],
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: false }
 }));
 
 // Load static files from /public
