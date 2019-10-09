@@ -157,7 +157,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
   req.session.women = req.session.whitewomen + req.session.womenofcolor;
   req.session.men = parseInt(req.body.men, 10);
   req.session.nonbinary = parseInt(req.body.nonbinary, 10);
-  req.session.hashtag = "#BallotMANia";
+  req.session.hashtag = "#ballotmania";
 
   req.session.session_text = "Candidates on the ballot";
   if (req.session.zip) {
@@ -514,7 +514,7 @@ app.get('/share/:id', function (req, res, next) {
       pie: pie_url,
       pie_id: pie_id,
       session_text: refVal.session_text.replace(/\"/g, "'"),
-      hashtag: refVal.hashtag.replace(/\"/g, "'"),
+      hashtag: querystring.escape(refVal.hashtag.replace(/\"/g, "'")),
       total_count: refVal.women + refVal.men + refVal.other,
       total_women: refVal.women,
       total_womenofcolor: refVal.womenofcolor,
