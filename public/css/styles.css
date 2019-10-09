@@ -181,6 +181,24 @@
     height: 80px;
   }
 
+  .ballotmania .candidate-picture {
+  }
+
+  .ballotmania .small-bio {
+    margin-top: 5px;
+    padding: 5px;
+    border: 1px solid white;
+  }
+  .ballotmania .large-bio {
+    margin-top: 3.6em;
+    padding: 50px 5px;
+    border: 1px solid white;
+  }
+  .ballotmania a.bio-link {
+    color: #fff;
+    text-decoration: none;
+  }
+
   /* Choice Page */
   .choice #logo {
     margin-bottom: 20px;

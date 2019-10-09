@@ -29,11 +29,24 @@
           <div class="text-center">
             <div class="row candidate">
               <div class="col-xs-4 text-center">
-                {% if candidate.person.image.url %}
-                  <img
-                    src="{{ candidate.person.image.url }}"
-                    alt="{{ candidate.person.name }} photo" />
-                {% endif %}
+                  {% if candidate.person.image.url %}
+                    <img
+                      class="candidate-picture"
+                      src="{{ candidate.person.image.url }}"
+                      alt="{{ candidate.person.name }} photo" />
+
+                    <a class="bio-link" href="{{ candidate.person.url }}" target="_blank">
+                      <div class="small-bio">
+                        Click for bio
+                      </div>
+                    </a>
+                  {% else %}
+                    <a class="bio-link" href="{{ candidate.person.url }}" target="_blank">
+                      <div class="large-bio">
+                        Click for bio
+                      </div>
+                    </a>
+                  {% endif %}
               </div>
               <div class="col-xs-8">
                 <div class="row">
