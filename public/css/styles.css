@@ -59,6 +59,11 @@
     color: inherit;
   }
 
+  a.inline {
+    text-decoration: underline;
+    color: #fff;
+  }
+
   label {
     font-size: 18px;
     color: #fff;
