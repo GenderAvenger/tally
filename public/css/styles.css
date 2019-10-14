@@ -19,16 +19,26 @@
     height: 100%;
   }
   body {
+    padding-top: 30px;
     font-family: 'Futura', Arial,sans-serif;
     font-size: 13px;
+    height:100%;
     background-color: #202555;
-    padding-top: 30px;
-    background-image: url('../img/cityscape.png');
-    background-position: bottom;
-    background-repeat: repeat-x;
-    min-height: 100%;
+    bottom: 100px;
   }
-
+  .container {
+    padding-bottom: 110px;
+  }
+  #background {
+    width:100%;
+    margin-top: 10px;
+    height:90px;
+    background-image: url('../img/cityscape.png');
+    background-repeat: repeat-x;
+    bottom:0;
+    position: fixed;
+    z-index: -1;
+  }
   h1 {
     color: #fff;
     font-family: 'Futura',Arial,sans-serif;
@@ -47,6 +57,11 @@
   a {
     text-decoration: none;
     color: inherit;
+  }
+
+  a.inline {
+    text-decoration: underline;
+    color: #fff;
   }
 
   label {
@@ -119,6 +134,11 @@
     width: 75px;
   }
 
+  .tool-list {
+    max-width: 750px;
+    margin:auto;
+  }
+
   .btn {
     background: #EF4C29;
     color: #fff;
@@ -156,6 +176,32 @@
   }
   .form #logo img {
     height: 64px;
+  }
+
+  /* BallotMANia Page */
+  .ballotmania #logo {
+    margin-bottom: 5px;
+  }
+  .ballotmania #logo img {
+    height: 80px;
+  }
+
+  .ballotmania .candidate-picture {
+  }
+
+  .ballotmania .small-bio {
+    margin-top: 5px;
+    padding: 5px;
+    border: 1px solid white;
+  }
+  .ballotmania .large-bio {
+    margin-top: 1em;
+    padding: 42px 5px;
+    border: 1px solid white;
+  }
+  .ballotmania a.bio-link {
+    color: #fff;
+    text-decoration: none;
   }
 
   /* Choice Page */
@@ -296,6 +342,50 @@
     text-transform: uppercase;
     margin-bottom: 5px;
     color: #fff;
+  }
+
+  /* Ballotmania Page */
+  div.candidate {
+    max-width: 400px;
+    margin: auto;
+    padding: 10px 0px;
+    margin-bottom: 10px;
+  }
+  div.candidate img {
+    max-width: 100%;
+    max-height: 150px;
+    margin-top: 15px;
+  }
+  div.candidate {
+    background-color: #3152A4;
+    border: 3px solid #fff;
+  }
+  div.office {
+    color: #fff;
+  }
+  div.candidate h4 {
+    color: #fff;
+    margin-bottom: 0px;
+  }
+  div.candidate div.party {
+    font-size: .7em;
+    margin-bottom: 2px;
+    color: #fff;
+    font-weight: normal;
+  }
+  div.ballot-button {
+    width: 100%;
+    max-width: 200px;
+    padding: 3px;
+    background-color: #edce63;
+    color: #1d2951;
+    font-size: 12px;
+  }
+  div.ballot-button:hover {
+    background-color: #f1d881;
+  }
+  div.ballot-button.pressed {
+    background-color: #DC5239;
   }
 
   .pad-bottom {
