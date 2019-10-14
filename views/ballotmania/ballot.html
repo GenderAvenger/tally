@@ -42,8 +42,13 @@
                       </div>
                     </a>
                   {% else %}
-                    <a class="bio-link" href="{{ candidate.person.url }}" target="_blank">
+                    <a class="bio-link" href="https://google.com/search?q={{ candidate.person.name + ' ' + race.office.name }}&tbm=isch" target="_blank">
                       <div class="large-bio">
+                        Click to search for photos
+                      </div>
+                    </a>
+                    <a class="bio-link" href="{{ candidate.person.url }}" target="_blank">
+                      <div class="small-bio">
                         Click for bio
                       </div>
                     </a>
