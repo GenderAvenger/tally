@@ -341,7 +341,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT");
-  } else {
+  } else if (proportionWomen === 0){
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -357,6 +357,22 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT?");
+  } else {
+    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+20', "BARELY ANY WOMEN");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '40',
+      '-annotate', '+35+65', "ON MY BALLOT");
   }
 
   image_parameters.push(
