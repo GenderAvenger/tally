@@ -316,38 +316,14 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+20', "THE PRESENT AND FUTURE");
+      '-annotate', '+35+20', "THERE ARE WOMEN");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+65', "ARE");
-    if(req.session.womenofcolor == 0) {
-      image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#d87111',
-          '-fill', '#d87111',
-          '-font', 'ArialB',
-          '-pointsize', '40',
-          '-annotate', '+130+65', "ALMOST");
-      image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#edce63',
-          '-fill', '#edce63',
-          '-font', 'ArialB',
-          '-pointsize', '40',
-          '-annotate', '+310+65', "BRIGHT");
-    } else {
-      image_parameters.push(
-        '-gravity', 'NorthWest',
-        '-stroke', '#edce63',
-        '-fill', '#edce63',
-        '-font', 'ArialB',
-        '-pointsize', '40',
-        '-annotate', '+130+65', "BRIGHT");
-    }
+      '-annotate', '+35+65', "ON MY BALLOT");
   } else if ( proportionWomen + proportionNonbinary > .3 ) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
 
@@ -357,22 +333,14 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+20', "CLOUDY WITH A");
+      '-annotate', '+35+20', "NOT ENOUGH WOMEN");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+65', "CHANCE OF ");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
-      '-font', 'ArialB',
-      '-pointsize', '42',
-      '-annotate', '+300+65', "PATRIARCHY");
-
+      '-annotate', '+35+65', "ON MY BALLOT");
   } else {
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
     image_parameters.push(
@@ -381,21 +349,14 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+20', "A THUNDERSTORM OF");
+      '-annotate', '+35+20', "WHERE ARE THE WOMEN");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+65', "GENDER");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+230+65', "INEQUALITY");
+      '-annotate', '+35+65', "ON MY BALLOT?");
   }
 
   image_parameters.push(
