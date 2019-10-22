@@ -203,6 +203,10 @@
     color: #fff;
     text-decoration: none;
   }
+ .disclaimer {
+    font-size: 1em;
+    margin-top: 20px;
+  }
 
   /* Choice Page */
   .choice #logo {

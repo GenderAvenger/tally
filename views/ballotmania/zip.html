@@ -21,7 +21,6 @@
       <div class="row">
         <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6 text-center">
           <h2>Look up your ballot.</h2>
-          <p>(Ballot information provided by <a class="inline" href="http://ballotpedia.com" target="_new">Ballotpedia</a>)</p>
         </div>
       </div>
       <form method="post" id="zip-form" action="/ballotmania">
@@ -44,6 +43,12 @@
           </div>
         </div>
       </form>
+        <div class="row">
+          <div class="col-xs-offset-1 col-xs-10 text-center">
+            <p class="disclaimer">(Ballot information provided by <a class="inline" href="http://ballotpedia.com" target="_new">Ballotpedia</a>)</p>
+            <p class="disclaimer">GenderAvenger does not endorse any candidate or party.</p>
+          </div>
+        </div>
     </div>
     {% include "shared/footer.html" %}
   </body>
