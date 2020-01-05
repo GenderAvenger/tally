@@ -178,6 +178,12 @@
     height: 64px;
   }
 
+  /* Ballotmania Tutorial */
+  #ballotmania-tutorial img {
+    max-width: 500px;
+    width: 100%;
+  }
+
   /* BallotMANia Page */
   .ballotmania #logo {
     margin-bottom: 5px;

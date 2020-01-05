@@ -119,6 +119,10 @@ app.get('/ballotmania', function (req, res, next) {
   })
 });
 
+app.get('/ballotmania/tutorial', function (req, res, next) {
+  res.render('ballotmania/tutorial.html')
+});
+
 app.post('/ballotmania', function (req, res, next) {
   var zip = req.body.zip;
   req.session.zip = zip;
