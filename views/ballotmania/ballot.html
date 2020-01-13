@@ -42,11 +42,9 @@
                       </div>
                     </a>
                   {% else %}
-                    <a class="bio-link" href="https://google.com/search?q=%22{{ candidate.person.name }}%22&tbm=isch" target="_blank">
-                      <div class="large-bio">
-                        Click to search for photos
-                      </div>
-                    </a>
+                    <div class="large-bio">
+                      <p>No Photo</p>
+                    </div>
                     <a class="bio-link" href="{{ candidate.person.url }}" target="_blank">
                       <div class="small-bio">
                         Click for bio
