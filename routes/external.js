@@ -156,6 +156,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
   var file_id = uuid.v4();
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
+  var social_share_text = "";
   req.session.women = parseInt(req.body.women, 10);
   req.session.men = parseInt(req.body.men, 10);
   req.session.nonbinary = parseInt(req.body.nonbinary, 10);
@@ -289,6 +290,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT");
+    social_share_text = "There are women on my ballot."
   } else if ( proportionWomen + proportionNonbinary > .3 ) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
 
@@ -306,6 +308,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT");
+    social_share_text = "Not enough women on my ballot!"
   } else if (proportionWomen === 0){
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
     image_parameters.push(
@@ -322,6 +325,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT?");
+    social_share_text = "Where are the women on my ballot?"
   } else {
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
     image_parameters.push(
@@ -338,6 +342,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT");
+    social_share_text = "Barely any women on my ballot."
   }
 
   image_parameters.push(
@@ -370,7 +375,8 @@ app.post('/ballotmania/ballot', function (req, res, next) {
               "women": req.session.women,
               "other": 0,
               "pie_id": pie_id,
-              "pie_url": pie_url
+              "pie_url": pie_url,
+              "social_share_text": social_share_text,
             });
 
             req.session.lastCreated = pie_url;
@@ -390,7 +396,8 @@ app.post('/ballotmania/ballot', function (req, res, next) {
           "women": req.session.women,
           "other": 0,
           "pie_id": pie_id,
-          "pie_url": pie_url
+          "pie_url": pie_url,
+          "social_share_text": social_share_text,
         });
         fs.unlinkSync(path.join(__dirname, '../' + card_filename));
         req.session.lastCreated = pie_url;
@@ -440,6 +447,10 @@ app.get('/share/:id', function (req, res, next) {
       return res.redirect('/');
     }
     var pie_url = refVal.pie_url;
+    social_share_text = refVal.social_share_text || "";
+    if(social_share_text != "") {
+      social_share_text = social_share_text + " ";
+    }
 
     // Check if the user just made this chart
     var report_is_new = req.session.lastCreated == pie_url;
@@ -462,6 +473,7 @@ app.get('/share/:id', function (req, res, next) {
       total_womenofcolor: refVal.womenofcolor,
       report_is_new: report_is_new,
       version: req.cookies['version'],
+      social_share_text: social_share_text,
     });
   })
 });
@@ -634,6 +646,7 @@ app.post('/whotalks/chart', function (req, res, next) {
   var file_id = uuid.v4();
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
+  var social_share_text = "";
 
   var totalParticipants = men + women;
   var proportionWomen = women / totalParticipants;
@@ -842,7 +855,8 @@ app.post('/whotalks/chart', function (req, res, next) {
               "other": 0,
               "type": "whotalks",
               "pie_id": pie_id,
-              "pie_url": pie_url
+              "pie_url": pie_url,
+              "social_share_text": social_share_text,
             });
 
             req.session.lastCreated = pie_url;
@@ -863,7 +877,8 @@ app.post('/whotalks/chart', function (req, res, next) {
           "other": 0,
           "type": "whotalks",
           "pie_id": pie_id,
-          "pie_url": pie_url
+          "pie_url": pie_url,
+          "social_share_text": social_share_text,
         });
         fs.unlinkSync(path.join(__dirname, '../' + card_filename));
         req.session.lastCreated = pie_url;
@@ -879,6 +894,7 @@ app.post('/tally/chart', function (req, res, next) {
   var file_id = uuid.v4();
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
+  var social_share_text = "";
 
   if(req.session.womenofcolor > req.session.women) {
     req.session.women += req.session.womenofcolor;
@@ -1051,6 +1067,7 @@ app.post('/tally/chart', function (req, res, next) {
           '-font', 'ArialB',
           '-pointsize', '40',
           '-annotate', '+310+65', "BRIGHT");
+      social_share_text = "The present and future are almost bright!";
     } else {
       image_parameters.push(
         '-gravity', 'NorthWest',
@@ -1059,6 +1076,7 @@ app.post('/tally/chart', function (req, res, next) {
         '-font', 'ArialB',
         '-pointsize', '40',
         '-annotate', '+130+65', "BRIGHT");
+      social_share_text = "The present and future are bright";
     }
   } else if ( proportionWomen + proportionNonbinary > .3 ) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
@@ -1084,7 +1102,7 @@ app.post('/tally/chart', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '42',
       '-annotate', '+300+65', "PATRIARCHY");
-
+    social_share_text = "Cloudy with a chance of patriacrhy.";
   } else {
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
     image_parameters.push(
@@ -1108,6 +1126,7 @@ app.post('/tally/chart', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+230+65', "INEQUALITY");
+    social_share_text = "A thunderstorm of gender inequality.";
   }
 
   image_parameters.push(
@@ -1140,7 +1159,8 @@ app.post('/tally/chart', function (req, res, next) {
               "women": req.session.women,
               "other": 0,
               "pie_id": pie_id,
-              "pie_url": pie_url
+              "pie_url": pie_url,
+              "social_share_text": social_share_text,
             });
 
             req.session.lastCreated = pie_url;
@@ -1160,7 +1180,8 @@ app.post('/tally/chart', function (req, res, next) {
           "women": req.session.women,
           "other": 0,
           "pie_id": pie_id,
-          "pie_url": pie_url
+          "pie_url": pie_url,
+          "social_share_text": social_share_text,
         });
         fs.unlinkSync(path.join(__dirname, '../' + card_filename));
         req.session.lastCreated = pie_url;
@@ -1176,6 +1197,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
   var file_id = uuid.v4();
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
+  var social_share_text = "";
 
   // Set up the image pieces
   im.convert([
@@ -1325,6 +1347,8 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
             '-font', 'ArialB',
             '-pointsize', '40',
             '-annotate', '+325+685', "BRIGHT");
+
+        social_share_text = "The present and future are almost bright!";
       } else {
         image_parameters.push(
           '-gravity', 'NorthWest',
@@ -1333,6 +1357,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
           '-font', 'ArialB',
           '-pointsize', '40',
           '-annotate', '+145+685', "BRIGHT");
+        social_share_text = "The present and future are bright!";
       }
     } else if ( proportionWomen + proportionNonbinary > .3 ) {
       image_parameters.push('-page', '+620+470','assets/icon_cloudy.png');
@@ -1358,7 +1383,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
         '-font', 'ArialB',
         '-pointsize', '42',
         '-annotate', '+310+685', "PATRIARCHY");
-
+        social_share_text = "Cloudy with a chance of patriarchy.";
     } else {
       image_parameters.push('-page', '+620+470','assets/icon_thunder.png');
       image_parameters.push(
@@ -1382,6 +1407,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
         '-font', 'ArialB',
         '-pointsize', '42',
         '-annotate', '+245+685', "INEQUALITY");
+        social_share_text = "A thunderstorm of gender inequality.";
     }
 
     image_parameters.push(
@@ -1415,7 +1441,8 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
                   "women": req.session.women,
                   "other": 0,
                   "pie_id": pie_id,
-                  "pie_url": pie_url
+                  "pie_url": pie_url,
+                  "social_share_text": social_share_text,
                 });
 
                 fs.unlinkSync(req.file.path);
@@ -1436,7 +1463,8 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
               "women": req.session.women,
               "other": 0,
               "pie_id": pie_id,
-              "pie_url": pie_url
+              "pie_url": pie_url,
+              "social_share_text": social_share_text,
             });
             fs.unlinkSync(req.file.path);
             fs.unlinkSync(path.join(__dirname, '../' + card_filename));
