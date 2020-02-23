@@ -116,6 +116,7 @@
       </form>
     </div>
     <script type="text/javascript">
+      var allowIncomplete = false;
 
       function verifyTotalCount() {
         var candidateCount = $(".candidate").length;
@@ -125,8 +126,10 @@
           $("#women-of-color").val() +
           $("#nonbinary").val();
 
-        if(selectionCount < candidateCount) {
-          alert("You must make a choice for each candidate.")
+        if(!allowIncomplete
+        && selectionCount < candidateCount) {
+          alert("Are you sure you want to submit without making a choice for each candidate? If so, submit again.")
+          allowIncomplete = true;
           return false;
         }
         return true;
