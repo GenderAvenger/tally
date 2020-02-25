@@ -179,7 +179,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
   );
 
   image_parameters.push('-page', '+0+0','assets/base_background.png');
-  image_parameters.push('-page', '+0+0','assets/city_background_ballotmania.png');
+  image_parameters.push('-page', '+0+10','assets/city_background_ballotmania.png');
   image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
 
   // Draw the chart
@@ -241,12 +241,12 @@ app.post('/ballotmania/ballot', function (req, res, next) {
 
   if(req.session.nonbinary > 0) {
     image_parameters.push(
-      '-gravity', 'NorthEast',
+      '-gravity', 'Center',
       '-stroke', '#9E84CB',
       '-fill', '#9E84CB',
       '-font', 'Arial',
       '-pointsize', '30',
-      '-annotate', '+25+670', req.session.nonbinary + ((req.session.nonbinary == 1)?" Nonbinary Person":" Nonbinary Persons"));
+      '-annotate', '+0+280', req.session.nonbinary + ((req.session.nonbinary == 1)?" Nonbinary Person":" Nonbinary Persons"));
   }
 
   image_parameters.push(
