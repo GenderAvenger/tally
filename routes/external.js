@@ -275,7 +275,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
     '-annotate', '+35+210', req.session.hashtag);
 
   if( proportionWomen + proportionNonbinary >= .4 ) {
-    image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
+    image_parameters.push('-page', '+620+40','assets/ballotmania_icons_positive.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
@@ -292,7 +292,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-annotate', '+35+65', "ON MY BALLOT");
     social_share_text = "There are women on my ballot. Keep it this way: https://www.genderavenger.com/ballotmania"
   } else if ( proportionWomen + proportionNonbinary > .3 ) {
-    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
+    image_parameters.push('-page', '+620+40','assets/ballotmania_icons_neutral.png');
 
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -310,7 +310,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-annotate', '+35+65', "ON MY BALLOT");
     social_share_text = "There are not enough women on the ballot! Make change: https://www.genderavenger.com/ballotmania"
   } else if (proportionWomen === 0){
-    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
+    image_parameters.push('-page', '+620+40','assets/ballotmania_icons_negative.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
@@ -327,7 +327,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-annotate', '+35+65', "ON MY BALLOT?");
     social_share_text = "Where are the women on my ballot? Help find some: https://www.genderavenger.com/ballotmania"
   } else {
-    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
+    image_parameters.push('-page', '+620+40','assets/ballotmania_icons_negative.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
