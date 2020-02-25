@@ -156,9 +156,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
   var file_id = uuid.v4();
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
-  req.session.whitewomen = parseInt(req.body.whiteWomen, 10);
-  req.session.womenofcolor = parseInt(req.body.womenOfColor, 10);
-  req.session.women = req.session.whitewomen + req.session.womenofcolor;
+  req.session.women = parseInt(req.body.women, 10);
   req.session.men = parseInt(req.body.men, 10);
   req.session.nonbinary = parseInt(req.body.nonbinary, 10);
   req.session.hashtag = "#ballotmania";
@@ -172,11 +170,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
   var chart_filename = "assets/chartgen/" + file_id + "_chart.png";
   var card_filename = "assets/chartgen/" + file_id + "_card.png";
 
-  if(req.session.womenofcolor > req.session.women) {
-    req.session.women += req.session.womenofcolor;
-  }
   var proportionWomen = req.session.women / (req.session.women + req.session.men + req.session.nonbinary);
-  var proportionWomenOfColor = req.session.womenofcolor / (req.session.women + req.session.men + req.session.nonbinary);
   var proportionNonbinary = req.session.nonbinary / (req.session.women + req.session.men + req.session.nonbinary);
 
   var image_parameters = [];
@@ -211,17 +205,6 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-fill', '#edce63',
       '-stroke', '#edce63',
       '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
-    );
-  }
-  if(proportionWomenOfColor > 0) {
-    var degrees = (proportionWomenOfColor * 360 + 90);
-    var radians = degrees * Math.PI / 180;
-    var x = 450 + 200 * Math.cos(radians);
-    var y = 500 + 200 * Math.sin(radians);
-    image_parameters.push(
-      '-tile', 'assets/stripes.gif',
-      '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\'',
-      '+tile'
     );
   }
 
@@ -266,28 +249,6 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-annotate', '+25+670', req.session.nonbinary + ((req.session.nonbinary == 1)?" Nonbinary Person":" Nonbinary Persons"));
   }
 
-  if(req.session.womenofcolor == 0) {
-    image_parameters.push(
-      '-stroke', '#000000',
-      '-fill', '#d87111',
-      '-draw', 'rectangle 65,665 360,707');
-
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#ffffff',
-      '-fill', '#ffffff',
-      '-font', 'Arial',
-      '-pointsize', '30',
-      '-annotate', '+75+670', "No Women of Color!");
-  } else {
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#d87111',
-      '-fill', '#d87111',
-      '-font', 'Arial',
-      '-pointsize', '30',
-      '-annotate', '+75+670', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
-  }
   image_parameters.push(
     '-gravity', 'NorthEast',
     '-stroke', '#FF0000',
