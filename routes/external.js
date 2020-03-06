@@ -290,7 +290,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT");
-    social_share_text = "There are women on my ballot. Keep it this way: https://www.genderavenger.com/ballotmania"
+    social_share_text = "There are women on my ballot. Keep it this way: https://www.genderavenger.com/ballotmania#partners"
   } else if ( proportionWomen + proportionNonbinary > .3 ) {
     image_parameters.push('-page', '+620+40','assets/ballotmania_icons_neutral.png');
 
@@ -308,7 +308,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT");
-    social_share_text = "There are not enough women on the ballot! Make change: https://www.genderavenger.com/ballotmania"
+    social_share_text = "There are not enough women on the ballot! Make change: https://www.genderavenger.com/ballotmania#partners"
   } else if (proportionWomen === 0){
     image_parameters.push('-page', '+620+40','assets/ballotmania_icons_negative.png');
     image_parameters.push(
@@ -325,7 +325,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT?");
-    social_share_text = "Where are the women on my ballot? Help find some: https://www.genderavenger.com/ballotmania"
+    social_share_text = "Where are the women on my ballot? Help find some: https://www.genderavenger.com/ballotmania#partners"
   } else {
     image_parameters.push('-page', '+620+40','assets/ballotmania_icons_negative.png');
     image_parameters.push(
@@ -342,7 +342,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT");
-    social_share_text = "Barely any women on my ballot. Encourage more: https://www.genderavenger.com/ballotmania"
+    social_share_text = "Barely any women on my ballot. Encourage more: https://www.genderavenger.com/ballotmania#partners"
   }
 
   image_parameters.push(
