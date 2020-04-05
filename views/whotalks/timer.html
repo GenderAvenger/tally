@@ -25,11 +25,15 @@
       <div class="row">
         <div class="col-xs-offset-2 col-xs-8 col-sm-offset-2 col-sm-4 text-center">
           <div class="button button-timer" id="dude">A Dude</div>
-          <p id="dude-display" class="display">00:00</p>
+          <div>
+            <input type="text" class="whotalks-entry" name="dude_display" value="00:00:00" id="dude-display" />
+          </div>
         </div>
         <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-4 text-center">
           <div class="button button-timer" id="not-dude">Not a Dude</div>
-          <p id="not-dude-display" class="display">00:00</p>
+          <div>
+            <input type="text" class="whotalks-entry" name="not_dude_display" value="00:00:00" id="not-dude-display" />
+          </div>
         </div>
       </div>
       <div class="row">
@@ -72,8 +76,8 @@
         var $not_dude = $('#not-dude');
         var $activity_talker = $('#activity-talker');
 
-        var $dude_input = $('#dude-input');
-        var $dude_input = $('#not-dude-input');
+        var $dude_display = $('#dude-display');
+        var $not_dude_display = $('#not-dude-display');
 
         function num_pad(num) {
           if (num < 10) {
@@ -91,11 +95,7 @@
             tally.hours += Math.floor(tally.minutes / 60);
             tally.minutes = tally.minutes % 60;
           }
-          if (tally.hours !== 0) {
-            $(display_sel).html(num_pad(tally.hours) + ':' + num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
-          } else {
-            $(display_sel).html(num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
-          }
+          $(display_sel).val(num_pad(tally.hours) + ':' + num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
 
           // Update the input value
           var tally_tot = (tally.hours * 3600) + (tally.minutes * 60) + tally.seconds
@@ -108,13 +108,63 @@
             $ans.html('<span id="pct">' + pct + '</span>% men');
           }
         }
+
+        function parseTime(timeString) {
+          var timePieces = timeString.split(':');
+          var paddedPieces = [0,0,0].concat(timePieces);
+          var finalPieces = paddedPieces.slice(-3);
+          console.log(finalPieces)
+          var seconds = parseInt(finalPieces[2]) | 0;
+          var minutes = parseInt(finalPieces[1]) | 0;
+          var hours = parseInt(finalPieces[0]) | 0;
+          return {
+            minutes: minutes % 60 + Math.floor(seconds / 60),
+            seconds: seconds % 60,
+            hours: hours + Math.floor((minutes + seconds / 60) / 60)
+          }
+        }
+
+        function saveTimeInputValues() {
+          var dude_time_string = $dude_display.val();
+          var not_dude_time_string = $not_dude_display.val();
+          var parsed_dude_time = parseTime(dude_time_string);
+          var parsed_not_dude_time = parseTime(not_dude_time_string);
+
+          if(parsed_dude_time) {
+            dude.time = parsed_dude_time;
+            setTime(dude.time, '#dude-display', '#dude-input');
+          }
+          if(parsed_not_dude_time) {
+            not_dude.time = parsed_not_dude_time;
+            setTime(not_dude.time, '#not-dude-display', '#not-dude-input');
+          }
+        }
+
+        function stopNotDudeTimer() {
+          not_dude.active = false;
+          clearInterval(not_dude_t);
+          $not_dude.text("Not a Dude");
+          $activity_talker.html("&nbsp;");
+          $not_dude.removeClass('pressed');
+        }
+
+        function stopDudeTimer() {
+          dude.active = false;
+          clearInterval(dude_t);
+          $dude.text("A Dude");
+          $activity_talker.html("&nbsp;");
+          $dude.removeClass('pressed');
+        }
+
+        function stopAllTimers() {
+          stopNotDudeTimer();
+          stopDudeTimer();
+        }
+
         $dude.click(function() {
           $dude.toggleClass('pressed');
           if (dude.active === true) {
-            dude.active = false;
-            clearInterval(dude_t);
-            $dude.text("A Dude");
-            $activity_talker.html("&nbsp;");
+            stopDudeTimer();
           } else {
             dude.active = true;
             $dude.html("<span class='glyphicon glyphicon-pause'></span>");
@@ -134,10 +184,7 @@
         $not_dude.click(function() {
           $not_dude.toggleClass('pressed');
           if (not_dude.active === true) {
-            not_dude.active = false;
-            clearInterval(not_dude_t);
-            $not_dude.text("Not a Dude");
-            $activity_talker.html("&nbsp;");
+            stopNotDudeTimer();
           } else {
             not_dude.active = true;
             $not_dude.html("<span class='glyphicon glyphicon-pause'></span>");
@@ -154,14 +201,11 @@
             }, 1000);
           }
         });
-        $('body').keydown(function(e) {
-          if (e.keyCode === 37) { // left
-            $dude.trigger('click');
-          } else if (e.keyCode === 39) { //right
-            $not_dude.trigger('click');
-          }
-        });
 
+        $dude_display.blur(saveTimeInputValues)
+        $not_dude_display.blur(saveTimeInputValues)
+        $dude_display.focus(stopAllTimers)
+        $not_dude_display.focus(stopAllTimers)
 
         setTime(not_dude.time, '#not-dude-display', '#not-dude-input');
         setTime(dude.time, '#dude-display', '#dude-input');
