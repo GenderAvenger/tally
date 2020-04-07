@@ -24,15 +24,69 @@
       </div>
       <div class="row">
         <div class="col-xs-offset-2 col-xs-8 col-sm-offset-2 col-sm-4 text-center">
-          <div class="button button-timer" id="dude">A Dude</div>
-          <div>
-            <input type="text" class="whotalks-entry" name="dude_display" value="00:00:00" id="dude-display" />
+          <div class="timerMode button button-timer" id="dude">A Dude</div>
+          <div class="timerMode">
+            <p id="dude-display" class="display">00:00</p>
+          </div>
+          <div class="editMode">
+            <h2>A Dude</h2>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="dude-edit-hours">Hours:</label>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="whotalks-entry" name="dude_edit_hours" value="0" id="dude-edit-hours" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="dude-edit-minutes">Minutes:</label>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="whotalks-entry" name="dude_edit_minutes" value="0" id="dude-edit-minutes" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="dude-edit-seconds">Seconds:</label>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="whotalks-entry" name="dude_edit_seconds" value="0" id="dude-edit-seconds" />
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-4 text-center">
-          <div class="button button-timer" id="not-dude">Not a Dude</div>
-          <div>
-            <input type="text" class="whotalks-entry" name="not_dude_display" value="00:00:00" id="not-dude-display" />
+          <div class="timerMode button button-timer" id="not-dude">Not a Dude</div>
+          <div class="timerMode">
+            <p id="not-dude-display" class="display">00:00</p>
+          </div>
+          <div class="editMode">
+            <h2>Not a Dude</h2>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="not-dude-edit-hours">Hours:</label>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="whotalks-entry" name="not_dude_edit_hours" value="0" id="not-dude-edit-hours" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="not-dude-edit-minutes">Minutes:</label>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="whotalks-entry" name="not_dude_edit_minutes" value="0" id="not-dude-edit-minutes" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="not-dude-edit-seconds">Seconds:</label>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="whotalks-entry" name="not_dude_edit_seconds" value="0" id="not-dude-edit-seconds" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -42,6 +96,13 @@
             <div class="form-group">
               <input type="hidden" name="not_dude_time" value="0" id="not-dude-input" />
               <input type="hidden" name="dude_time" value="0" id="dude-input" />
+              <div class="timerMode">
+                <input class="btn" type="button" id="activate-edit-mode" value="Edit Times"/>
+              </div>
+              <div class="editMode">
+                <br />
+                <input class="btn" type="button" id="activate-timer-mode" value="Use Timers"/>
+              </div>
               <input class="btn" type="submit" id="chart-submit" value="Finish"/>
             </div>
           </form>
@@ -76,8 +137,12 @@
         var $not_dude = $('#not-dude');
         var $activity_talker = $('#activity-talker');
 
-        var $dude_display = $('#dude-display');
-        var $not_dude_display = $('#not-dude-display');
+        var $dude_edit_hours = $('#dude-edit-hours');
+        var $dude_edit_minutes = $('#dude-edit-minutes');
+        var $dude_edit_seconds = $('#dude-edit-seconds');
+        var $not_dude_edit_hours = $('#not-dude-edit-hours');
+        var $not_dude_edit_minutes = $('#not-dude-edit-minutes');
+        var $not_dude_edit_seconds = $('#not-dude-edit-seconds');
 
         function num_pad(num) {
           if (num < 10) {
@@ -95,11 +160,22 @@
             tally.hours += Math.floor(tally.minutes / 60);
             tally.minutes = tally.minutes % 60;
           }
-          $(display_sel).val(num_pad(tally.hours) + ':' + num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
+          if (tally.hours !== 0) {
+            $(display_sel).html(num_pad(tally.hours) + ':' + num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
+          } else {
+            $(display_sel).html(num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
+          }
 
-          // Update the input value
+          // Update the input values
           var tally_tot = (tally.hours * 3600) + (tally.minutes * 60) + tally.seconds
           $(input_sel).val(tally_tot);
+
+          $dude_edit_hours.val(dude.time.hours);
+          $dude_edit_minutes.val(dude.time.minutes);
+          $dude_edit_seconds.val(dude.time.seconds);
+          $not_dude_edit_hours.val(not_dude.time.hours);
+          $not_dude_edit_minutes.val(not_dude.time.minutes);
+          $not_dude_edit_seconds.val(not_dude.time.seconds);
 
           var d_tot = (dude.time.hours * 3600) + (dude.time.minutes * 60) + dude.time.seconds;
           var l_tot = (not_dude.time.hours * 3600) + (not_dude.time.minutes * 60) + not_dude.time.seconds;
@@ -109,26 +185,23 @@
           }
         }
 
-        function parseTime(timeString) {
-          var timePieces = timeString.split(':');
-          var paddedPieces = [0,0,0].concat(timePieces);
-          var finalPieces = paddedPieces.slice(-3);
-          console.log(finalPieces)
-          var seconds = parseInt(finalPieces[2]) | 0;
-          var minutes = parseInt(finalPieces[1]) | 0;
-          var hours = parseInt(finalPieces[0]) | 0;
-          return {
-            minutes: minutes % 60 + Math.floor(seconds / 60),
-            seconds: seconds % 60,
-            hours: hours + Math.floor((minutes + seconds / 60) / 60)
-          }
-        }
-
         function saveTimeInputValues() {
-          var dude_time_string = $dude_display.val();
-          var not_dude_time_string = $not_dude_display.val();
-          var parsed_dude_time = parseTime(dude_time_string);
-          var parsed_not_dude_time = parseTime(not_dude_time_string);
+          var dude_time_hours = parseInt($dude_edit_hours.val()) | 0;
+          var dude_time_minutes = parseInt($dude_edit_minutes.val()) | 0;
+          var dude_time_seconds = parseInt($dude_edit_seconds.val()) | 0;
+          var not_dude_time_hours = parseInt($not_dude_edit_hours.val()) | 0;
+          var not_dude_time_minutes = parseInt($not_dude_edit_minutes.val()) | 0;
+          var not_dude_time_seconds = parseInt($not_dude_edit_seconds.val()) | 0;
+          var parsed_dude_time = {
+            minutes: dude_time_minutes % 60 + Math.floor(dude_time_seconds / 60),
+            seconds: dude_time_seconds % 60,
+            hours: dude_time_hours + Math.floor((dude_time_minutes + dude_time_seconds / 60) / 60)
+          };
+          var parsed_not_dude_time ={
+            minutes: not_dude_time_minutes % 60 + Math.floor(not_dude_time_seconds / 60),
+            seconds: not_dude_time_seconds % 60,
+            hours: not_dude_time_hours + Math.floor((not_dude_time_minutes + not_dude_time_seconds / 60) / 60)
+          };
 
           if(parsed_dude_time) {
             dude.time = parsed_dude_time;
@@ -202,10 +275,37 @@
           }
         });
 
-        $dude_display.blur(saveTimeInputValues)
-        $not_dude_display.blur(saveTimeInputValues)
-        $dude_display.focus(stopAllTimers)
-        $not_dude_display.focus(stopAllTimers)
+        function bindEditInput($edit_input) {
+          $edit_input.blur(saveTimeInputValues)
+          $edit_input.focus(stopAllTimers)
+        }
+
+        bindEditInput($not_dude_edit_hours);
+        bindEditInput($not_dude_edit_minutes);
+        bindEditInput($not_dude_edit_seconds);
+        bindEditInput($dude_edit_hours);
+        bindEditInput($dude_edit_minutes);
+        bindEditInput($dude_edit_seconds);
+
+        function activateEditMode() {
+          stopAllTimers();
+          $(".timerMode").hide();
+          $(".editMode").show();
+        }
+        function activateTimerMode()  {
+          $(".editMode").hide();
+          $(".timerMode").show();
+        }
+
+
+        $("#activate-edit-mode").click(activateEditMode)
+        $("#activate-timer-mode").click(activateTimerMode)
+        var manual_mode = "{{manual_mode}}"
+        if (manual_mode) {
+          activateEditMode();
+        } else {
+          activateTimerMode();
+        }
 
         setTime(not_dude.time, '#not-dude-display', '#not-dude-input');
         setTime(dude.time, '#dude-display', '#dude-input');

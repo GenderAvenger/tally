@@ -99,6 +99,12 @@ app.get('/tally/photo', function (req, res, next) {
   });
 });
 
+app.get('/whotalks/choice', function (req, res, next) {
+  res.render('whotalks/choice.html', {
+    title: 'Who Talks?'
+  });
+});
+
 app.get('/whotalks', function (req, res, next) {
   // It's OK to use || since falsy values *should* default to 0
   var not_dude_time = req.session.not_dude_time || 0;
@@ -107,7 +113,8 @@ app.get('/whotalks', function (req, res, next) {
   res.render('whotalks/timer.html', {
     title: 'Who Talks?',
     dude_time: dude_time,
-    not_dude_time: not_dude_time
+    not_dude_time: not_dude_time,
+    manual_mode: req.query.manual
   });
 });
 

@@ -349,7 +349,14 @@
   input.whotalks-entry {
     text-align: center;
     width: 5em;
-    border-radius: 5px;
+  }
+
+  div.editMode {
+    display:none;
+  }
+
+  div.timerMode {
+    display:none;
   }
 
   #activity-talker {
