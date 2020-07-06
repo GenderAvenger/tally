@@ -144,6 +144,19 @@ app.post('/ballotmania', function (req, res, next) {
   })
 });
 
+app.get('/votes/1', function (req, res, next) {
+  res.render('votes/1.html')
+})
+app.get('/votes/2', function (req, res, next) {
+  res.render('votes/2.html')
+})
+app.get('/votes/3', function (req, res, next) {
+  res.render('votes/3.html')
+})
+app.get('/votes/4', function (req, res, next) {
+  res.render('votes/4.html')
+})
+
 app.get('/ballotmania/ballot', function (req, res, next) {
   var offices = req.session.offices || [];
   res.render('ballotmania/ballot.html', {

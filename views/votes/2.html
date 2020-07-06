@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Head -->
+  {% include "shared/header.html" %}
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-offset-3 col-sm-6 text-center">
+          <div id="logo">
+            <a href="/"><img src="../img/wire_logo.png" alt="Gender Avenger"/></a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="text-center">
+          <div id="chart">
+            <img src="/img/sample.png" style="max-width: 500px; border: 3px solid white; margin: 20px;"/>
+          </div>
+        </div>
+      </div>
+      <form method="post" id="zip-form" action="/ballotmania">
+        <div class="row">
+          <div class="text-center">
+            <h2>Help get more women to vote this year.</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="text-center">
+            <div class="form-group">
+              <input class="btn btn-default btn-lg" type="submit" value="Count me in"/>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    {% include "shared/footer.html" %}
+  </body>
+</html>
