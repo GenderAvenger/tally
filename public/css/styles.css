@@ -346,6 +346,19 @@
     margin-bottom: 10px;
   }
 
+  input.whotalks-entry {
+    text-align: center;
+    width: 5em;
+  }
+
+  div.editMode {
+    display:none;
+  }
+
+  div.timerMode {
+    display:none;
+  }
+
   #activity-talker {
     font-size: 16px;
     font-weight: normal;
