@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Head -->
+  {% include "shared/header.html" %}
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-offset-3 col-sm-6 text-center">
+          <div id="logo">
+            <a href="/"><img src="../img/wire_logo.png" alt="Gender Avenger"/></a>
+          </div>
+        </div>
+      </div>
+      <form method="post" id="zip-form" action="/ballotmania">
+        <div class="row">
+          <div class="col-xs-6 col-sm-offset-3 col-sm-3 text-left">
+            <h2>Current Streak: 0</h2>
+          </div>
+          <div class="col-xs-6 col-sm-3 text-right">
+            <h2>Best Streak: 13</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-offset-3 col-sm-6">
+            <textarea style="height: 100px">Hi, this is Jane.  I want to make sure you know how and when you can vote this fall. Sign up to make sure you know your state's requirements and we will remind you about important dates: https://genderavenger.turbovote.com</textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-7 col-sm-offset-3 col-sm-3 text-left">
+            <p>To: 215-123-1523 (Mary Doe)</p>
+          </div>
+          <div class="col-xs-5 col-sm-3 text-right">
+            <div class="form-group">
+              <input class="btn btn-default btn-lg" type="submit" value="Send text"/>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+        </div>
+        <br />
+        <div class="row">
+          <div class="text-center">
+            <div class="form-group">
+              <input class="btn btn-default btn-lg" type="submit" value="View progress"/>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+    {% include "shared/footer.html" %}
+  </body>
+</html>

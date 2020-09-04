@@ -151,6 +151,19 @@ app.post('/ballotmania', function (req, res, next) {
   })
 });
 
+app.get('/votes/1', function (req, res, next) {
+  res.render('votes/1.html')
+})
+app.get('/votes/2', function (req, res, next) {
+  res.render('votes/2.html')
+})
+app.get('/votes/3', function (req, res, next) {
+  res.render('votes/3.html')
+})
+app.get('/votes/4', function (req, res, next) {
+  res.render('votes/4.html')
+})
+
 app.get('/ballotmania/ballot', function (req, res, next) {
   var offices = req.session.offices || [];
   res.render('ballotmania/ballot.html', {
@@ -908,6 +921,7 @@ app.post('/tally/chart', function (req, res, next) {
   }
   var proportionWomen = req.session.women / (req.session.women + req.session.men + req.session.nonbinary);
   var proportionWomenOfColor = req.session.womenofcolor / (req.session.women + req.session.men + req.session.nonbinary);
+  var subProportionWomenOfColor = req.session.womenofcolor / req.session.women;
   var proportionNonbinary = req.session.nonbinary / (req.session.women + req.session.men + req.session.nonbinary);
 
   var image_parameters = [];
@@ -996,29 +1010,13 @@ app.post('/tally/chart', function (req, res, next) {
       '-pointsize', '30',
       '-annotate', '+25+670', req.session.nonbinary + ((req.session.nonbinary == 1)?" Nonbinary Person":" Nonbinary Persons"));
   }
-
-  if(req.session.womenofcolor == 0) {
-    image_parameters.push(
-      '-stroke', '#000000',
-      '-fill', '#d87111',
-      '-draw', 'rectangle 65,665 360,707');
-
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#ffffff',
-      '-fill', '#ffffff',
-      '-font', 'Arial',
-      '-pointsize', '30',
-      '-annotate', '+75+670', "No Women of Color!");
-  } else {
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#d87111',
-      '-fill', '#d87111',
-      '-font', 'Arial',
-      '-pointsize', '30',
-      '-annotate', '+75+670', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
-  }
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#d87111',
+    '-fill', '#d87111',
+    '-font', 'Arial',
+    '-pointsize', '30',
+    '-annotate', '+75+670', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
   image_parameters.push(
     '-gravity', 'NorthEast',
     '-stroke', '#FF0000',
@@ -1044,38 +1042,39 @@ app.post('/tally/chart', function (req, res, next) {
     '-annotate', '+35+210', req.session.hashtag);
 
   if( proportionWomen + proportionNonbinary >= .4 ) {
-    image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+20', "THE PRESENT AND FUTURE");
-    image_parameters.push(
-      '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
-      '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+65', "ARE");
-    if(req.session.womenofcolor == 0) {
+    if(subProportionWomenOfColor < .25) {
+      image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
       image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#d87111',
-          '-fill', '#d87111',
-          '-font', 'ArialB',
-          '-pointsize', '40',
-          '-annotate', '+130+65', "ALMOST");
+        '-gravity', 'NorthWest',
+        '-stroke', '#fff',
+        '-fill', '#fff',
+        '-font', 'ArialB',
+        '-pointsize', '40',
+        '-annotate', '+35+20', "OVERCAST WITHOUT ENOUGH");
       image_parameters.push(
-          '-gravity', 'NorthWest',
-          '-stroke', '#edce63',
-          '-fill', '#edce63',
-          '-font', 'ArialB',
-          '-pointsize', '40',
-          '-annotate', '+310+65', "BRIGHT");
-      social_share_text = "The present and future are almost bright!";
+        '-gravity', 'NorthWest',
+        '-stroke', '#d87111',
+        '-fill', '#d87111',
+        '-font', 'ArialB',
+        '-pointsize', '40',
+        '-annotate', '+35+65', "WOMEN OF COLOR");
+      social_share_text = "Overcast without enough women of color.";
     } else {
+      image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#fff',
+        '-fill', '#fff',
+        '-font', 'ArialB',
+        '-pointsize', '40',
+        '-annotate', '+35+20', "THE PRESENT AND FUTURE");
+      image_parameters.push(
+        '-gravity', 'NorthWest',
+        '-stroke', '#fff',
+        '-fill', '#fff',
+        '-font', 'ArialB',
+        '-pointsize', '40',
+        '-annotate', '+35+65', "ARE");
       image_parameters.push(
         '-gravity', 'NorthWest',
         '-stroke', '#edce63',
@@ -1164,6 +1163,8 @@ app.post('/tally/chart', function (req, res, next) {
               "hashtag": req.session.hashtag,
               "men": req.session.men,
               "women": req.session.women,
+              "women_of_color": req.session.womenofcolor,
+              "nonbinary": req.session.nonbinary,
               "other": 0,
               "pie_id": pie_id,
               "pie_url": pie_url,
@@ -1185,6 +1186,8 @@ app.post('/tally/chart', function (req, res, next) {
           "hashtag": req.session.hashtag,
           "men": req.session.men,
           "women": req.session.women,
+          "women_of_color": req.session.womenofcolor,
+          "nonbinary": req.session.nonbinary,
           "other": 0,
           "pie_id": pie_id,
           "pie_url": pie_url,
@@ -1222,6 +1225,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
     var totalCount = req.session.women + req.session.men + req.session.nonbinary;
     var proportionWomen = req.session.women / totalCount;
     var proportionWomenOfColor = req.session.womenofcolor / totalCount;
+    var subProportionWomenOfColor = req.session.womenofcolor / req.session.women;
     var proportionNonbinary = req.session.nonbinary / totalCount;
 
     var image_parameters = [];
@@ -1258,7 +1262,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
       );
     }
     if(proportionNonbinary > 0) {
-      var left = 850 - 800 * proportionWomenOfColor
+      var left = 850 - 800 * proportionNonbinary
       image_parameters.push(
         '-fill', '#9E84CB',
         '-stroke', '#9E84CB',
@@ -1324,39 +1328,38 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
       '-annotate', '+50+735', text);
 
     if( proportionWomen + proportionNonbinary >= .4 ) {
-      image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
-      image_parameters.push(
-        '-gravity', 'NorthWest',
-        '-stroke', '#fff',
-        '-fill', '#fff',
-        '-font', 'ArialB',
-        '-pointsize', '40',
-        '-annotate', '+50+640', "THE PRESENT AND FUTURE");
-      image_parameters.push(
-        '-gravity', 'NorthWest',
-        '-stroke', '#fff',
-        '-fill', '#fff',
-        '-font', 'ArialB',
-        '-pointsize', '40',
-        '-annotate', '+50+685', "ARE");
-      if(req.session.womenofcolor == 0) {
+      if(subProportionWomenOfColor < .25) {
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#fff',
+          '-fill', '#fff',
+          '-font', 'ArialB',
+          '-pointsize', '40',
+          '-annotate', '+50+640', "OVERCAST WITHOUT ENOUGH");
         image_parameters.push(
             '-gravity', 'NorthWest',
             '-stroke', '#d87111',
             '-fill', '#d87111',
             '-font', 'ArialB',
             '-pointsize', '40',
-            '-annotate', '+145+685', "ALMOST");
-        image_parameters.push(
+            '-annotate', '+50+685', "WOMEN OF COLOR");
+        social_share_text = "Overcast without enough women of color.";
+      } else {
+        image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
+          image_parameters.push(
             '-gravity', 'NorthWest',
-            '-stroke', '#edce63',
-            '-fill', '#edce63',
+            '-stroke', '#fff',
+            '-fill', '#fff',
             '-font', 'ArialB',
             '-pointsize', '40',
-            '-annotate', '+325+685', "BRIGHT");
-
-        social_share_text = "The present and future are almost bright!";
-      } else {
+            '-annotate', '+50+640', "THE PRESENT AND FUTURE");
+        image_parameters.push(
+          '-gravity', 'NorthWest',
+          '-stroke', '#fff',
+          '-fill', '#fff',
+          '-font', 'ArialB',
+          '-pointsize', '40',
+          '-annotate', '+50+685', "ARE");
         image_parameters.push(
           '-gravity', 'NorthWest',
           '-stroke', '#edce63',
@@ -1446,6 +1449,8 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
                   "hashtag": req.session.hashtag,
                   "men": req.session.men,
                   "women": req.session.women,
+                  "women_of_color": req.session.womenofcolor,
+                  "nonbinary": req.session.nonbinary,
                   "other": 0,
                   "pie_id": pie_id,
                   "pie_url": pie_url,
@@ -1468,6 +1473,8 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
               "hashtag": req.session.hashtag,
               "men": req.session.men,
               "women": req.session.women,
+              "women_of_color": req.session.womenofcolor,
+              "nonbinary": req.session.nonbinary,
               "other": 0,
               "pie_id": pie_id,
               "pie_url": pie_url,
