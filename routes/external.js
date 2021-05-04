@@ -294,7 +294,7 @@ app.post('/ballotmania/ballot', function (req, res, next) {
     '-pointsize', '40',
     '-annotate', '+35+210', req.session.hashtag);
 
-  if( proportionWomen + proportionNonbinary >= .4 ) {
+  if( proportionWomen + proportionNonbinary >= .35 ) {
     image_parameters.push('-page', '+620+40','assets/ballotmania_icons_positive.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -684,7 +684,7 @@ app.post('/whotalks/chart', function (req, res, next) {
   image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
 
   // Draw the labels
-  if (proportionWomen >= .4
+  if (proportionWomen >= .5
   &&  proportionWomenTime >= .9 * proportionWomen) {
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
     image_parameters.push(
@@ -708,7 +708,7 @@ app.post('/whotalks/chart', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+130+65', "BRIGHT");
-  } else if (proportionWomen >= .4
+  } else if (proportionWomen >= .5
   &&  proportionWomenTime < .9 * proportionWomen) {
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
 
@@ -727,7 +727,7 @@ app.post('/whotalks/chart', function (req, res, next) {
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "MEN TALKED TOO MUCH");
-  } else if (proportionWomen < .4
+  } else if (proportionWomen < .5
   &&  proportionWomenTime > .9 * proportionWomen) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
 
@@ -921,7 +921,6 @@ app.post('/tally/chart', function (req, res, next) {
   }
   var proportionWomen = req.session.women / (req.session.women + req.session.men + req.session.nonbinary);
   var proportionWomenOfColor = req.session.womenofcolor / (req.session.women + req.session.men + req.session.nonbinary);
-  var subProportionWomenOfColor = req.session.womenofcolor / req.session.women;
   var proportionNonbinary = req.session.nonbinary / (req.session.women + req.session.men + req.session.nonbinary);
 
   var image_parameters = [];
@@ -1041,8 +1040,8 @@ app.post('/tally/chart', function (req, res, next) {
     '-pointsize', '40',
     '-annotate', '+35+210', req.session.hashtag);
 
-  if( proportionWomen + proportionNonbinary >= .4 ) {
-    if(subProportionWomenOfColor < .25) {
+  if( proportionWomen + proportionNonbinary >= .5 ) {
+    if(proportionWomenOfColor < .20) {
       image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
       image_parameters.push(
         '-gravity', 'NorthWest',
@@ -1084,7 +1083,7 @@ app.post('/tally/chart', function (req, res, next) {
         '-annotate', '+130+65', "BRIGHT");
       social_share_text = "The present and future are bright";
     }
-  } else if ( proportionWomen + proportionNonbinary > .3 ) {
+  } else if ( proportionWomen + proportionNonbinary > .35 ) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
 
     image_parameters.push(
@@ -1225,7 +1224,6 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
     var totalCount = req.session.women + req.session.men + req.session.nonbinary;
     var proportionWomen = req.session.women / totalCount;
     var proportionWomenOfColor = req.session.womenofcolor / totalCount;
-    var subProportionWomenOfColor = req.session.womenofcolor / req.session.women;
     var proportionNonbinary = req.session.nonbinary / totalCount;
 
     var image_parameters = [];
@@ -1327,8 +1325,8 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
       '-pointsize', '40',
       '-annotate', '+50+735', text);
 
-    if( proportionWomen + proportionNonbinary >= .4 ) {
-      if(subProportionWomenOfColor < .25) {
+    if( proportionWomen + proportionNonbinary >= .5 ) {
+      if(proportionWomenOfColor < .20) {
         image_parameters.push(
           '-gravity', 'NorthWest',
           '-stroke', '#fff',
@@ -1369,7 +1367,7 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
           '-annotate', '+145+685', "BRIGHT");
         social_share_text = "The present and future are bright!";
       }
-    } else if ( proportionWomen + proportionNonbinary > .3 ) {
+    } else if ( proportionWomen + proportionNonbinary > .35 ) {
       image_parameters.push('-page', '+620+470','assets/icon_cloudy.png');
 
       image_parameters.push(
