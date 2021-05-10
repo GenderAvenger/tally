@@ -107,6 +107,7 @@ app.get('/whotalks/choice', function (req, res, next) {
 
 app.get('/whotalks', function (req, res, next) {
   // It's OK to use || since falsy values *should* default to 0
+  var not_dude_of_color_time = req.session.not_dude_of_color_time || 0;
   var not_dude_time = req.session.not_dude_time || 0;
   var dude_time = req.session.dude_time || 0;
 
@@ -114,6 +115,7 @@ app.get('/whotalks', function (req, res, next) {
     title: 'Who Talks?',
     dude_time: dude_time,
     not_dude_time: not_dude_time,
+    not_dude_of_color_time: not_dude_of_color_time,
     manual_mode: req.query.manual
   });
 });
@@ -435,11 +437,13 @@ var isInt = function (n) {
 app.post('/whotalks', function (req, res, next) {
   // Validate input
   var dude_time = parseInt(req.body.dude_time, 10),
-      not_dude_time = parseInt(req.body.not_dude_time, 10);
+      not_dude_time = parseInt(req.body.not_dude_time, 10),
+      not_dude_of_color_time = parseInt(req.body.not_dude_of_color_time, 10);
 
   // This data is valid, so store it to the session and move along
   req.session.dude_time = dude_time;
   req.session.not_dude_time = not_dude_time;
+  req.session.not_dude_of_color_time = not_dude_of_color_time;
 
   if(dude_time + not_dude_time == 0) {
     return res.redirect('whotalks');
@@ -613,10 +617,14 @@ app.post('/tally/details', function (req, res, next) {
 app.post('/whotalks/chart', function (req, res, next) {
   var dude_time = req.session.dude_time;
   var not_dude_time = req.session.not_dude_time;
+  var not_dude_of_color_time = req.session.not_dude_of_color_time;
   req.session.not_dude_time = 0;
+  req.session.not_dude_of_color_time = 0;
   req.session.dude_time = 0;
   var men = parseInt(req.body.dudecount, 10),
-      women = parseInt(req.body.notdudecount, 10),
+      women_white = parseInt(req.body.notdudecount, 10),
+      women_of_color = parseInt(req.body.notdudeofcolorcount, 10),
+      women = women_white + women_of_color,
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
@@ -625,7 +633,8 @@ app.post('/whotalks/chart', function (req, res, next) {
 
   // TODO - make validation DRY
   if ((!isInt(men) || men < 0)
-   || (!isInt(women) || women < 0)
+   || (!isInt(women_white) || women_white < 0)
+   || (!isInt(women_of_color) || women_of_color < 0)
    || (typeof session_text !== "string")
    || session_text == ""
    || !session_text.match(sessionPattern)
@@ -644,7 +653,8 @@ app.post('/whotalks/chart', function (req, res, next) {
       session_text: req.body.session_text,
       error: {
         dudecount: !isInt(men) || men < 0,
-        notdudecount: !isInt(women) || women < 0 ,
+        notdudecount: !isInt(women_white) || women_white < 0 ,
+        notdudeofcolorcount: !isInt(women_of_color) || women_of_color < 0 ,
         hashtag: (typeof session_text !== "string") || (hashtag != "" && !hashtag.match(hashPattern)),
         session_text: (typeof session_text !== "string") || !session_text.match(sessionPattern),
         no_session: session_text == ""
@@ -659,7 +669,8 @@ app.post('/whotalks/chart', function (req, res, next) {
 
   // Valid at this point, save
   req.session.men = men;
-  req.session.women = women;
+  req.session.women_white = women_white;
+  req.session.women_of_color = women_of_color;
   req.session.session_text = session_text;
   req.session.hashtag = hashtag;
 
@@ -670,9 +681,11 @@ app.post('/whotalks/chart', function (req, res, next) {
 
   var totalParticipants = men + women;
   var proportionWomen = women / totalParticipants;
+  var proportionWomenOfColor = women_of_color / totalParticipants;
 
-  var totalTime = Math.max(1, (not_dude_time + dude_time));
-  var proportionWomenTime = not_dude_time / totalTime;
+  var totalTime = Math.max(1, (not_dude_time + not_dude_of_color_time + dude_time));
+  var proportionWomenTime = (not_dude_time + not_dude_of_color_time) / totalTime;
+  var proportionWomenOfColorTime = (not_dude_of_color_time) / totalTime;
 
   var image_parameters = [];
   image_parameters.push(
@@ -807,6 +820,17 @@ app.post('/whotalks/chart', function (req, res, next) {
       '-fill', '#edce63',
       '-stroke', '#edce63',
       '-draw', 'path \'M 450,535 L 450,710 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
+    );
+  }
+  if(proportionWomenOfColorTime > 0) {
+    var degrees = (proportionWomenOfColorTime * 360 + 90);
+    var radians = degrees * Math.PI / 180;
+    var x = 450 + 175 * Math.cos(radians);
+    var y = 535 + 175 * Math.sin(radians);
+    image_parameters.push(
+      '-tile', 'assets/stripes.gif',
+      '-draw', 'path \'M 450,535 L 450,710 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\'',
+      '+tile'
     );
   }
 

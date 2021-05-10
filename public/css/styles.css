@@ -114,6 +114,14 @@
     color: #fff;
   }
 
+  h3 {
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
   .instructions {
     font-size: 15px;
     color: #fff;

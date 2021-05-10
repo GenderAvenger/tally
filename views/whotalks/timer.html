@@ -57,12 +57,14 @@
           </div>
         </div>
         <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-4 text-center">
-          <div class="timerMode button button-timer" id="not-dude">Not a Dude</div>
+          <div class="timerMode button button-timer" id="not-dude">Not a Dude (white)</div>
+          <div class="timerMode button button-timer" id="not-dude-of-color">(of color)</div>
           <div class="timerMode">
-            <p id="not-dude-display" class="display">00:00</p>
+            <p class="display"><span id="not-dude-total-display">00:00</span> (<span id="not-dude-display">00:00</span> + <span id="not-dude-of-color-display">00:00</span>)</p>
           </div>
           <div class="editMode">
             <h2>Not a Dude</h2>
+            <h3>(white)</h3>
             <div class="row">
               <div class="col-xs-6">
                 <label for="not-dude-edit-hours">Hours:</label>
@@ -87,6 +89,31 @@
                 <input type="text" class="whotalks-entry" name="not_dude_edit_seconds" value="0" id="not-dude-edit-seconds" />
               </div>
             </div>
+            <h3>(of color)</h3>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="not-dude-of-color-edit-hours">Hours:</label>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="whotalks-entry" name="not_dude_of_color_edit_hours" value="0" id="not-dude-of-color-edit-hours" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="not-dude-of-color-edit-minutes">Minutes:</label>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="whotalks-entry" name="not_dude_of_color_edit_minutes" value="0" id="not-dude-of-color-edit-minutes" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="not-dude-of-color-edit-seconds">Seconds:</label>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="whotalks-entry" name="not_dude_of_color_edit_seconds" value="0" id="not-dude-of-color-edit-seconds" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -95,6 +122,7 @@
           <form method="post" id="chart-form">
             <div class="form-group">
               <input type="hidden" name="not_dude_time" value="0" id="not-dude-input" />
+              <input type="hidden" name="not_dude_of_color_time" value="0" id="not-dude-of-color-input" />
               <input type="hidden" name="dude_time" value="0" id="dude-input" />
               <div class="timerMode">
                 <input class="btn" type="button" id="activate-edit-mode" value="Edit Times"/>
@@ -130,11 +158,21 @@
           },
           active: false
         };
+        var not_dude_of_color = {
+          time: {
+            minutes: 0,
+            seconds: {{not_dude_of_color_time}},
+            hours: 0
+          },
+          active: false
+        };
         var dude_t;
         var not_dude_t;
+        var not_dude_of_color_t;
         var $ans = $('#ans');
         var $dude = $('#dude');
         var $not_dude = $('#not-dude');
+        var $not_dude_of_color = $('#not-dude-of-color');
         var $activity_talker = $('#activity-talker');
 
         var $dude_edit_hours = $('#dude-edit-hours');
@@ -143,6 +181,9 @@
         var $not_dude_edit_hours = $('#not-dude-edit-hours');
         var $not_dude_edit_minutes = $('#not-dude-edit-minutes');
         var $not_dude_edit_seconds = $('#not-dude-edit-seconds');
+        var $not_dude_of_color_edit_hours = $('#not-dude-of-color-edit-hours');
+        var $not_dude_of_color_edit_minutes = $('#not-dude-of-color-edit-minutes');
+        var $not_dude_of_color_edit_seconds = $('#not-dude-of-color-edit-seconds');
 
         function num_pad(num) {
           if (num < 10) {
@@ -151,6 +192,35 @@
             return num;
           }
         }
+
+        function setTimeDisplay(tally, display_sel) {
+          if (tally.hours !== 0) {
+            $(display_sel).html(num_pad(tally.hours) + ':' + num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
+          } else {
+            $(display_sel).html(num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
+          }
+        }
+
+        function updateNotDudeTotalDisplay() {
+          var minutes = (not_dude.time.minutes + not_dude_of_color.time.minutes) % 60
+            + Math.floor((not_dude.time.seconds + not_dude_of_color.time.seconds)/ 60);
+          var seconds = (not_dude.time.seconds + not_dude_of_color.time.seconds) % 60;
+          var hours = not_dude.time.hours + not_dude_of_color.time.hours
+            + Math.floor(
+              (not_dude.time.minutes + not_dude_of_color.time.minutes
+                 + (not_dude.time.seconds + not_dude_of_color.time.seconds) / 60
+              ) / 60
+            );
+          var parsed_not_dude_total_time = {
+            minutes,
+            seconds,
+            hours,
+          };
+          if(parsed_not_dude_total_time) {
+            setTimeDisplay(parsed_not_dude_total_time, '#not-dude-total-display');
+          }
+        }
+
         function setTime(tally, display_sel, input_sel) {
           if (tally.seconds >= 60) {
             tally.minutes += Math.floor(tally.seconds / 60);
@@ -160,11 +230,7 @@
             tally.hours += Math.floor(tally.minutes / 60);
             tally.minutes = tally.minutes % 60;
           }
-          if (tally.hours !== 0) {
-            $(display_sel).html(num_pad(tally.hours) + ':' + num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
-          } else {
-            $(display_sel).html(num_pad(tally.minutes) + ':' + num_pad(tally.seconds));
-          }
+          setTimeDisplay(tally, display_sel)
 
           // Update the input values
           var tally_tot = (tally.hours * 3600) + (tally.minutes * 60) + tally.seconds
@@ -176,11 +242,15 @@
           $not_dude_edit_hours.val(not_dude.time.hours);
           $not_dude_edit_minutes.val(not_dude.time.minutes);
           $not_dude_edit_seconds.val(not_dude.time.seconds);
+          $not_dude_of_color_edit_hours.val(not_dude_of_color.time.hours);
+          $not_dude_of_color_edit_minutes.val(not_dude_of_color.time.minutes);
+          $not_dude_of_color_edit_seconds.val(not_dude_of_color.time.seconds);
 
           var d_tot = (dude.time.hours * 3600) + (dude.time.minutes * 60) + dude.time.seconds;
-          var l_tot = (not_dude.time.hours * 3600) + (not_dude.time.minutes * 60) + not_dude.time.seconds;
-          if(d_tot + l_tot > 0) {
-            var pct = parseInt(d_tot / (d_tot + l_tot) * 100, 10);
+          var nd_tot = (not_dude.time.hours * 3600) + (not_dude.time.minutes * 60) + not_dude.time.seconds;
+          var ndoc_tot = (not_dude_of_color.time.hours * 3600) + (not_dude_of_color.time.minutes * 60) + not_dude_of_color.time.seconds;
+          if(d_tot + nd_tot + ndoc_tot > 0) {
+            var pct = parseInt(d_tot / (d_tot + nd_tot + ndoc_tot) * 100, 10);
             $ans.html('<span id="pct">' + pct + '</span>% men');
           }
         }
@@ -192,6 +262,12 @@
           var not_dude_time_hours = parseInt($not_dude_edit_hours.val()) | 0;
           var not_dude_time_minutes = parseInt($not_dude_edit_minutes.val()) | 0;
           var not_dude_time_seconds = parseInt($not_dude_edit_seconds.val()) | 0;
+          var not_dude_of_color_time_hours = parseInt($not_dude_of_color_edit_hours.val()) | 0;
+          var not_dude_of_color_time_minutes = parseInt($not_dude_of_color_edit_minutes.val()) | 0;
+          var not_dude_of_color_time_seconds = parseInt($not_dude_of_color_edit_seconds.val()) | 0;
+          var not_dude_total_time_hours = not_dude_time_hours + not_dude_of_color_time_hours;
+          var not_dude_total_time_minutes = not_dude_time_minutes + not_dude_of_color_time_minutes;
+          var not_dude_total_time_seconds = not_dude_time_seconds + not_dude_of_color_time_seconds;
           var parsed_dude_time = {
             minutes: dude_time_minutes % 60 + Math.floor(dude_time_seconds / 60),
             seconds: dude_time_seconds % 60,
@@ -202,6 +278,11 @@
             seconds: not_dude_time_seconds % 60,
             hours: not_dude_time_hours + Math.floor((not_dude_time_minutes + not_dude_time_seconds / 60) / 60)
           };
+          var parsed_not_dude_of_color_time ={
+            minutes: not_dude_of_color_time_minutes % 60 + Math.floor(not_dude_of_color_time_seconds / 60),
+            seconds: not_dude_of_color_time_seconds % 60,
+            hours: not_dude_of_color_time_hours + Math.floor((not_dude_of_color_time_minutes + not_dude_of_color_time_seconds / 60) / 60)
+          };
 
           if(parsed_dude_time) {
             dude.time = parsed_dude_time;
@@ -211,12 +292,25 @@
             not_dude.time = parsed_not_dude_time;
             setTime(not_dude.time, '#not-dude-display', '#not-dude-input');
           }
+          if(parsed_not_dude_of_color_time) {
+            not_dude_of_color.time = parsed_not_dude_of_color_time;
+            setTime(not_dude_of_color.time, '#not-dude-of-color-display', '#not-dude-of-color-input');
+          }
+          updateNotDudeTotalDisplay();
+        }
+
+        function stopNotDudeOfColorTimer() {
+          not_dude_of_color.active = false;
+          clearInterval(not_dude_of_color_t);
+          $not_dude_of_color.text("(of color)");
+          $activity_talker.html("&nbsp;");
+          $not_dude_of_color.removeClass('pressed');
         }
 
         function stopNotDudeTimer() {
           not_dude.active = false;
           clearInterval(not_dude_t);
-          $not_dude.text("Not a Dude");
+          $not_dude.text("Not a Dude (white)");
           $activity_talker.html("&nbsp;");
           $not_dude.removeClass('pressed');
         }
@@ -230,6 +324,7 @@
         }
 
         function stopAllTimers() {
+          stopNotDudeOfColorTimer();
           stopNotDudeTimer();
           stopDudeTimer();
         }
@@ -245,8 +340,14 @@
             if (not_dude.active === true) {
               $not_dude.toggleClass('pressed');
               not_dude.active = false;
-              $not_dude.text("Not a Dude");
+              $not_dude.text("Not a Dude (white)");
               clearInterval(not_dude_t);
+            }
+            if (not_dude_of_color.active === true) {
+              $not_dude_of_color.toggleClass('pressed');
+              not_dude_of_color.active = false;
+              $not_dude_of_color.text("(of color)");
+              clearInterval(not_dude_of_color_t);
             }
             dude_t = setInterval(function() {
               dude.time.seconds++;
@@ -261,16 +362,50 @@
           } else {
             not_dude.active = true;
             $not_dude.html("<span class='glyphicon glyphicon-pause'></span>");
-            $activity_talker.html("Not a dude.");
+            $activity_talker.html("Not a dude (white).");
             if (dude.active === true) {
               $dude.toggleClass('pressed');
               dude.active = false;
               $dude.text("A Dude");
               clearInterval(dude_t);
             }
+            if (not_dude_of_color.active === true) {
+              $not_dude_of_color.toggleClass('pressed');
+              not_dude_of_color.active = false;
+              $not_dude_of_color.text("(of color)");
+              clearInterval(not_dude_of_color_t);
+            }
             not_dude_t = setInterval(function() {
               not_dude.time.seconds++;
               setTime(not_dude.time, '#not-dude-display', '#not-dude-input');
+              updateNotDudeTotalDisplay();
+            }, 1000);
+          }
+        });
+        $not_dude_of_color.click(function() {
+          $not_dude_of_color.toggleClass('pressed');
+          if (not_dude_of_color.active === true) {
+            stopNotDudeOfColorTimer();
+          } else {
+            not_dude_of_color.active = true;
+            $not_dude_of_color.html("<span class='glyphicon glyphicon-pause'></span>");
+            $activity_talker.html("Not a dude (of color).");
+            if (dude.active === true) {
+              $dude.toggleClass('pressed');
+              dude.active = false;
+              $dude.text("A Dude");
+              clearInterval(dude_t);
+            }
+            if (not_dude.active === true) {
+              $not_dude.toggleClass('pressed');
+              not_dude.active = false;
+              $not_dude.text("Not a Dude (white)");
+              clearInterval(not_dude_t);
+            }
+            not_dude_of_color_t = setInterval(function() {
+              not_dude_of_color.time.seconds++;
+              setTime(not_dude_of_color.time, '#not-dude-of-color-display', '#not-dude-of-color-input');
+              updateNotDudeTotalDisplay();
             }, 1000);
           }
         });
@@ -280,6 +415,9 @@
           $edit_input.focus(stopAllTimers)
         }
 
+        bindEditInput($not_dude_of_color_edit_hours);
+        bindEditInput($not_dude_of_color_edit_minutes);
+        bindEditInput($not_dude_of_color_edit_seconds);
         bindEditInput($not_dude_edit_hours);
         bindEditInput($not_dude_edit_minutes);
         bindEditInput($not_dude_edit_seconds);
@@ -297,7 +435,6 @@
           $(".timerMode").show();
         }
 
-
         $("#activate-edit-mode").click(activateEditMode)
         $("#activate-timer-mode").click(activateTimerMode)
         var manual_mode = "{{manual_mode}}"
@@ -307,6 +444,7 @@
           activateTimerMode();
         }
 
+        setTime(not_dude_of_color.time, '#not-dude-of-color-display', '#not-dude-of-color-input');
         setTime(not_dude.time, '#not-dude-display', '#not-dude-input');
         setTime(dude.time, '#dude-display', '#dude-input');
       });
