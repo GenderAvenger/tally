@@ -22,7 +22,7 @@
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "node-imagemagick": "^0.1.8",
-    "nodemailer": "^4.7.0",
+    "nodemailer": "^6.4.16",
     "nunjucks": "^3.1.4",
     "request": "^2.88.0",
     "serve-favicon": "^2.5.0",
