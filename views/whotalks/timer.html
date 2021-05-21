@@ -58,7 +58,7 @@
         </div>
         <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-sm-4 text-center">
           <div class="timerMode button button-timer" id="not-dude">Not a Dude (white)</div>
-          <div class="timerMode button button-timer" id="not-dude-of-color">(of color)</div>
+          <div class="timerMode button button-timer" id="not-dude-of-color">Not a Dude (of color)</div>
           <div class="timerMode">
             <p class="display"><span id="not-dude-total-display">00:00</span> (<span id="not-dude-display">00:00</span> + <span id="not-dude-of-color-display">00:00</span>)</p>
           </div>
@@ -302,7 +302,7 @@
         function stopNotDudeOfColorTimer() {
           not_dude_of_color.active = false;
           clearInterval(not_dude_of_color_t);
-          $not_dude_of_color.text("(of color)");
+          $not_dude_of_color.text("Not a Dude (of color)");
           $activity_talker.html("&nbsp;");
           $not_dude_of_color.removeClass('pressed');
         }
@@ -346,7 +346,7 @@
             if (not_dude_of_color.active === true) {
               $not_dude_of_color.toggleClass('pressed');
               not_dude_of_color.active = false;
-              $not_dude_of_color.text("(of color)");
+              $not_dude_of_color.text("Not a Dude (of color)");
               clearInterval(not_dude_of_color_t);
             }
             dude_t = setInterval(function() {
@@ -372,7 +372,7 @@
             if (not_dude_of_color.active === true) {
               $not_dude_of_color.toggleClass('pressed');
               not_dude_of_color.active = false;
-              $not_dude_of_color.text("(of color)");
+              $not_dude_of_color.text("Not a Dude (of color)");
               clearInterval(not_dude_of_color_t);
             }
             not_dude_t = setInterval(function() {
