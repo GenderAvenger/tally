@@ -107,6 +107,7 @@ app.get('/whotalks/choice', function (req, res, next) {
 
 app.get('/whotalks', function (req, res, next) {
   // It's OK to use || since falsy values *should* default to 0
+  var not_dude_of_color_time = req.session.not_dude_of_color_time || 0;
   var not_dude_time = req.session.not_dude_time || 0;
   var dude_time = req.session.dude_time || 0;
 
@@ -114,6 +115,7 @@ app.get('/whotalks', function (req, res, next) {
     title: 'Who Talks?',
     dude_time: dude_time,
     not_dude_time: not_dude_time,
+    not_dude_of_color_time: not_dude_of_color_time,
     manual_mode: req.query.manual
   });
 });
@@ -435,11 +437,13 @@ var isInt = function (n) {
 app.post('/whotalks', function (req, res, next) {
   // Validate input
   var dude_time = parseInt(req.body.dude_time, 10),
-      not_dude_time = parseInt(req.body.not_dude_time, 10);
+      not_dude_time = parseInt(req.body.not_dude_time, 10),
+      not_dude_of_color_time = parseInt(req.body.not_dude_of_color_time, 10);
 
   // This data is valid, so store it to the session and move along
   req.session.dude_time = dude_time;
   req.session.not_dude_time = not_dude_time;
+  req.session.not_dude_of_color_time = not_dude_of_color_time;
 
   if(dude_time + not_dude_time == 0) {
     return res.redirect('whotalks');
@@ -613,10 +617,11 @@ app.post('/tally/details', function (req, res, next) {
 app.post('/whotalks/chart', function (req, res, next) {
   var dude_time = req.session.dude_time;
   var not_dude_time = req.session.not_dude_time;
-  req.session.not_dude_time = 0;
-  req.session.dude_time = 0;
+  var not_dude_of_color_time = req.session.not_dude_of_color_time;
   var men = parseInt(req.body.dudecount, 10),
-      women = parseInt(req.body.notdudecount, 10),
+      women_white = parseInt(req.body.notdudecount, 10),
+      women_of_color = parseInt(req.body.notdudeofcolorcount, 10),
+      women = women_white + women_of_color,
       session_text = req.body.session_text,
       hashtag = req.body.hashtag;
 
@@ -625,7 +630,8 @@ app.post('/whotalks/chart', function (req, res, next) {
 
   // TODO - make validation DRY
   if ((!isInt(men) || men < 0)
-   || (!isInt(women) || women < 0)
+   || (!isInt(women_white) || women_white < 0)
+   || (!isInt(women_of_color) || women_of_color < 0)
    || (typeof session_text !== "string")
    || session_text == ""
    || !session_text.match(sessionPattern)
@@ -639,12 +645,14 @@ app.post('/whotalks/chart', function (req, res, next) {
     return res.render('whotalks/headcount.html', {
       title: 'Who Talks?',
       dudecount: men,
-      notdudecount: women,
+      notdudecount: women_white,
+      notdudeofcolorcount: women_of_color,
       hashtag: req.body.hashtag,
       session_text: req.body.session_text,
       error: {
         dudecount: !isInt(men) || men < 0,
-        notdudecount: !isInt(women) || women < 0 ,
+        notdudecount: !isInt(women_white) || women_white < 0 ,
+        notdudeofcolorcount: !isInt(women_of_color) || women_of_color < 0 ,
         hashtag: (typeof session_text !== "string") || (hashtag != "" && !hashtag.match(hashPattern)),
         session_text: (typeof session_text !== "string") || !session_text.match(sessionPattern),
         no_session: session_text == ""
@@ -658,8 +666,12 @@ app.post('/whotalks/chart', function (req, res, next) {
     hashtag = "#" + hashtag;
 
   // Valid at this point, save
+  req.session.not_dude_time = 0;
+  req.session.not_dude_of_color_time = 0;
+  req.session.dude_time = 0;
   req.session.men = men;
-  req.session.women = women;
+  req.session.women_white = women_white;
+  req.session.women_of_color = women_of_color;
   req.session.session_text = session_text;
   req.session.hashtag = hashtag;
 
@@ -669,10 +681,15 @@ app.post('/whotalks/chart', function (req, res, next) {
   var social_share_text = "";
 
   var totalParticipants = men + women;
-  var proportionWomen = women / totalParticipants;
+  var proportionWomen = Math.round(women / totalParticipants * 100) / 100;
+  var proportionWhiteWomen = Math.round(women_white / totalParticipants * 100) / 100;
+  var proportionWomenOfColor = Math.round(women_of_color / totalParticipants * 100) / 100;
 
-  var totalTime = Math.max(1, (not_dude_time + dude_time));
-  var proportionWomenTime = not_dude_time / totalTime;
+  var totalTime = Math.max(1, (not_dude_time + not_dude_of_color_time + dude_time));
+  var totalWomenTime = not_dude_time + not_dude_of_color_time;
+  var proportionWomenTime = Math.round((not_dude_time + not_dude_of_color_time) / totalTime * 100) / 100;
+  var proportionWhiteWomenTime = Math.round(not_dude_time / totalTime * 100) / 100;
+  var proportionWomenOfColorTime = Math.round(not_dude_of_color_time / totalTime * 100) / 100;
 
   var image_parameters = [];
   image_parameters.push(
@@ -683,9 +700,12 @@ app.post('/whotalks/chart', function (req, res, next) {
   image_parameters.push('-page', '+0+0','assets/city_background_wire_logo.png');
   image_parameters.push('-page', '+0+130','assets/horizontal_bar.png');
 
-  // Draw the labels
+  // Label categories...
   if (proportionWomen >= .5
-  &&  proportionWomenTime >= .9 * proportionWomen) {
+  && proportionWomenOfColor >= .2
+  && proportionWomenTime >= .9 * proportionWomen
+  && proportionWomenOfColorTime >= .9 * proportionWomenOfColor) {
+    // Sunny and bright
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -693,60 +713,124 @@ app.post('/whotalks/chart', function (req, res, next) {
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+20', "THE PRESENT AND FUTURE");
+      '-annotate', '+30+20', "THE PRESENT AND FUTURE");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+65', "ARE");
+      '-annotate', '+30+65', "ARE");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#edce63',
       '-fill', '#edce63',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+130+65', "BRIGHT");
+      '-annotate', '+125+65', "BRIGHT");
   } else if (proportionWomen >= .5
-  &&  proportionWomenTime < .9 * proportionWomen) {
-    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
-
+  && proportionWomenTime < .9 * proportionWomen) {
+    // Men talked too much
+    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '36',
+      '-annotate', '+35+20', "WOMEN / NONBINARY PEOPLE");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#FF0000',
+      '-fill', '#FF0000',
+      '-font', 'ArialB',
+      '-pointsize', '36',
+      '-annotate', '+35+65', "COULDN'T GET A WORD IN");
+  } else if (proportionWomen < .5
+  && proportionWomenTime >= .9 * proportionWomen
+  && totalWomenTime > 0) {
+    // Not enough women
+    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+20', "WOMEN WERE THERE, BUT");
-
+      '-annotate', '+30+20', "THERE WERE");
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#FF0000',
       '-fill', '#FF0000',
       '-font', 'ArialB',
       '-pointsize', '40',
-      '-annotate', '+35+65', "MEN TALKED TOO MUCH");
-  } else if (proportionWomen < .5
-  &&  proportionWomenTime > .9 * proportionWomen) {
+      '-annotate', '+30+65', "TOO MANY MEN");
+  } else if (proportionWomen >= .5
+  && proportionWomenTime >= .9 * proportionWomen
+  && totalWomenTime > 0
+  && proportionWomenOfColor >= .2
+  && proportionWomenOfColorTime < .9 * proportionWomenOfColor) {
+    // Men and white people talked too much
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
-
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+20', "WOMEN SPOKE, BUT THERE");
-
+      '-pointsize', '36',
+      '-annotate', '+35+20', "WOMEN / NONBINARY BIPOC");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#d87111',
+      '-fill', '#d87111',
+      '-font', 'ArialB',
+      '-pointsize', '36',
+      '-annotate', '+35+65', "COULDN'T GET A WORD IN");
+  } else if (proportionWomen >= .5
+  && proportionWomenTime >= .9 * proportionWomen
+  && totalWomenTime > 0
+  && proportionWomenOfColor < .2
+  && proportionWomenOfColorTime >= .9 * proportionWomenOfColor) {
+    // Not enough women of color
+    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
+    image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
       '-stroke', '#fff',
       '-fill', '#fff',
       '-font', 'ArialB',
-      '-pointsize', '40',
-      '-annotate', '+35+65', "WERE TOO MANY MEN");
+      '-pointsize', '36',
+      '-annotate', '+35+20', "WE NEEDED MORE");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#d87111',
+      '-fill', '#d87111',
+      '-font', 'ArialB',
+      '-pointsize', '36',
+      '-annotate', '+35+65', "WOMEN / NONBINARY BIPOC");
+  } else if (proportionWomen >= .5
+  && proportionWomenTime >= .9 * proportionWomen
+  && totalWomenTime > 0
+  && proportionWomenOfColor < .2
+  && proportionWomenOfColorTime <= .9 * proportionWomenOfColor) {
+    // Not enough women of color
+    image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '36',
+      '-annotate', '+30+30', "A THUNDERSTORM OF");
+    image_parameters.push(
+      '-gravity', 'NorthWest',
+      '-stroke', '#fff',
+      '-fill', '#fff',
+      '-font', 'ArialB',
+      '-pointsize', '36',
+      '-annotate', '+30+80', "INTERSECTIONAL INEQUALITY");
   } else {
+    // Thunderstorm
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
@@ -771,14 +855,24 @@ app.post('/whotalks/chart', function (req, res, next) {
       '-annotate', '+230+65', "INEQUALITY");
   }
 
-  // Draw the chart
-  // Start by assuming only men
+  ///////////////////////////
+  // Draw the talk time chart
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#fff',
+    '-fill', '#fff',
+    '-font', 'ArialB',
+    '-pointsize', '32',
+    '-annotate', '+70+310', "Talk Time");
+
+  // Bars
+  // Men bars
   if(proportionWomenTime < (proportionWomen * .9)) {
     image_parameters.push(
       '-stroke', '#ff4820',
       '-fill', '#ff4820',
       '-tile', 'assets/stripes_talks.gif',
-      '-draw', 'circle 450,535 450,710'
+      '-draw', 'rectangle 70,350 170,700'
     );
     image_parameters.push(
       '+tile'
@@ -787,44 +881,181 @@ app.post('/whotalks/chart', function (req, res, next) {
     image_parameters.push(
       '-stroke', '#ff4820',
       '-fill', '#ff4820',
-      '-draw', 'circle 450,535 450,710'
+      '-draw', 'rectangle 70,350 170,700'
     );
   }
 
-  // Draw in the time women spoke
-  if(proportionWomenTime == 1) {
-    image_parameters.push(
-      '-fill', '#edce63',
-      '-stroke', '#edce63',
-      '-draw', 'circle 450,535 450,710'
-    );
-  } else if(proportionWomenTime > 0) {
-    var degrees = (proportionWomenTime * 360 + 90);
-    var radians = degrees * Math.PI / 180;
-    var x = 450 + 175 * Math.cos(radians);
-    var y = 535 + 175 * Math.sin(radians);
-    image_parameters.push(
-      '-fill', '#edce63',
-      '-stroke', '#edce63',
-      '-draw', 'path \'M 450,535 L 450,710 A 175,175 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
-    );
-  }
-
+  // Not-men bars (white)
+  womenBarHeight = proportionWomenTime * 350
+  womenBarY = 700 - womenBarHeight
   image_parameters.push(
-    '-gravity', 'Center',
-    '-stroke', '#ffffff',
-    '-fill', '#ffffff',
-    '-font', 'Arial',
-    '-pointsize', '32',
-    '-annotate', '+0-160', 'Men made up ' + Math.round((1 - proportionWomen) * 100,0) + '%% of the group.');
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
+    '-draw', `rectangle 70,${womenBarY} 170,700`
+  );
 
+  // Not-men bars (BIPOC)
+  womenOfColorBarHeight = proportionWomenOfColorTime * 350
+  womenOfColorBarY = 700 - womenOfColorBarHeight
   image_parameters.push(
-    '-gravity', 'Center',
+    '-stroke', '#d87111',
+    '-fill', '#d87111',
+    '-draw', `rectangle 70,${womenOfColorBarY} 170,700`
+  );
+
+  // Labels
+  image_parameters.push(
+    '-gravity', 'NorthWest',
     '-stroke', '#ff4820',
     '-fill', '#ff4820',
-    '-font', 'Arial',
+    '-font', 'ArialB',
+    '-pointsize', '40',
+    '-annotate', '+200+360', `${Math.round((1 - proportionWomenTime) * 100)}%`);
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#ff4820',
+    '-fill', '#ff4820',
+    '-font', 'ArialB',
+    '-pointsize', '24',
+    '-annotate', '+200+400', "Men");
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
+    '-font', 'ArialB',
+    '-pointsize', '40',
+    '-annotate', '+200+475', `${Math.round(proportionWhiteWomenTime * 100)}%`);
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
+    '-font', 'ArialB',
+    '-pointsize', '24',
+    '-annotate', '+200+515', "Women / Nonbinary");
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
+    '-font', 'ArialB',
+    '-pointsize', '18',
+    '-annotate', '+200+540', "(White)");
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#d87111',
+    '-fill', '#d87111',
+    '-font', 'ArialB',
+    '-pointsize', '40',
+    '-annotate', '+200+615', `${Math.round(proportionWomenOfColorTime * 100)}%`);
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#d87111',
+    '-fill', '#d87111',
+    '-font', 'ArialB',
+    '-pointsize', '24',
+    '-annotate', '+200+655', "Women / Nonbinary");
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#d87111',
+    '-fill', '#d87111',
+    '-font', 'ArialB',
+    '-pointsize', '18',
+    '-annotate', '+200+680', "(BIPOC)");
+
+  ///////////////////////////
+  // Draw the attendance chart
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#fff',
+    '-fill', '#fff',
+    '-font', 'ArialB',
     '-pointsize', '32',
-    '-annotate', '+0-120', 'Men spoke ' + Math.round((1 - proportionWomenTime) * 100,0) + '%% of the time.');
+    '-annotate', '+490+310', "Attendance");
+
+  // Bars
+  // Men bars
+  image_parameters.push(
+    '-stroke', '#ff4820',
+    '-fill', '#ff4820',
+    '-draw', 'rectangle 490,350 590,700'
+  );
+
+  // Not-men bars (white)
+  womenBarHeight = proportionWomen * 350
+  womenBarY = 700 - womenBarHeight
+  image_parameters.push(
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
+    '-draw', `rectangle 490,${womenBarY} 590,700`
+  );
+
+  // Not-men bars (BIPOC)
+  womenOfColorBarHeight = proportionWomenOfColor * 350
+  womenOfColorBarY = 700 - womenOfColorBarHeight
+  image_parameters.push(
+    '-stroke', '#d87111',
+    '-fill', '#d87111',
+    '-draw', `rectangle 490,${womenOfColorBarY} 590,700`
+  );
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#ff4820',
+    '-fill', '#ff4820',
+    '-font', 'ArialB',
+    '-pointsize', '40',
+    '-annotate', '+620+360', `${Math.round((1 - proportionWomen) * 100)}%`);
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#ff4820',
+    '-fill', '#ff4820',
+    '-font', 'ArialB',
+    '-pointsize', '24',
+    '-annotate', '+620+400', "Men");
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
+    '-font', 'ArialB',
+    '-pointsize', '40',
+    '-annotate', '+620+475', `${Math.round(proportionWhiteWomen * 100)}%`);
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
+    '-font', 'ArialB',
+    '-pointsize', '24',
+    '-annotate', '+620+515', "Women / Nonbinary");
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#edce63',
+    '-fill', '#edce63',
+    '-font', 'ArialB',
+    '-pointsize', '18',
+    '-annotate', '+620+540', "(White)");
+
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#d87111',
+    '-fill', '#d87111',
+    '-font', 'ArialB',
+    '-pointsize', '40',
+    '-annotate', '+620+615', `${Math.round(proportionWomenOfColor * 100)}%`);
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#d87111',
+    '-fill', '#d87111',
+    '-font', 'ArialB',
+    '-pointsize', '24',
+    '-annotate', '+620+655', "Women / Nonbinary");
+  image_parameters.push(
+    '-gravity', 'NorthWest',
+    '-stroke', '#d87111',
+    '-fill', '#d87111',
+    '-font', 'ArialB',
+    '-pointsize', '18',
+    '-annotate', '+620+680', "(BIPOC)");
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -832,7 +1063,7 @@ app.post('/whotalks/chart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '40',
-    '-annotate', '+35+160', req.session.session_text);
+    '-annotate', '+30+160', req.session.session_text);
 
   image_parameters.push(
     '-gravity', 'NorthWest',
@@ -840,7 +1071,7 @@ app.post('/whotalks/chart', function (req, res, next) {
     '-fill', '#fff',
     '-font', 'Arial',
     '-pointsize', '40',
-    '-annotate', '+35+210', req.session.hashtag);
+    '-annotate', '+30+210', req.session.hashtag);
 
   image_parameters.push(
     '-layers', 'flatten', card_filename

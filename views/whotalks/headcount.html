@@ -20,7 +20,9 @@
             {% elif error.hashtag %}
             <p class="error">Oops! Your hashtag needs work. (Max characters: 20, no spaces allowed)</p>
             {% elif error.notdudecount %}
-            <p class="error">Oops! Not dude count must be a number.</p>
+            <p class="error">Oops! Not dude (white) count must be a number.</p>
+            {% elif error.notdudeofcolorcount %}
+            <p class="error">Oops! Not dude (of color) count must be a number.</p>
             {% elif error.dudecount %}
             <p class="error">Oops! Dude count must be a number.</p>
             {% endif %}
@@ -33,21 +35,31 @@
       </div>
       <form method="post" id="chart-form" action="/whotalks/chart">
         <div class="row">
-          <div class="col-xs-6 col-sm-offset-3 col-sm-3 text-center">
-              <div class="form-group {% if error.dudecount %}error{% endif %}">
-                <label for="dudecount">Dudes:</label>
-                <input class="form-control" id="dudecount" name="dudecount" placeholder="0" {% if dudecount %}value="{{ dudecount }}"{% endif %}/>
-              </div>
+          <div class="col-xs-12 col-sm-offset-3 col-sm-6 text-left">
+            <div class="form-group {% if error.dudecount %}error{% endif %}">
+              <label for="dudecount">Dudes:</label>
+              <input class="form-control" id="dudecount" name="dudecount" placeholder="0" {% if dudecount %}value="{{ dudecount }}"{% endif %}/>
             </div>
-          <div class="col-xs-6 col-sm-3 text-center">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-offset-3 col-sm-6 text-left">
             <div class="form-group {% if error.notdudecount %}error{% endif %}">
-              <label for="notdudecount">Not Dudes:</label>
+              <label for="notdudecount">Not Dudes (white):</label>
               <input class="form-control" id="notdudecount" name="notdudecount" placeholder="0" {% if notdudecount %}value="{{ notdudecount }}"{% endif %}/>
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-xs-offset-0 col-xs-12 col-sm-offset-3 col-sm-6 text-center">
+          <div class="col-xs-12 col-sm-offset-3 col-sm-6 text-left">
+            <div class="form-group {% if error.notdudeofcolorcount %}error{% endif %}">
+              <label for="notdudeofcolorcount">Not Dudes (of color):</label>
+              <input class="form-control" id="notdudeofcolorcount" name="notdudeofcolorcount" placeholder="0" {% if notdudeofcolorcount %}value="{{ notdudeofcolorcount }}"{% endif %}/>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-offset-0 col-xs-12 col-sm-offset-3 col-sm-6 text-left">
             <div class="form-group {% if error.session_text %} error {% endif %}">
               <label for="session_text">Title your results</label>
               <textarea class="form-control" id="session_text" name="session_text" placeholder="e.g. the name of a meeting, show, event">{% if session_text %}{{ session_text }}{% endif %}</textarea>
@@ -55,7 +67,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-xs-offset-0 col-xs-12 col-sm-offset-3 col-sm-6 text-center">
+          <div class="col-xs-12 col-sm-offset-3 col-sm-6 text-left">
             <div class="form-group {% if error.hashtag %} error {% endif %}">
               <label for="hashtag">Hashtag</label>
               <input type="text" class="form-control" name="hashtag" id="hashtag" placeholder="optional" {% if hashtag %}value="{{ hashtag }}"{% endif %}/>
