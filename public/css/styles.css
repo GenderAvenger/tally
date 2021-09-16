@@ -23,7 +23,7 @@
     font-family: 'Futura', Arial,sans-serif;
     font-size: 13px;
     height:100%;
-    background-color: #202555;
+    background-color: #041e42;
     bottom: 100px;
   }
   .container {
@@ -77,7 +77,7 @@
   }
 
   div.button {
-    background: #EF4C29;
+    background: #EF4035;
     color: #fff;
     font-family: 'Futura',Arial,sans-serif;
     font-size: 18px;
@@ -95,7 +95,7 @@
 
   .secondary-button {
     background: #fff;
-    color: #EDCE64;
+    color: #c49102;
     font-size: 15px;
     font-weight: normal;
     display: inline-block;
@@ -129,7 +129,7 @@
 
   p.error {
     font-size: 12px;
-    color: #ee0000;
+    color: #EF4035;
     background: #fff;
     padding: 10px;
   }
@@ -148,9 +148,9 @@
   }
 
   .btn {
-    background: #EF4C29;
+    background: #EF4035;
     color: #fff;
-    border-color: #EF4C29;
+    border-color: #EF4035;
     border-radius: 0px;
     text-transform: uppercase;
     font-family: 'Futura',Arial,sans-serif;
@@ -162,6 +162,7 @@
     margin: 5px 0px;
   }
   .btn:hover {
+    background: #EF4035;
     color: #fff;
   }
 
@@ -335,7 +336,7 @@
   div.button-timer {
     min-width: 180px;
     padding: 12px;
-    background-color: #edce63;
+    background-color: #c49102;
     color: #1d2951;
     margin-bottom: 10px;
   }
@@ -343,13 +344,13 @@
     background-color: #f1d881;
   }
   div.button-timer.pressed {
-    background-color: #DC5239;
+    background-color: #EF4035;
   }
 
   div.button-pause {
     width: 60px;
     padding: 12px;
-    background-color: #DC5239;
+    background-color: #EF4035;
     color: #ffffff;
     margin-bottom: 10px;
   }
@@ -408,7 +409,7 @@
     width: 100%;
     max-width: 200px;
     padding: 3px;
-    background-color: #edce63;
+    background-color: #c49102;
     color: #1d2951;
     font-size: 12px;
   }
@@ -416,7 +417,7 @@
     background-color: #f1d881;
   }
   div.ballot-button.pressed {
-    background-color: #DC5239;
+    background-color: #EF4035;
   }
 
   .pad-bottom {
@@ -427,10 +428,10 @@
   }
 
   #ans {
-    color: #f1d881;
+    color: #c49102;
   }
   .display {
-    color: #f1d881;
+    color: #c49102;
     font-size: 90%;
   }
 
