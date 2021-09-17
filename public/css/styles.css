@@ -167,6 +167,10 @@
     margin-bottom: 50px;
   }
 
+  #logo img {
+    max-width: 300px;
+  }
+
   .landing h1 {
     margin-bottom: 15px;
   }
