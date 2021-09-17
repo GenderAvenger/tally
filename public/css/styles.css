@@ -20,7 +20,7 @@
   }
   body {
     padding-top: 30px;
-    font-family: 'Futura', Arial,sans-serif;
+    font-family: 'proxima-nova', 'Futura', Arial,sans-serif;
     font-size: 13px;
     height:100%;
     background-color: #041e42;
@@ -41,7 +41,6 @@
   }
   h1 {
     color: #fff;
-    font-family: 'Futura',Arial,sans-serif;
     font-size: 36px;
     font-weight: bold;
     text-transform: uppercase;
@@ -49,7 +48,6 @@
 
   p {
     color: #fff;
-    font-family: 'Futura',Arial,sans-serif;
     font-size: 18px;
     font-weight: medium;
   }
@@ -79,7 +77,6 @@
   div.button {
     background: #EF4035;
     color: #fff;
-    font-family: 'Futura',Arial,sans-serif;
     font-size: 18px;
     font-weight: bold;
     display: inline-block;
@@ -94,8 +91,8 @@
   }
 
   .secondary-button {
-    background: #fff;
-    color: #c49102;
+    background: #c49102;
+    color: #fff;
     font-size: 15px;
     font-weight: normal;
     display: inline-block;
@@ -153,7 +150,6 @@
     border-color: #EF4035;
     border-radius: 0px;
     text-transform: uppercase;
-    font-family: 'Futura',Arial,sans-serif;
     font-size: 18px;
     font-weight: bold;
     display: inline-block;
@@ -337,11 +333,10 @@
     min-width: 180px;
     padding: 12px;
     background-color: #c49102;
-    color: #1d2951;
+    color: #fff;
     margin-bottom: 10px;
   }
   div.button-timer:hover {
-    background-color: #f1d881;
   }
   div.button-timer.pressed {
     background-color: #EF4035;
