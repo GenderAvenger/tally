@@ -20,10 +20,10 @@
   }
   body {
     padding-top: 30px;
-    font-family: 'Futura', Arial,sans-serif;
+    font-family: 'proxima-nova', 'Futura', Arial,sans-serif;
     font-size: 13px;
     height:100%;
-    background-color: #202555;
+    background-color: #041e42;
     bottom: 100px;
   }
   .container {
@@ -33,15 +33,14 @@
     width:100%;
     margin-top: 10px;
     height:90px;
-    background-image: url('../img/cityscape.png');
-    background-repeat: repeat-x;
+    /* background-image: url('../img/cityscape.png');
+    background-repeat: repeat-x; */
     bottom:0;
     position: fixed;
     z-index: -1;
   }
   h1 {
     color: #fff;
-    font-family: 'Futura',Arial,sans-serif;
     font-size: 36px;
     font-weight: bold;
     text-transform: uppercase;
@@ -49,7 +48,6 @@
 
   p {
     color: #fff;
-    font-family: 'Futura',Arial,sans-serif;
     font-size: 18px;
     font-weight: medium;
   }
@@ -77,9 +75,8 @@
   }
 
   div.button {
-    background: #EF4C29;
+    background: #EF4035;
     color: #fff;
-    font-family: 'Futura',Arial,sans-serif;
     font-size: 18px;
     font-weight: bold;
     display: inline-block;
@@ -94,8 +91,8 @@
   }
 
   .secondary-button {
-    background: #fff;
-    color: #EDCE64;
+    background: #c49102;
+    color: #fff;
     font-size: 15px;
     font-weight: normal;
     display: inline-block;
@@ -129,7 +126,7 @@
 
   p.error {
     font-size: 12px;
-    color: #ee0000;
+    color: #EF4035;
     background: #fff;
     padding: 10px;
   }
@@ -148,12 +145,11 @@
   }
 
   .btn {
-    background: #EF4C29;
+    background: #EF4035;
     color: #fff;
-    border-color: #EF4C29;
+    border-color: #EF4035;
     border-radius: 0px;
     text-transform: uppercase;
-    font-family: 'Futura',Arial,sans-serif;
     font-size: 18px;
     font-weight: bold;
     display: inline-block;
@@ -162,12 +158,17 @@
     margin: 5px 0px;
   }
   .btn:hover {
+    background: #EF4035;
     color: #fff;
   }
 
   /* Landing Page */
   .landing #logo {
     margin-bottom: 50px;
+  }
+
+  #logo img {
+    max-width: 300px;
   }
 
   .landing h1 {
@@ -335,22 +336,22 @@
   div.button-timer {
     min-width: 180px;
     padding: 12px;
-    background-color: #edce63;
-    color: #1d2951;
+    background-color: #c49102;
+    color: #fff;
     margin-bottom: 10px;
   }
   div.button-timer:hover {
-    background-color: #f1d881;
   }
   div.button-timer.pressed {
-    background-color: #DC5239;
+    background-color: #d3d3d3;
+    color: #222;
   }
 
   div.button-pause {
     width: 60px;
     padding: 12px;
-    background-color: #DC5239;
-    color: #ffffff;
+    background-color: #d3d3d3;
+    color: #222;
     margin-bottom: 10px;
   }
 
@@ -408,7 +409,7 @@
     width: 100%;
     max-width: 200px;
     padding: 3px;
-    background-color: #edce63;
+    background-color: #c49102;
     color: #1d2951;
     font-size: 12px;
   }
@@ -416,7 +417,7 @@
     background-color: #f1d881;
   }
   div.ballot-button.pressed {
-    background-color: #DC5239;
+    background-color: #EF4035;
   }
 
   .pad-bottom {
@@ -427,10 +428,10 @@
   }
 
   #ans {
-    color: #f1d881;
+    color: #c49102;
   }
   .display {
-    color: #f1d881;
+    color: #c49102;
     font-size: 90%;
   }
 

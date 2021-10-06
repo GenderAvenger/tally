@@ -16,6 +16,15 @@ var http   = require('http'),
 
 var upload = multer({ dest: 'uploads/' })
 
+
+const red = '#ef4035';
+const gold = '#edce63';
+const blue = '#041e42';
+const white = '#ffffff';
+const black = '#222222';
+const purple = '#c1acd8';
+const orange = '#d87111';
+
 // Set up nodemailer's transporter
 var email_transporter = nodemailer.createTransport({
     host: process.env['SMTP_HOST'],
@@ -208,14 +217,14 @@ app.post('/ballotmania/ballot', function (req, res, next) {
   // Draw the chart
   if(req.session.men == 0) {
     image_parameters.push(
-      '-fill', '#edce63',
-      '-stroke', '#edce63',
+      '-fill', red,
+      '-stroke', red,
       '-draw', 'circle 450,500 450,700'
     );
   } else {
     image_parameters.push(
-      '-fill', '#FF0000',
-      '-stroke', '#FF0000',
+      '-fill', red,
+      '-stroke', red,
       '-draw', 'circle 450,500 450,700'
     );
   }
@@ -225,8 +234,8 @@ app.post('/ballotmania/ballot', function (req, res, next) {
     var x = 450 + 200 * Math.cos(radians);
     var y = 500 + 200 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#edce63',
-      '-stroke', '#edce63',
+      '-fill', gold,
+      '-stroke', gold,
       '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
     );
   }
@@ -237,8 +246,8 @@ app.post('/ballotmania/ballot', function (req, res, next) {
     var x = 450 - 200 * Math.cos(radians);
     var y = 500 + 200 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#9E84CB',
-      '-stroke', '#9E84CB',
+      '-fill', purple,
+      '-stroke', purple,
       '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',' + ((degrees > 270)?0:0)  + ' ' + x + ',' + y + ' Z\''
     );
   }
@@ -248,16 +257,16 @@ app.post('/ballotmania/ballot', function (req, res, next) {
     var x = 450 - 200 * Math.cos(radians);
     var y = 500 + 200 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#9E84CB',
-      '-stroke', '#9E84CB',
+      '-fill', purple,
+      '-stroke', purple,
       '-draw', 'circle 450,500 450,700'
     );
   }
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#edce63',
-    '-fill', '#edce63',
+    '-stroke', gold,
+    '-fill', gold,
     '-font', 'Arial',
     '-pointsize', '30',
     '-annotate', '+75+630', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
@@ -265,8 +274,8 @@ app.post('/ballotmania/ballot', function (req, res, next) {
   if(req.session.nonbinary > 0) {
     image_parameters.push(
       '-gravity', 'Center',
-      '-stroke', '#9E84CB',
-      '-fill', '#9E84CB',
+      '-stroke', purple,
+      '-fill', purple,
       '-font', 'Arial',
       '-pointsize', '30',
       '-annotate', '+0+280', req.session.nonbinary + ((req.session.nonbinary == 1)?" Nonbinary Person":" Nonbinary Persons"));
@@ -274,24 +283,24 @@ app.post('/ballotmania/ballot', function (req, res, next) {
 
   image_parameters.push(
     '-gravity', 'NorthEast',
-    '-stroke', '#FF0000',
-    '-fill', '#FF0000',
+    '-stroke', red,
+    '-fill', red,
     '-font', 'Arial',
     '-pointsize', '30',
     '-annotate', '+125+630', req.session.men + ((req.session.men == 1)?" Man":" Men"));
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#fff',
-    '-fill', '#fff',
+    '-stroke', white,
+    '-fill', white,
     '-font', 'Arial',
     '-pointsize', '40',
     '-annotate', '+35+160', req.session.session_text);
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#fff',
-    '-fill', '#fff',
+    '-stroke', white,
+    '-fill', white,
     '-font', 'Arial',
     '-pointsize', '40',
     '-annotate', '+35+210', req.session.hashtag);
@@ -300,15 +309,15 @@ app.post('/ballotmania/ballot', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/ballotmania_icons_positive.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+20', "THERE ARE WOMEN");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT");
@@ -318,15 +327,15 @@ app.post('/ballotmania/ballot', function (req, res, next) {
 
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+20', "NOT ENOUGH WOMEN");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT");
@@ -335,15 +344,15 @@ app.post('/ballotmania/ballot', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/ballotmania_icons_negative.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+20', "WHERE ARE THE WOMEN");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT?");
@@ -352,15 +361,15 @@ app.post('/ballotmania/ballot', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/ballotmania_icons_negative.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+20', "BARELY ANY WOMEN");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "ON MY BALLOT");
@@ -709,22 +718,22 @@ app.post('/whotalks/chart', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+30+20', "THE PRESENT AND FUTURE");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+30+65', "ARE");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#edce63',
-      '-fill', '#edce63',
+      '-stroke', gold,
+      '-fill', gold,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+125+65', "BRIGHT");
@@ -734,15 +743,15 @@ app.post('/whotalks/chart', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '36',
       '-annotate', '+35+20', "WOMEN / NONBINARY PEOPLE");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
+      '-stroke', red,
+      '-fill', red,
       '-font', 'ArialB',
       '-pointsize', '36',
       '-annotate', '+35+65', "COULDN'T GET A WORD IN");
@@ -753,15 +762,15 @@ app.post('/whotalks/chart', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+30+20', "THERE WERE");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
+      '-stroke', red,
+      '-fill', red,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+30+65', "TOO MANY MEN");
@@ -774,15 +783,15 @@ app.post('/whotalks/chart', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '36',
       '-annotate', '+35+20', "WOMEN / NONBINARY BIPOC");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#d87111',
-      '-fill', '#d87111',
+      '-stroke', orange,
+      '-fill', orange,
       '-font', 'ArialB',
       '-pointsize', '36',
       '-annotate', '+35+65', "COULDN'T GET A WORD IN");
@@ -796,15 +805,15 @@ app.post('/whotalks/chart', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '36',
       '-annotate', '+35+20', "WE NEEDED MORE");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#d87111',
-      '-fill', '#d87111',
+      '-stroke', orange,
+      '-fill', orange,
       '-font', 'ArialB',
       '-pointsize', '36',
       '-annotate', '+35+65', "WOMEN / NONBINARY BIPOC");
@@ -817,15 +826,15 @@ app.post('/whotalks/chart', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '36',
       '-annotate', '+30+30', "A THUNDERSTORM OF");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '36',
       '-annotate', '+30+80', "INTERSECTIONAL INEQUALITY");
@@ -834,22 +843,22 @@ app.post('/whotalks/chart', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+20', "A THUNDERSTORM OF");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "GENDER");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
+      '-stroke', red,
+      '-fill', red,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+230+65', "INEQUALITY");
@@ -859,8 +868,8 @@ app.post('/whotalks/chart', function (req, res, next) {
   // Draw the talk time chart
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#fff',
-    '-fill', '#fff',
+    '-stroke', white,
+    '-fill', white,
     '-font', 'ArialB',
     '-pointsize', '32',
     '-annotate', '+70+310', "Talk Time");
@@ -869,8 +878,8 @@ app.post('/whotalks/chart', function (req, res, next) {
   // Men bars
   if(proportionWomenTime < (proportionWomen * .9)) {
     image_parameters.push(
-      '-stroke', '#ff4820',
-      '-fill', '#ff4820',
+      '-stroke', red,
+      '-fill', red,
       '-tile', 'assets/stripes_talks.gif',
       '-draw', 'rectangle 70,350 170,700'
     );
@@ -879,8 +888,8 @@ app.post('/whotalks/chart', function (req, res, next) {
     );
   } else {
     image_parameters.push(
-      '-stroke', '#ff4820',
-      '-fill', '#ff4820',
+      '-stroke', red,
+      '-fill', red,
       '-draw', 'rectangle 70,350 170,700'
     );
   }
@@ -889,8 +898,8 @@ app.post('/whotalks/chart', function (req, res, next) {
   womenBarHeight = proportionWomenTime * 350
   womenBarY = 700 - womenBarHeight
   image_parameters.push(
-    '-stroke', '#edce63',
-    '-fill', '#edce63',
+    '-stroke', gold,
+    '-fill', gold,
     '-draw', `rectangle 70,${womenBarY} 170,700`
   );
 
@@ -898,67 +907,67 @@ app.post('/whotalks/chart', function (req, res, next) {
   womenOfColorBarHeight = proportionWomenOfColorTime * 350
   womenOfColorBarY = 700 - womenOfColorBarHeight
   image_parameters.push(
-    '-stroke', '#d87111',
-    '-fill', '#d87111',
+    '-stroke', orange,
+    '-fill', orange,
     '-draw', `rectangle 70,${womenOfColorBarY} 170,700`
   );
 
   // Labels
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#ff4820',
-    '-fill', '#ff4820',
+    '-stroke', red,
+    '-fill', red,
     '-font', 'ArialB',
     '-pointsize', '40',
     '-annotate', '+200+360', `${Math.round((1 - proportionWomenTime) * 100)}%`);
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#ff4820',
-    '-fill', '#ff4820',
+    '-stroke', red,
+    '-fill', red,
     '-font', 'ArialB',
     '-pointsize', '24',
     '-annotate', '+200+400', "Men");
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#edce63',
-    '-fill', '#edce63',
+    '-stroke', gold,
+    '-fill', gold,
     '-font', 'ArialB',
     '-pointsize', '40',
     '-annotate', '+200+475', `${Math.round(proportionWhiteWomenTime * 100)}%`);
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#edce63',
-    '-fill', '#edce63',
+    '-stroke', gold,
+    '-fill', gold,
     '-font', 'ArialB',
     '-pointsize', '24',
     '-annotate', '+200+515', "Women / Nonbinary");
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#edce63',
-    '-fill', '#edce63',
+    '-stroke', gold,
+    '-fill', gold,
     '-font', 'ArialB',
     '-pointsize', '18',
     '-annotate', '+200+540', "(White)");
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#d87111',
-    '-fill', '#d87111',
+    '-stroke', orange,
+    '-fill', orange,
     '-font', 'ArialB',
     '-pointsize', '40',
     '-annotate', '+200+615', `${Math.round(proportionWomenOfColorTime * 100)}%`);
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#d87111',
-    '-fill', '#d87111',
+    '-stroke', orange,
+    '-fill', orange,
     '-font', 'ArialB',
     '-pointsize', '24',
     '-annotate', '+200+655', "Women / Nonbinary");
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#d87111',
-    '-fill', '#d87111',
+    '-stroke', orange,
+    '-fill', orange,
     '-font', 'ArialB',
     '-pointsize', '18',
     '-annotate', '+200+680', "(BIPOC)");
@@ -967,8 +976,8 @@ app.post('/whotalks/chart', function (req, res, next) {
   // Draw the attendance chart
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#fff',
-    '-fill', '#fff',
+    '-stroke', white,
+    '-fill', white,
     '-font', 'ArialB',
     '-pointsize', '32',
     '-annotate', '+490+310', "Attendance");
@@ -976,8 +985,8 @@ app.post('/whotalks/chart', function (req, res, next) {
   // Bars
   // Men bars
   image_parameters.push(
-    '-stroke', '#ff4820',
-    '-fill', '#ff4820',
+    '-stroke', red,
+    '-fill', red,
     '-draw', 'rectangle 490,350 590,700'
   );
 
@@ -985,8 +994,8 @@ app.post('/whotalks/chart', function (req, res, next) {
   womenBarHeight = proportionWomen * 350
   womenBarY = 700 - womenBarHeight
   image_parameters.push(
-    '-stroke', '#edce63',
-    '-fill', '#edce63',
+    '-stroke', gold,
+    '-fill', gold,
     '-draw', `rectangle 490,${womenBarY} 590,700`
   );
 
@@ -994,81 +1003,81 @@ app.post('/whotalks/chart', function (req, res, next) {
   womenOfColorBarHeight = proportionWomenOfColor * 350
   womenOfColorBarY = 700 - womenOfColorBarHeight
   image_parameters.push(
-    '-stroke', '#d87111',
-    '-fill', '#d87111',
+    '-stroke', orange,
+    '-fill', orange,
     '-draw', `rectangle 490,${womenOfColorBarY} 590,700`
   );
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#ff4820',
-    '-fill', '#ff4820',
+    '-stroke', red,
+    '-fill', red,
     '-font', 'ArialB',
     '-pointsize', '40',
     '-annotate', '+620+360', `${Math.round((1 - proportionWomen) * 100)}%`);
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#ff4820',
-    '-fill', '#ff4820',
+    '-stroke', red,
+    '-fill', red,
     '-font', 'ArialB',
     '-pointsize', '24',
     '-annotate', '+620+400', "Men");
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#edce63',
-    '-fill', '#edce63',
+    '-stroke', gold,
+    '-fill', gold,
     '-font', 'ArialB',
     '-pointsize', '40',
     '-annotate', '+620+475', `${Math.round(proportionWhiteWomen * 100)}%`);
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#edce63',
-    '-fill', '#edce63',
+    '-stroke', gold,
+    '-fill', gold,
     '-font', 'ArialB',
     '-pointsize', '24',
     '-annotate', '+620+515', "Women / Nonbinary");
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#edce63',
-    '-fill', '#edce63',
+    '-stroke', gold,
+    '-fill', gold,
     '-font', 'ArialB',
     '-pointsize', '18',
     '-annotate', '+620+540', "(White)");
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#d87111',
-    '-fill', '#d87111',
+    '-stroke', orange,
+    '-fill', orange,
     '-font', 'ArialB',
     '-pointsize', '40',
     '-annotate', '+620+615', `${Math.round(proportionWomenOfColor * 100)}%`);
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#d87111',
-    '-fill', '#d87111',
+    '-stroke', orange,
+    '-fill', orange,
     '-font', 'ArialB',
     '-pointsize', '24',
     '-annotate', '+620+655', "Women / Nonbinary");
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#d87111',
-    '-fill', '#d87111',
+    '-stroke', orange,
+    '-fill', orange,
     '-font', 'ArialB',
     '-pointsize', '18',
     '-annotate', '+620+680', "(BIPOC)");
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#fff',
-    '-fill', '#fff',
+    '-stroke', white,
+    '-fill', white,
     '-font', 'Arial',
     '-pointsize', '40',
     '-annotate', '+30+160', req.session.session_text);
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#fff',
-    '-fill', '#fff',
+    '-stroke', white,
+    '-fill', white,
     '-font', 'Arial',
     '-pointsize', '40',
     '-annotate', '+30+210', req.session.hashtag);
@@ -1166,14 +1175,14 @@ app.post('/tally/chart', function (req, res, next) {
   // Draw the chart
   if(req.session.men == 0) {
     image_parameters.push(
-      '-fill', '#edce63',
-      '-stroke', '#edce63',
+      '-fill', gold,
+      '-stroke', gold,
       '-draw', 'circle 450,500 450,700'
     );
   } else {
     image_parameters.push(
-      '-fill', '#FF0000',
-      '-stroke', '#FF0000',
+      '-fill', red,
+      '-stroke', red,
       '-draw', 'circle 450,500 450,700'
     );
   }
@@ -1183,8 +1192,8 @@ app.post('/tally/chart', function (req, res, next) {
     var x = 450 + 200 * Math.cos(radians);
     var y = 500 + 200 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#edce63',
-      '-stroke', '#edce63',
+      '-fill', gold,
+      '-stroke', gold,
       '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',1 ' + x + ',' + y + ' Z\''
     );
   }
@@ -1206,8 +1215,8 @@ app.post('/tally/chart', function (req, res, next) {
     var x = 450 - 200 * Math.cos(radians);
     var y = 500 + 200 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#9E84CB',
-      '-stroke', '#9E84CB',
+      '-fill', purple,
+      '-stroke', purple,
       '-draw', 'path \'M 450,500 L 450,700 A 200,200 0 ' + ((degrees > 270)?1:0) + ',' + ((degrees > 270)?0:0)  + ' ' + x + ',' + y + ' Z\''
     );
   }
@@ -1217,16 +1226,16 @@ app.post('/tally/chart', function (req, res, next) {
     var x = 450 - 200 * Math.cos(radians);
     var y = 500 + 200 * Math.sin(radians);
     image_parameters.push(
-      '-fill', '#9E84CB',
-      '-stroke', '#9E84CB',
+      '-fill', purple,
+      '-stroke', purple,
       '-draw', 'circle 450,500 450,700'
     );
   }
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#edce63',
-    '-fill', '#edce63',
+    '-stroke', gold,
+    '-fill', gold,
     '-font', 'Arial',
     '-pointsize', '30',
     '-annotate', '+75+630', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
@@ -1234,39 +1243,39 @@ app.post('/tally/chart', function (req, res, next) {
   if(req.session.nonbinary > 0) {
     image_parameters.push(
       '-gravity', 'NorthEast',
-      '-stroke', '#9E84CB',
-      '-fill', '#9E84CB',
+      '-stroke', purple,
+      '-fill', purple,
       '-font', 'Arial',
       '-pointsize', '30',
       '-annotate', '+25+670', req.session.nonbinary + ((req.session.nonbinary == 1)?" Nonbinary Person":" Nonbinary Persons"));
   }
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#d87111',
-    '-fill', '#d87111',
+    '-stroke', orange,
+    '-fill', orange,
     '-font', 'Arial',
     '-pointsize', '30',
     '-annotate', '+75+670', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
   image_parameters.push(
     '-gravity', 'NorthEast',
-    '-stroke', '#FF0000',
-    '-fill', '#FF0000',
+    '-stroke', red,
+    '-fill', red,
     '-font', 'Arial',
     '-pointsize', '30',
     '-annotate', '+125+630', req.session.men + ((req.session.men == 1)?" Man":" Men"));
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#fff',
-    '-fill', '#fff',
+    '-stroke', white,
+    '-fill', white,
     '-font', 'Arial',
     '-pointsize', '40',
     '-annotate', '+35+160', req.session.session_text);
 
   image_parameters.push(
     '-gravity', 'NorthWest',
-    '-stroke', '#fff',
-    '-fill', '#fff',
+    '-stroke', white,
+    '-fill', white,
     '-font', 'Arial',
     '-pointsize', '40',
     '-annotate', '+35+210', req.session.hashtag);
@@ -1276,15 +1285,15 @@ app.post('/tally/chart', function (req, res, next) {
       image_parameters.push('-page', '+620+40','assets/icon_cloudy_small.png');
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#fff',
-        '-fill', '#fff',
+        '-stroke', white,
+        '-fill', white,
         '-font', 'ArialB',
         '-pointsize', '40',
         '-annotate', '+35+20', "OVERCAST WITHOUT ENOUGH");
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#d87111',
-        '-fill', '#d87111',
+        '-stroke', orange,
+        '-fill', orange,
         '-font', 'ArialB',
         '-pointsize', '40',
         '-annotate', '+35+65', "WOMEN OF COLOR");
@@ -1293,22 +1302,22 @@ app.post('/tally/chart', function (req, res, next) {
       image_parameters.push('-page', '+620+40','assets/icon_sunny_small.png');
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#fff',
-        '-fill', '#fff',
+        '-stroke', white,
+        '-fill', white,
         '-font', 'ArialB',
         '-pointsize', '40',
         '-annotate', '+35+20', "THE PRESENT AND FUTURE");
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#fff',
-        '-fill', '#fff',
+        '-stroke', white,
+        '-fill', white,
         '-font', 'ArialB',
         '-pointsize', '40',
         '-annotate', '+35+65', "ARE");
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#edce63',
-        '-fill', '#edce63',
+        '-stroke', gold,
+        '-fill', gold,
         '-font', 'ArialB',
         '-pointsize', '40',
         '-annotate', '+130+65', "BRIGHT");
@@ -1319,22 +1328,22 @@ app.post('/tally/chart', function (req, res, next) {
 
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+20', "CLOUDY WITH A");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "CHANCE OF ");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
+      '-stroke', red,
+      '-fill', red,
       '-font', 'ArialB',
       '-pointsize', '42',
       '-annotate', '+300+65', "PATRIARCHY");
@@ -1343,22 +1352,22 @@ app.post('/tally/chart', function (req, res, next) {
     image_parameters.push('-page', '+620+40','assets/icon_thunder_small.png');
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+20', "A THUNDERSTORM OF");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+35+65', "GENDER");
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#FF0000',
-      '-fill', '#FF0000',
+      '-stroke', red,
+      '-fill', red,
       '-font', 'ArialB',
       '-pointsize', '40',
       '-annotate', '+230+65', "INEQUALITY");
@@ -1469,69 +1478,69 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
 
     // Draw the chart
     image_parameters.push(
-      '-fill', '#ff4820',
-      '-stroke', '#ff4820',
+      '-fill', red,
+      '-stroke', red,
       '-draw', 'rectangle 50,790 850,840'
     );
 
     if(proportionWomen > 0) {
       var right = 50 + 800 * proportionWomen;
       image_parameters.push(
-        '-fill', '#edce63',
-        '-stroke', '#edce63',
+        '-fill', gold,
+        '-stroke', gold,
         '-draw', 'rectangle 50,790 ' + right + ',840'
       );
     }
     if(proportionWomenOfColor > 0) {
       var right = 50 + 800 * proportionWomenOfColor;
       image_parameters.push(
-        '-fill', '#d87111',
-        '-stroke', '#d87111',
+        '-fill', orange,
+        '-stroke', orange,
         '-draw', 'rectangle 50,790 ' + right + ',840'
       );
     }
     if(proportionNonbinary > 0) {
       var left = 850 - 800 * proportionNonbinary
       image_parameters.push(
-        '-fill', '#9E84CB',
-        '-stroke', '#9E84CB',
+        '-fill', purple,
+        '-stroke', purple,
         '-draw', 'rectangle ' + left + ',790 850,840'
       );
     }
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#edce63',
-      '-fill', '#edce63',
+      '-stroke', gold,
+      '-fill', gold,
       '-font', 'Arial',
       '-pointsize', '24',
       '-annotate', '+50+845', req.session.women + ((req.session.women == 1)?" Woman":" Women"));
 
     if(req.session.womenofcolor == 0) {
       image_parameters.push(
-        '-stroke', '#000000',
-        '-fill', '#d87111',
+        '-stroke', black,
+        '-fill', orange,
         '-draw', 'rectangle 40,871 280,900');
 
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#ffffff',
-        '-fill', '#ffffff',
+        '-stroke', white,
+        '-fill', white,
         '-font', 'Arial',
         '-pointsize', '24',
         '-annotate', '+50+873', "No Women of Color!");
     } else {
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#d87111',
-        '-fill', '#d87111',
+        '-stroke', orange,
+        '-fill', orange,
         '-font', 'Arial',
         '-pointsize', '24',
         '-annotate', '+50+870', req.session.womenofcolor + ((req.session.womenofcolor == 1)?" Woman of Color":" Women of Color"));
     }
     image_parameters.push(
       '-gravity', 'NorthEast',
-      '-stroke', '#ff4820',
-      '-fill', '#ff4820',
+      '-stroke', red,
+      '-fill', red,
       '-font', 'Arial',
       '-pointsize', '24',
       '-annotate', '+50+845', req.session.men + ((req.session.men == 1)?" Man":" Men"));
@@ -1539,8 +1548,8 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
     if(req.session.nonbinary > 0) {
       image_parameters.push(
         '-gravity', 'NorthEast',
-        '-stroke', '#9E84CB',
-        '-fill', '#9E84CB',
+        '-stroke', purple,
+        '-fill', purple,
         '-font', 'Arial',
         '-pointsize', '24',
         '-annotate', '+50+870', req.session.nonbinary + ((req.session.nonbinary == 1)?" Nonbinary Person":" Nonbinary Persons"));
@@ -1550,8 +1559,8 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
 
     image_parameters.push(
       '-gravity', 'NorthWest',
-      '-stroke', '#fff',
-      '-fill', '#fff',
+      '-stroke', white,
+      '-fill', white,
       '-font', 'Arial',
       '-pointsize', '40',
       '-annotate', '+50+735', text);
@@ -1560,15 +1569,15 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
       if(proportionWomenOfColor < .20) {
         image_parameters.push(
           '-gravity', 'NorthWest',
-          '-stroke', '#fff',
-          '-fill', '#fff',
+          '-stroke', white,
+          '-fill', white,
           '-font', 'ArialB',
           '-pointsize', '40',
           '-annotate', '+50+640', "OVERCAST WITHOUT ENOUGH");
         image_parameters.push(
             '-gravity', 'NorthWest',
-            '-stroke', '#d87111',
-            '-fill', '#d87111',
+            '-stroke', orange,
+            '-fill', orange,
             '-font', 'ArialB',
             '-pointsize', '40',
             '-annotate', '+50+685', "WOMEN OF COLOR");
@@ -1577,22 +1586,22 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
         image_parameters.push('-page', '+620+470','assets/icon_sunny.png');
           image_parameters.push(
             '-gravity', 'NorthWest',
-            '-stroke', '#fff',
-            '-fill', '#fff',
+            '-stroke', white,
+            '-fill', white,
             '-font', 'ArialB',
             '-pointsize', '40',
             '-annotate', '+50+640', "THE PRESENT AND FUTURE");
         image_parameters.push(
           '-gravity', 'NorthWest',
-          '-stroke', '#fff',
-          '-fill', '#fff',
+          '-stroke', white,
+          '-fill', white,
           '-font', 'ArialB',
           '-pointsize', '40',
           '-annotate', '+50+685', "ARE");
         image_parameters.push(
           '-gravity', 'NorthWest',
-          '-stroke', '#edce63',
-          '-fill', '#edce63',
+          '-stroke', gold,
+          '-fill', gold,
           '-font', 'ArialB',
           '-pointsize', '40',
           '-annotate', '+145+685', "BRIGHT");
@@ -1603,22 +1612,22 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
 
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#fff',
-        '-fill', '#fff',
+        '-stroke', white,
+        '-fill', white,
         '-font', 'ArialB',
         '-pointsize', '42',
         '-annotate', '+50+640', "CLOUDY WITH A");
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#fff',
-        '-fill', '#fff',
+        '-stroke', white,
+        '-fill', white,
         '-font', 'ArialB',
         '-pointsize', '42',
         '-annotate', '+50+685', "CHANCE OF ");
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#FF0000',
-        '-fill', '#FF0000',
+        '-stroke', red,
+        '-fill', red,
         '-font', 'ArialB',
         '-pointsize', '42',
         '-annotate', '+310+685', "PATRIARCHY");
@@ -1627,22 +1636,22 @@ app.post('/tally/photo', upload.single('photo'), function (req, res, next) {
       image_parameters.push('-page', '+620+470','assets/icon_thunder.png');
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#fff',
-        '-fill', '#fff',
+        '-stroke', white,
+        '-fill', white,
         '-font', 'ArialB',
         '-pointsize', '42',
         '-annotate', '+50+640', "A THUNDERSTORM OF");
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#fff',
-        '-fill', '#fff',
+        '-stroke', white,
+        '-fill', white,
         '-font', 'ArialB',
         '-pointsize', '42',
         '-annotate', '+50+685', "GENDER");
       image_parameters.push(
         '-gravity', 'NorthWest',
-        '-stroke', '#FF0000',
-        '-fill', '#FF0000',
+        '-stroke', red,
+        '-fill', red,
         '-font', 'ArialB',
         '-pointsize', '42',
         '-annotate', '+245+685', "INEQUALITY");
