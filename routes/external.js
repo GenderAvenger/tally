@@ -22,7 +22,7 @@ const gold = '#edce63';
 const blue = '#041e42';
 const white = '#ffffff';
 const black = '#222222';
-const purple = '#9E84CB';
+const purple = '#c1acd8';
 const orange = '#d87111';
 
 // Set up nodemailer's transporter

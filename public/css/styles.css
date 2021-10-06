@@ -343,14 +343,15 @@
   div.button-timer:hover {
   }
   div.button-timer.pressed {
-    background-color: #EF4035;
+    background-color: #d3d3d3;
+    color: #222;
   }
 
   div.button-pause {
     width: 60px;
     padding: 12px;
-    background-color: #EF4035;
-    color: #ffffff;
+    background-color: #d3d3d3;
+    color: #222;
     margin-bottom: 10px;
   }
 
