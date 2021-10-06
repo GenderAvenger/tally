@@ -18,7 +18,7 @@ var upload = multer({ dest: 'uploads/' })
 
 
 const red = '#ef4035';
-const gold = '#c49102';
+const gold = '#edce63';
 const blue = '#041e42';
 const white = '#ffffff';
 const black = '#222222';
