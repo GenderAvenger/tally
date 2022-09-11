@@ -1,0 +1,31 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.9.0
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run build
+        run: yarn build
+
+      - name: Run unit tests
+        run: yarn test:unit --coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
