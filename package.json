@@ -1,33 +1,54 @@
 {
-  "name": "even-steven",
-  "description": "Report Gender Data from Conferences",
-  "version": "0.0.2",
+  "name": "@genderavenger/tally",
+  "description": "Chart diversity in a room or on stage.",
+  "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=11"
+    "node": ">=18"
   },
   "scripts": {
-    "start": "node server.js"
+    "build": "yarn cleanup && yarn build:node",
+    "build:node": "tsc -p tsconfig.build.json",
+    "cleanup": "rimraf dist",
+    "lint": "eslint ./src --ext .ts",
+    "start": "yarn build && yarn start:prod",
+    "start:dev": "nodemon",
+    "start:prod": "node dist/index.js",
+    "test": "npm run test:unit",
+    "test:unit": "jest --config=jest.config.js"
   },
-  "main": "./server.js",
-  "license": "MIT",
-  "dependencies": {
-    "aws-sdk": "^2.374.0",
-    "body-parser": "^1.18.3",
-    "cookie-parser": "^1.4.3",
-    "express": "^4.16.4",
-    "express-session": "^1.11.3",
-    "firebase-admin": "^6.4.0",
-    "imgur": "^0.3.1",
-    "morgan": "^1.9.1",
-    "multer": "^1.4.1",
-    "node-imagemagick": "^0.1.8",
-    "nodemailer": "^4.7.0",
-    "nunjucks": "^3.1.4",
-    "request": "^2.88.0",
-    "serve-favicon": "^2.5.0",
-    "uuid": "^3.3.2",
-    "yamljs": "^0.3.0",
-    "zipcodes": "^8.0.0"
+  "main": "src/index.js",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GenderAvenger/tally.git"
+  },
+  "contributors": [
+    {
+      "name": "Daniel Schultz",
+      "email": "slifty@gmail.com",
+      "url": "https://slifty.com"
+    }
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@tsconfig/node18": "^1.0.1",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^18.7.16",
+    "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-sort-exports": "^0.7.0",
+    "jest": "^29.0.3",
+    "nodemon": "^2.0.19",
+    "rimraf": "^3.0.2",
+    "supertest": "^6.2.4",
+    "ts-jest": "^29.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.3"
   }
 }
