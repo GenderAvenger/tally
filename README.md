@@ -28,11 +28,11 @@ yarn test
 You can start the service locally by running:
 
 ```
-yarn start:dev
+yarn dev
 ```
 
-If you want to run in a production environment run:
+If you want to run in a production environment you should build it and serve from the compiled files with your server of choice:
 
 ```
-yarn start
+yarn build
 ```
