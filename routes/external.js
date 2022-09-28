@@ -36,30 +36,6 @@ var email_transporter = nodemailer.createTransport({
     }
 });
 
-app.get('/toolselect', function (req, res, next) {
-  res.render('core/tool_select.html', {
-    title: 'What do you want to do?',
-  });
-});
-
-app.get('/tally', function (req, res, next) {
-  res.render('tally/headcount.html', {
-    title: 'GA Tally',
-    men: req.session.men,
-    women: req.session.women,
-    womenofcolor: req.session.womenofcolor,
-    nonbinary: req.session.nonbinary,
-  });
-});
-
-app.get('/tally/details', function (req, res, next) {
-  res.render('tally/details.html', {
-    title: 'Event Details',
-    hashtag: req.session.hashtag,
-    session_text: req.session.session_text
-  });
-});
-
 app.get('/tally/photochoice', function (req, res, next) {
   res.render('tally/photo_choice.html', {
     title: 'Photo or Chart?'

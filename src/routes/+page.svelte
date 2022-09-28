@@ -10,7 +10,7 @@
 	<p>How well are women being represented in the spaces around you?</p>
 	<p>Choose how to measure inclusion:</p>
 </div>
-<div class="choices">
+<div id="navigation">
 	<Button primaryLabel="Count" secondaryLabel="Who's Present" href="/tally" />
 	<Button primaryLabel="Time" secondaryLabel="Who's Talking" href="/whotalks/choice" />
 </div>
@@ -20,11 +20,5 @@
 		display: flex;
 		flex-direction: column;
 		text-align: center;
-	}
-	.choices {
-		display: flex;
-		justify-content: space-around;
-		gap: 10px;
-		margin-top: 1rem;
 	}
 </style>

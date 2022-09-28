@@ -5,7 +5,7 @@
 </script>
 
 <ThemeLoader />
-<div class="container">
+<div id="container">
 	<slot />
 	<Footer privacyPolicyUrl="https://google.com" />
 </div>

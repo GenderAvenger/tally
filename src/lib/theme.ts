@@ -6,7 +6,8 @@ export const styles = {
 	'header-font-family': ['proxima-nova'],
 	'header-color': '#ffffff',
 	'button-background-color': '#ef4035',
-	'button-color': '#ffffff'
+	'button-color': '#ffffff',
+	'form-border-color': '#cccccc'
 };
 
 export const urls = {
