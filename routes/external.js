@@ -36,42 +36,6 @@ var email_transporter = nodemailer.createTransport({
     }
 });
 
-// Starting page when opening the app
-app.get('/', function (req, res, next) {
-
-  // Is a version being passed?
-  var version = parseInt(req.query.version);
-  if(version) {
-    res.cookie('version', version);
-  }
-
-  // Has the user been here before?
-  var is_returning_visitor = false;
-  if(!req.cookies.has_visited
-   || isNaN(parseInt(req.cookies.has_visited))) {
-    res.cookie('has_visited', 1);
-  }
-  else {
-    var visit_count = parseInt(req.cookies.has_visited);
-    res.cookie('has_visited', visit_count + 1);
-
-    // Have they been here more than 4 times?
-    is_returning_visitor = visit_count >= 4;
-  }
-
-  if(is_returning_visitor) {
-    return res.redirect('toolselect');
-  } else {
-    return res.redirect('intro');
-  }
-});
-
-app.get('/intro', function (req, res, next) {
-  res.render('core/intro.html', {
-    title: 'Introduction',
-  });
-});
-
 app.get('/toolselect', function (req, res, next) {
   res.render('core/tool_select.html', {
     title: 'What do you want to do?',

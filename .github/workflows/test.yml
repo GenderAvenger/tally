@@ -24,8 +24,8 @@ jobs:
       - name: Run build
         run: yarn build
 
-      - name: Run unit tests
-        run: yarn test:unit --coverage
+      - name: Install playwright dependencies
+        run: yarn run playwright install
 
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
+      - name: Run unit tests
+        run: yarn test
