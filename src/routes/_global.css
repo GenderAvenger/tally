@@ -14,8 +14,37 @@ h5,
 h6 {
 	color: var(--header-color, #000000);
 }
-div.container {
+#container {
 	display: grid;
 	margin: auto;
 	justify-content: center;
+	max-width: 25rem;
+}
+#navigation {
+	display: flex;
+	justify-content: space-around;
+	gap: 10px;
+	margin-top: 1rem;
+}
+input,
+textarea {
+	padding: 6px 12px;
+	border-radius: 4px;
+	border: 1px solid var(--form-border-color, #cccccc);
+}
+.instructions {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+}
+form {
+	display: grid;
+	row-gap: 1rem;
+}
+div.formItem {
+	display: grid;
+	row-gap: 0.2rem;
+}
+input[type='number'] {
+	width: 3rem;
 }
