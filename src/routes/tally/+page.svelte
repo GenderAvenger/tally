@@ -1,10 +1,10 @@
 <script lang="ts">
 	import {
-		womenCount,
+		whiteWomenCount,
 		womenOfColorCount,
-		menCount,
+		whiteMenCount,
 		menOfColorCount,
-		nonbinaryPeopleCount,
+		whiteNonbinaryPeopleCount,
 		nonbinaryPeopleOfColorCount
 	} from '$lib/stores';
 	import { LogoVersion } from '$lib/types/LogoVersion';
@@ -28,8 +28,8 @@
 </div>
 <form>
 	<div class="formItem">
-		<label for="women">How many women total?</label>
-		<input type="number" id="women" placeholder="0" min="0" bind:value={$womenCount} />
+		<label for="women">How many white women?</label>
+		<input type="number" id="women" placeholder="0" min="0" bind:value={$whiteWomenCount} />
 	</div>
 	<div class="formItem">
 		<label for="womenofcolor">How many women of color?</label>
@@ -42,25 +42,25 @@
 		/>
 	</div>
 	<div class="formItem">
-		<label for="men">How many men?</label>
-		<input type="number" id="men" placeholder="0" min="0" bind:value={$menCount} />
+		<label for="men">How many white men?</label>
+		<input type="number" id="men" placeholder="0" min="0" bind:value={$whiteMenCount} />
 	</div>
 	<div class="formItem">
 		<label for="men">How many men of color?</label>
 		<input type="number" id="men" placeholder="0" min="0" bind:value={$menOfColorCount} />
 	</div>
 	<div class="formItem">
-		<label for="nonbinary">How many nonbinary persons?</label>
+		<label for="nonbinary">How many white nonbinary people?</label>
 		<input
 			type="number"
 			id="nonbinary"
 			placeholder="0"
 			min="0"
-			bind:value={$nonbinaryPeopleCount}
+			bind:value={$whiteNonbinaryPeopleCount}
 		/>
 	</div>
 	<div class="formItem">
-		<label for="men">How many nonbinary persons of color?</label>
+		<label for="men">How many nonbinary people of color?</label>
 		<input
 			type="number"
 			id="men"

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import {
-		womenCount,
+		whiteWomenCount,
 		womenOfColorCount,
-		menCount,
+		whiteMenCount,
 		menOfColorCount,
-		nonbinaryPeopleCount,
+		whiteNonbinaryPeopleCount,
 		nonbinaryPeopleOfColorCount,
 		sessionText,
 		hashtag
@@ -14,11 +14,11 @@
 	import Button from '$lib/components/Button.svelte';
 
 	const chartHash = JSON.stringify({
-		womenCount: $womenCount,
+		whiteWomenCount: $whiteWomenCount,
 		womenOfColorCount: $womenOfColorCount,
-		menCount: $menCount,
+		whiteMenCount: $whiteMenCount,
 		menOfColorCount: $menOfColorCount,
-		nonbinaryPeopleCount: $nonbinaryPeopleCount,
+		whiteNonbinaryPeopleCount: $whiteNonbinaryPeopleCount,
 		nonbinaryPeopleOfColorCount: $nonbinaryPeopleOfColorCount,
 		sessionText: $sessionText,
 		hashtag: $hashtag

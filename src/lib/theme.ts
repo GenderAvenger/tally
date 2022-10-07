@@ -12,11 +12,11 @@ export const styles = {
 	'chart-border-color': '#707070',
 	'chart-outcome-text-color': '#000000',
 	'chart-title-text-color': '#000000',
-	'chart-women-fill': '#B4D5D3',
+	'chart-white-women-fill': '#B4D5D3',
 	'chart-women-of-color-fill': '#2E5C63',
-	'chart-men-fill': '#A7D0E9',
+	'chart-white-men-fill': '#A7D0E9',
 	'chart-men-of-color-fill': '#77BDEB',
-	'chart-nonbinary-people-fill': '#90A4A9',
+	'chart-white-nonbinary-people-fill': '#90A4A9',
 	'chart-nonbinary-people-of-color-fill': '#697C8B'
 };
 
