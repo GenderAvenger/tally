@@ -1,5 +1,5 @@
 body {
-	font-family: var(--body-font, 'Futura'), Arial, sans-serif;
+	font-family: var(--body-font-family, 'Futura'), Arial, sans-serif;
 	background-color: var(--body-background-color, #ffffff);
 	color: var(--body-color, #000000);
 	padding: 10px;
@@ -15,10 +15,12 @@ h6 {
 	color: var(--header-color, #000000);
 }
 #container {
-	display: grid;
+	display: flex;
+	flex-direction: column;
 	margin: auto;
 	justify-content: center;
-	max-width: 25rem;
+	max-width: 45rem;
+	align-items: center;
 }
 #navigation {
 	display: flex;
@@ -36,6 +38,8 @@ textarea {
 	display: flex;
 	flex-direction: column;
 	text-align: center;
+	justify-content: center;
+	align-items: center;
 }
 form {
 	display: grid;

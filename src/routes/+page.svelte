@@ -6,13 +6,12 @@
 
 <Logo version={LogoVersion.PRIMARY} />
 <div class="instructions">
-	<h1>Start Counting</h1>
-	<p>How well are women being represented in the spaces around you?</p>
-	<p>Choose how to measure inclusion:</p>
+	<h1>We're creating a more equitable world, one speaking engagement at a time.</h1>
+	<p>Is your speaker line up diverse? Let us help!</p>
+	<p>In a few simple steps, you can get an evaluation of the gender and racial diversity of your event.</p>
 </div>
 <div id="navigation">
-	<Button primaryLabel="Count" secondaryLabel="Who's Present" href="/tally" />
-	<Button primaryLabel="Time" secondaryLabel="Who's Talking" href="/whotalks/choice" />
+	<Button primaryLabel="Get Started" href="/tally" />
 </div>
 
 <style>
