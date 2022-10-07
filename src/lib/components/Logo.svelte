@@ -12,7 +12,13 @@
 	const logoPath = logos[version];
 </script>
 
-<a href="/"><img src={logoPath} alt={content.logoAltText} /></a>
+<a href="/"
+	><img
+		src={logoPath}
+		alt={content.logoAltText}
+		class:submark={version === LogoVersion.SUBMARK}
+	/></a
+>
 
 <style>
 	a {
@@ -20,5 +26,8 @@
 	}
 	img {
 		max-width: 300px;
+	}
+	img.submark {
+		max-width: 100px;
 	}
 </style>

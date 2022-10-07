@@ -1,8 +1,28 @@
 <script lang="ts">
-	import { sessionText, hashtag } from '$lib/stores';
+	import {
+		womenCount,
+		womenOfColorCount,
+		menCount,
+		menOfColorCount,
+		nonbinaryPeopleCount,
+		nonbinaryPeopleOfColorCount,
+		sessionText,
+		hashtag
+	} from '$lib/stores';
 	import { LogoVersion } from '$lib/types/LogoVersion';
 	import Logo from '$lib/components/Logo.svelte';
 	import Button from '$lib/components/Button.svelte';
+
+	const chartHash = JSON.stringify({
+		womenCount: $womenCount,
+		womenOfColorCount: $womenOfColorCount,
+		menCount: $menCount,
+		menOfColorCount: $menOfColorCount,
+		nonbinaryPeopleCount: $nonbinaryPeopleCount,
+		nonbinaryPeopleOfColorCount: $nonbinaryPeopleOfColorCount,
+		sessionText: $sessionText,
+		hashtag: $hashtag
+	});
 </script>
 
 <Logo version={LogoVersion.SUBMARK} />
@@ -21,7 +41,7 @@
 	</div>
 	<div id="navigation">
 		<Button primaryLabel="Back" href="/tally" />
-		<Button primaryLabel="Continue" href="/tally/details" />
+		<Button primaryLabel="Continue" href="/tally/chart/{chartHash}" />
 	</div>
 </form>
 
