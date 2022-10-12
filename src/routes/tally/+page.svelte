@@ -14,15 +14,14 @@
 
 <Logo version={LogoVersion.SUBMARK} />
 <div class="instructions">
-	<h1>Plan Your Event</h1>
+	<h1>Champion Gender Equality</h1>
 	<p class="intro">
-		It all starts here! Track your progress to a diverse speaking event. Remember, every step
-		counts! You can enter information for each panel or tabulate the results for the entire event.
-		Let's get counting!
+		As a meeting planner, you have a lot on your mind. We built this resource to align with your
+		work. Let us help you meet your equality goals!
 	</p>
-	<p>
-		Below, input the number of women, men, nonbinary people, and people of color who will be
-		speaking.
+	<p class="intro-two">
+		Input the number of women, men, non-binary, and people of color who will be speaking at your
+		program.
 	</p>
 	<p class="note">We affirm that trans men are men and trans women are women.</p>
 </div>
@@ -70,28 +69,32 @@
 		/>
 	</div>
 	<div id="navigation">
-		<Button primaryLabel="Back" href="/" />
 		<Button primaryLabel="Continue" href="/tally/details" />
 	</div>
 </form>
 
 <style>
 	#navigation {
-		justify-content: space-between;
+		justify-content: center;
 	}
 	.intro {
-		max-width: 32rem;
+		max-width: 44rem;
+		margin-bottom: 1.6rem;
+	}
+	.intro-two {
+		max-width: 34rem;
+		margin-bottom: 1.6rem;
 	}
 	.note {
-		font-size: 0.8rem;
+		font-size: 1rem;
 		font-style: italic;
-		margin-bottom: 20px;
+		margin-bottom: 2rem;
 	}
 	p {
 		margin: 5px;
 	}
 	form {
-		max-width: 25rem;
+		max-width: 30rem;
 	}
 	div.formItem {
 		display: flex;

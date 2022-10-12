@@ -1,10 +1,22 @@
 <script lang="ts">
-	export let href = '/';
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
+
+	export let href = '';
 	export let primaryLabel = '';
 	export let secondaryLabel = '';
+
+	let wrapperTag = 'span';
+	if (href !== '') {
+		wrapperTag = 'a';
+	}
+
+	const dispatchClick = (event: Event) => {
+		dispatch('click', event);
+	};
 </script>
 
-<a {href}>
+<svelte:element this={wrapperTag} {href} on:click={dispatchClick}>
 	<div class="button">
 		{#if primaryLabel}
 			<div class="primaryLabel">{primaryLabel}</div>
@@ -13,7 +25,7 @@
 			<div class="secondaryLabel">{secondaryLabel}</div>
 		{/if}
 	</div>
-</a>
+</svelte:element>
 
 <style>
 	a {
@@ -25,13 +37,13 @@
 		font-weight: bold;
 		text-transform: uppercase;
 		cursor: pointer;
-		padding: 10px 24px;
+		padding: 12px 30px;
 		text-align: center;
 		display: flex;
 		flex-direction: column;
 	}
 	.primaryLabel {
-		font-size: 1.25em;
+		font-size: 1em;
 	}
 	.secondaryLabel {
 		margin-top: 7px;

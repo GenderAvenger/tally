@@ -21,7 +21,7 @@ export const styles = {
 };
 
 export const urls = {
-	privacyPolicyUrl: 'https://google.com'
+	privacyPolicyUrl: 'https://www.thefemalequotient.com/sea-privacy-policy'
 };
 
 export const content = {

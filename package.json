@@ -4,7 +4,9 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build": "yarn build:functions && yarn build:site",
+		"build:site": "vite build",
+		"build:functions": "yarn --cwd ./functions run build",
 		"preview": "vite preview",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -25,11 +27,18 @@
 		"prettier-plugin-svelte": "^2.7.0",
 		"sass": "^1.54.9",
 		"svelte": "^3.44.0",
+		"svelte-adapter-firebase": "^0.14.4",
 		"svelte-check": "^2.7.1",
 		"svelte-preprocess": "^4.10.6",
 		"tslib": "^2.3.1",
 		"typescript": "^4.7.4",
 		"vite": "^3.1.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"firebase": "^9.11.0",
+		"firebase-admin": "^11.1.0",
+		"firebase-functions": "^3.24.1",
+		"uuid": "^9.0.0"
+	}
 }

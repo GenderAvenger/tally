@@ -1,10 +1,12 @@
 import { writable } from 'svelte/store';
 
-export const whiteWomenCount = writable(20);
-export const womenOfColorCount = writable(15);
-export const whiteMenCount = writable(2);
-export const menOfColorCount = writable(1);
-export const whiteNonbinaryPeopleCount = writable(2);
-export const nonbinaryPeopleOfColorCount = writable(1);
-export const sessionText = writable('A session');
-export const hashtag = writable('Hashtag');
+export const whiteWomenCount = writable(0);
+export const womenOfColorCount = writable(0);
+export const whiteMenCount = writable(0);
+export const menOfColorCount = writable(0);
+export const whiteNonbinaryPeopleCount = writable(0);
+export const nonbinaryPeopleOfColorCount = writable(0);
+export const sessionText = writable('');
+export const sessionDate = writable(new Date().toJSON().slice(0, 10));
+export const sessionLocation = writable('');
+export const chartPurpose = writable('none');
