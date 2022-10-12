@@ -45,3 +45,11 @@ You will also need to follow instructions to set up the [firebase emulator suite
 cp .env.template .env
 edit .env
 ```
+
+## Publishing
+
+To publish manually you will need the [Firebase CLI](https://firebase.google.com/docs/cli) installed.
+
+You can then run `firebase login` to authenticate.
+
+Youc an then run `firebase deploy` to publish.
