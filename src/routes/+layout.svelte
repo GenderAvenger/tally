@@ -7,5 +7,5 @@
 <ThemeLoader />
 <div id="container">
 	<slot />
-	<Footer privacyPolicyUrl="https://google.com" />
 </div>
+<Footer privacyPolicyUrl="https://google.com" />

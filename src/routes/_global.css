@@ -1,5 +1,6 @@
 body {
 	font-family: var(--body-font-family, 'Futura'), Arial, sans-serif;
+	font-size: 1.3rem;
 	background-color: var(--body-background-color, #ffffff);
 	color: var(--body-color, #000000);
 	padding: 10px;
@@ -21,6 +22,7 @@ h6 {
 	justify-content: center;
 	max-width: 45rem;
 	align-items: center;
+	padding-bottom: 50px;
 }
 #navigation {
 	display: flex;
@@ -29,10 +31,14 @@ h6 {
 	margin-top: 1rem;
 }
 input,
-textarea {
-	padding: 6px 12px;
+textarea,
+select {
+	padding: 6px 3px;
+	padding-left: 14px;
 	border-radius: 4px;
 	border: 1px solid var(--form-border-color, #cccccc);
+	background-color: white;
+	font-size: 1.1rem;
 }
 .instructions {
 	display: flex;
@@ -40,10 +46,11 @@ textarea {
 	text-align: center;
 	justify-content: center;
 	align-items: center;
+	font-size: 1.3rem;
 }
 form {
 	display: grid;
-	row-gap: 1rem;
+	row-gap: 2.2rem;
 }
 div.formItem {
 	display: grid;
@@ -51,4 +58,16 @@ div.formItem {
 }
 input[type='number'] {
 	width: 3rem;
+}
+body {
+	animation: fadein 1s;
+}
+
+@keyframes fadein {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: var(--body-opacity-loaded, 0);
+	}
 }

@@ -8,6 +8,7 @@
 			const cssVariableValue = value instanceof Array ? value.join(', ') : value;
 			document.documentElement.style.setProperty(cssVariableLabel, cssVariableValue);
 		});
+		document.documentElement.style.setProperty('--body-opacity-loaded', '100');
 	};
 
 	onMount(() => {

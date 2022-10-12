@@ -7,28 +7,51 @@
 		whiteNonbinaryPeopleCount,
 		nonbinaryPeopleOfColorCount,
 		sessionText,
-		hashtag
+		sessionDate,
+		sessionLocation,
+		chartPurpose
 	} from '$lib/stores';
 	import { LogoVersion } from '$lib/types/LogoVersion';
 	import Logo from '$lib/components/Logo.svelte';
 	import Button from '$lib/components/Button.svelte';
 
-	const chartHash = JSON.stringify({
-		whiteWomenCount: $whiteWomenCount,
-		womenOfColorCount: $womenOfColorCount,
-		whiteMenCount: $whiteMenCount,
-		menOfColorCount: $menOfColorCount,
-		whiteNonbinaryPeopleCount: $whiteNonbinaryPeopleCount,
-		nonbinaryPeopleOfColorCount: $nonbinaryPeopleOfColorCount,
-		sessionText: $sessionText,
-		hashtag: $hashtag
-	});
+	async function createChart(e: Event) {
+		const response = await fetch('/api/chart', {
+			method: 'POST',
+			body: JSON.stringify({
+				whiteWomenCount: $whiteWomenCount,
+				womenOfColorCount: $womenOfColorCount,
+				whiteMenCount: $whiteMenCount,
+				menOfColorCount: $menOfColorCount,
+				whiteNonbinaryPeopleCount: $whiteNonbinaryPeopleCount,
+				nonbinaryPeopleOfColorCount: $nonbinaryPeopleOfColorCount,
+				sessionText: $sessionText,
+				sessionDate: $sessionDate,
+				sessionLocation: $sessionLocation,
+				chartPurpose: $chartPurpose
+			}),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+		const { id } = await response.json();
+		window.location.href = `/tally/chart/${id}`;
+		return false;
+	}
 </script>
 
 <Logo version={LogoVersion.SUBMARK} />
+<div class="instructions">
+	<h1>Keep Moving Forward</h1>
+	<p class="intro">
+		Meeting planners are on the front lines of diversity, equity and inclusion representation. Tell
+		us more about your speaking program! The opportunity is huge. We want to cheer you on as you
+		progress
+	</p>
+</div>
 <form>
 	<div class="formItem">
-		<label for="sessionText">What are you tallying?</label>
+		<label for="sessionText">Name (of speaking program):</label>
 		<textarea
 			id="sessionText"
 			placeholder="e.g. ABC Conference or Top 100 Books XYZ Magazine"
@@ -36,17 +59,43 @@
 		/>
 	</div>
 	<div class="formItem">
-		<label for="hashtag">Hashtag</label>
-		<input type="text" id="hashtag" placeholder="optional" bind:value={$hashtag} />
+		<label for="sessionDate">Date:</label>
+		<input type="date" id="sessionDate" bind:value={$sessionDate} />
+	</div>
+	<div class="formItem">
+		<label for="sessionLocation">Location:</label>
+		<input
+			id="sessionLocation"
+			placeholder="e.g. Philadelphia Convention Center"
+			bind:value={$sessionLocation}
+		/>
+	</div>
+	<div class="formItem">
+		<label for="chartPurpose">What are you using this tool for?</label>
+		<select id="chartPurpose" bind:value={$chartPurpose}>
+			<option value="none">- Select One -</option>
+			<option value="events">Events</option>
+			<option value="conferences">Conferences</option>
+			<option value="editorial">Editorial</option>
+			<option value="other">Other</option>
+		</select>
 	</div>
 	<div id="navigation">
 		<Button primaryLabel="Back" href="/tally" />
-		<Button primaryLabel="Continue" href="/tally/chart/{chartHash}" />
+		<Button primaryLabel="Submit" on:click|once={createChart} />
 	</div>
 </form>
 
 <style>
 	#navigation {
 		justify-content: space-between;
+	}
+	form {
+		max-width: 30rem;
+		min-width: 400px;
+	}
+	.intro {
+		max-width: 40rem;
+		margin-bottom: 3rem;
 	}
 </style>

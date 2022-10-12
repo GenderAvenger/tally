@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { LogoVersion } from '$lib/types/LogoVersion';
 	import Logo from '$lib/components/Logo.svelte';
-	import { page } from '$app/stores';
 	import { describeArc } from '$lib/utils';
 	import primaryLogo from '$lib/assets/logos/primary.png';
-	const { chartHash } = $page.params;
+
+	export let data;
 	const {
 		whiteWomenCount,
 		womenOfColorCount,
@@ -12,11 +12,14 @@
 		menOfColorCount,
 		whiteNonbinaryPeopleCount,
 		nonbinaryPeopleOfColorCount,
-		sessionText
-	} = JSON.parse(chartHash);
+		sessionText,
+		sessionDate
+	} = data;
 	const centerX = 450;
 	const centerY = 350;
 	const legendOffset = 450;
+	const legendFirstRow = 50;
+	const legendSecondRow = 460;
 	const radius = 200;
 	const womenCount = whiteWomenCount + womenOfColorCount;
 	const menCount = whiteMenCount + menOfColorCount;
@@ -30,10 +33,36 @@
 	const menPercentage = whiteMenPercentage + menOfColorPercentage;
 	const whiteNonbinaryPeoplePercentage = whiteNonbinaryPeopleCount / Math.max(totalCount, 1);
 	const nonbinaryPeopleOfColorPercentage = nonbinaryPeopleOfColorCount / Math.max(totalCount, 1);
+	const notDudesOfColorPercentage = womenOfColorPercentage + nonbinaryPeopleOfColorPercentage;
+
+	enum Rating {
+		GREAT = 'great',
+		OK = 'ok',
+		NOT_GOOD = 'not_good'
+	}
+
+	let rating: Rating;
+
+	if (womenPercentage >= 0.5 && notDudesOfColorPercentage >= 0.15) {
+		rating = Rating.GREAT;
+	} else if (
+		(womenPercentage < 0.5 && womenPercentage >= 0.35) ||
+		(womenPercentage >= 0.5 && notDudesOfColorPercentage < 0.15)
+	) {
+		rating = Rating.OK;
+	} else {
+		rating = Rating.NOT_GOOD;
+	}
+
+	const outcomeTitle = {
+		[Rating.GREAT]: "You're Amazing!",
+		[Rating.OK]: "You're Getting There!",
+		[Rating.NOT_GOOD]: "There's Progress to be Made!"
+	}[rating];
 </script>
 
 <Logo version={LogoVersion.PRIMARY} />
-<h1>Description text here</h1>
+<h1>{outcomeTitle}</h1>
 <svg id="chart" viewBox="0 0 900 900">
 	<defs>
 		<pattern
@@ -67,8 +96,8 @@
 		</pattern>
 	</defs>
 	<rect class="background" x="3" y="3" />
-	<image class="rating" href="ratingIcon.png" />
 	<text class="title" x="40" y="80">{sessionText}</text>
+	<text class="date" x="40" y="140">{sessionDate}</text>
 	<circle cx={centerX} cy={centerY} r={radius} />
 	<path
 		class="whiteWomenCount"
@@ -131,30 +160,101 @@
 				360
 		)}
 	/>
-	<text class="whiteWomenCount" x="180" y={legendOffset + 200}
+	<text class="whiteWomenCount" x={legendFirstRow} y={legendOffset + 200}
 		>■ {whiteWomenCount} White {whiteWomenCount === 1 ? 'Woman' : 'Women'}</text
 	>
-	<text class="womenOfColorCount" x="520" y={legendOffset + 200}
+	<text class="womenOfColorCount" x={legendSecondRow} y={legendOffset + 200}
 		>■ {womenOfColorCount} {womenOfColorCount === 1 ? ' Woman' : ' Women'} of Color</text
 	>
-	<text class="whiteMenCount" x="180" y={legendOffset + 230}
+	<text class="whiteMenCount" x={legendFirstRow} y={legendOffset + 230}
 		>■ {whiteMenCount} White {whiteMenCount === 1 ? ' Man' : 'Men'}</text
 	>
-	<text class="menOfColorCount" x="520" y={legendOffset + 230}
+	<text class="menOfColorCount" x={legendSecondRow} y={legendOffset + 230}
 		>■ {menOfColorCount} {menOfColorCount === 1 ? ' Man' : ' Men'} of Color</text
 	>
-	<text class="whiteNonbinaryPeopleCount" x="180" y={legendOffset + 260}
+	<text class="whiteNonbinaryPeopleCount" x={legendFirstRow} y={legendOffset + 260}
 		>■ {whiteNonbinaryPeopleCount} White Nonbinary {whiteNonbinaryPeopleCount === 1
 			? 'Person'
 			: 'People'}</text
 	>
-	<text class="nonbinaryPeopleOfColorCount" x="520" y={legendOffset + 260}
+	<text class="nonbinaryPeopleOfColorCount" x={legendSecondRow} y={legendOffset + 260}
 		>■ {nonbinaryPeopleOfColorCount} Nonbinary {nonbinaryPeopleOfColorCount === 1
 			? 'Person'
 			: 'People'} of Color</text
 	>
 	<image href={primaryLogo} width="200" x="350" y="790" />
 </svg>
+
+<div class="explanation">
+	{#if rating === Rating.GREAT}
+		<p>
+			<strong>Wow, check out your results!</strong> You can become an influencer. Show your colleagues
+			how you are adding value by clicking the “Share” button above. Send this chart to your communications
+			team. Or, download the chart to your device to access your event data anytime, anywhere.
+		</p>
+		<p>
+			You are a leader in this space, and we couldn’t be more excited for you! We encourage you to
+			lead by example for your fellow colleagues, departments, and organizations in your industry by
+			continuing to put on and showcase diverse speaking programs. Let others know about the work
+			you’re doing, speak out about the benefits, and hold yourselves accountable.
+		</p>
+		<p>Keep up the incredible work!</p>
+	{:else if rating === Rating.OK}
+		<p>
+			<strong>You’re getting there!</strong> Your event is starting to become more diverse — but there’s
+			still room for improvement! Have you done everything you could have to include diverse voices?
+		</p>
+		<p><strong><em>Here are some tips to help you when planning your next event:</em></strong></p>
+		<p>
+			<strong>Evaluate your current speaker network.</strong> Is your current network diverse? Do you
+			have a diverse group of people to call on across multiple industries? If you don’t, why is that?
+			How can you solve for more diversity?
+		</p>
+		<p>
+			<strong>Expand your network.</strong> Think outside of the box when you’re finding speakers. Look
+			online, consider other experts in the field, and ask people who they know and who would be interested
+			in speaking at your event.
+		</p>
+		<p>
+			<strong>Provide training, mentorship, and speaking opportunities to new voices.</strong> We all
+			start somewhere. Give people the space and resources to come forward and speak.
+		</p>
+		<p>
+			Show your colleagues how you are adding value by clicking the “Share” button above. Send this
+			chart to your communications team. Or, download the chart to your device to access your event
+			data anytime, anywhere
+		</p>
+		<p>Reference this chart for your next event, and commit to doing better!</p>
+	{:else}
+		<p>
+			<strong>You have a journey ahead of you...</strong> and we’re here to help you! You’ve made the
+			first step counting your speakers using this tool. We acknowledge that there are many industries
+			that do not represent many women or women of color. We’re here to help change that. We want to
+			remind you that progress is progress, no matter how small.
+		</p>
+		<p><strong><em>Here are some tips to help you when planning your next event:</em></strong></p>
+		<p>
+			<strong>Evaluate your current speaker network.</strong> Is your current network diverse? Do you
+			have a diverse group of people to call on across multiple industries? If you don’t, why is that?
+			How can you solve for more diversity?
+		</p>
+		<p>
+			<strong>Expand your network.</strong> Think outside of the box when you’re finding speakers. Look
+			online, consider other experts in the field, and ask people who they know and who would be interested
+			in speaking at your event.
+		</p>
+		<p>
+			<strong>Provide training, mentorship, and speaking opportunities to new voices.</strong>
+			We all start somewhere. Give people the space and resources to come forward and speak.
+		</p>
+		<p>
+			Show your colleagues how you are adding value by clicking the “Share” button above. Send this
+			chart to your communications team. Or, download the chart to your device to access your event
+			data anytime, anywhere.
+		</p>
+		<p>Reference this chart for your next event, and commit to doing better!</p>
+	{/if}
+</div>
 
 <style>
 	#chart {
@@ -175,8 +275,12 @@
 		stroke: var(--chart-border-color, #000000);
 	}
 	text.title {
-		text-transform: uppercase;
-		font: normal 40px arial;
+		font-size: 40px;
+		font-weight: bold;
+		fill: var(--chart-title-text-color, #ffffff);
+	}
+	text.date {
+		font-size: 36px;
 		fill: var(--chart-title-text-color, #ffffff);
 	}
 	#womenOfColorHatch line,
@@ -211,7 +315,7 @@
 	text.menOfColorCount,
 	text.whiteNonbinaryPeopleCount,
 	text.nonbinaryPeopleOfColorCount {
-		font-size: 24px;
+		font-size: 30px;
 	}
 	text.whiteWomenCount {
 		fill: var(--chart-white-women-fill, #009900);

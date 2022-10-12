@@ -17,9 +17,11 @@
 		position: fixed;
 		bottom: 0px;
 		left: 0px;
-		padding-bottom: 20px;
+		padding: 20px 0px;
 		display: flex;
 		justify-content: center;
 		width: 100%;
+		background: rgba(255, 255, 255, 1);
+		border-top: 1px solid #cccccc;
 	}
 </style>
