@@ -5,6 +5,8 @@ This application is a tool that makes it easy to create and share visual comment
 
 To learn more about how to contribute please check out [CONTRIBUTING.md](CONTRIBUTING.md).
 
+Data is stored using [Google Firebase's Cloud Firestore](https://firebase.google.com/docs/firestore).
+
 ## DISCLAIMER
 
 ***This repository is currently in transition from JavaScript to TypeScript.***
@@ -35,4 +37,11 @@ If you want to run in a production environment you should build it and serve fro
 
 ```
 yarn build
+```
+
+You will also need to follow instructions to set up the [firebase emulator suite](https://firebase.google.com/docs/emulator-suite/install_and_configure).  This project uses Cloud Firestore, Cloud Functions, and Firebase Hosting.  Once that is done, populate your environment variables:
+
+```
+cp .env.template .env
+edit .env
 ```
