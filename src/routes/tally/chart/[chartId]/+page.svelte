@@ -188,71 +188,97 @@
 <div class="explanation">
 	{#if rating === Rating.GREAT}
 		<p>
-			<strong>Wow, check out your results!</strong> You can become an influencer. Show your colleagues
-			how you are adding value by clicking the “Share” button above. Send this chart to your communications
-			team. Or, download the chart to your device to access your event data anytime, anywhere.
+			<strong>Wow, you’re on your way to becoming an influencer!</strong>
 		</p>
 		<p>
 			You are a leader in this space, and we couldn’t be more excited for you! We encourage you to
 			lead by example for your fellow colleagues, departments, and organizations in your industry by
-			continuing to put on and showcase diverse speaking programs. Let others know about the work
-			you’re doing, speak out about the benefits, and hold yourselves accountable.
+			continuing to put on and showcase diverse speaker programs. Let others know about the awesome
+			work you’re doing, speak out about the benefits, and hold yourselves accountable.
+		</p>
+		<p>
+			Show your colleagues how you are adding value by emailing your wins. Download the chart to
+			save and access anytime, anywhere. It’s yours to keep and share how you want. Print it out to
+			bring to a meeting, or send your wins to your management and leadership teams.
 		</p>
 		<p>Keep up the incredible work!</p>
 	{:else if rating === Rating.OK}
 		<p>
-			<strong>You’re getting there!</strong> Your event is starting to become more diverse — but there’s
-			still room for improvement! Have you done everything you could have to include diverse voices?
-		</p>
-		<p><strong><em>Here are some tips to help you when planning your next event:</em></strong></p>
-		<p>
-			<strong>Evaluate your current speaker network.</strong> Is your current network diverse? Do you
-			have a diverse group of people to call on across multiple industries? If you don’t, why is that?
-			How can you solve for more diversity?
+			<strong>You’re getting there!</strong> Your speaker program has some diversity – well done! We
+			notice there’s still room for improvement. Have you done everything you could have to include diverse
+			voices? We know you can do this!
 		</p>
 		<p>
-			<strong>Expand your network.</strong> Think outside of the box when you’re finding speakers. Look
-			online, consider other experts in the field, and ask people who they know and who would be interested
-			in speaking at your event.
+			<strong
+				><em>Here are some tips to help you when planning your next speaker program:</em></strong
+			>
+		</p>
+		<p>
+			<strong>Evaluate your current speaker network.</strong> Is your network diverse? Do you have groups
+			of people to call on across multiple industries? If you don’t, why is that? How can you solve for
+			more diversity? Be aware of what stage you are at right now, and be intentional in your diversity
+			commitments.
+		</p>
+		<p>
+			<strong>Expand your network.</strong> Think outside of the box when you’re finding speakers. Consider
+			other experts in the field. Put out a call to the community for speaker nominations. Ask other
+			speakers and attendees who they would like to hear from.
 		</p>
 		<p>
 			<strong>Provide training, mentorship, and speaking opportunities to new voices.</strong> We all
-			start somewhere. Give people the space and resources to come forward and speak.
+			start somewhere. Give others the space and resources to come forward and speak. Bring your colleagues
+			into the conversation. Ensure new speakers feel supported when they take the stage.
 		</p>
 		<p>
-			Show your colleagues how you are adding value by clicking the “Share” button above. Send this
-			chart to your communications team. Or, download the chart to your device to access your event
-			data anytime, anywhere
+			<strong>Create a welcoming environment for speakers and attendees alike.</strong> Make it clear
+			across your website, social media channels, email campaigns, signage and all other communications
+			that your program is fully accessible and welcome to everyone.
 		</p>
-		<p>Reference this chart for your next event, and commit to doing better!</p>
+		<p>
+			Show your colleagues how you are adding value by emailing your wins. Download the chart to
+			save and access anytime, anywhere. It’s yours to keep and share how you want. Print it out to
+			bring to a meeting, or send your wins to your management and leadership teams.
+		</p>
+		<p>Reference this chart for your next speaker program, and commit to doing better!</p>
 	{:else}
 		<p>
 			<strong>You have a journey ahead of you...</strong> and we’re here to help you! You’ve made the
-			first step counting your speakers using this tool. We acknowledge that there are many industries
-			that do not represent many women or women of color. We’re here to help change that. We want to
-			remind you that progress is progress, no matter how small.
-		</p>
-		<p><strong><em>Here are some tips to help you when planning your next event:</em></strong></p>
-		<p>
-			<strong>Evaluate your current speaker network.</strong> Is your current network diverse? Do you
-			have a diverse group of people to call on across multiple industries? If you don’t, why is that?
-			How can you solve for more diversity?
+			first step by using this tool. We acknowledge that there are many industries that do not represent
+			many women or women of color. We’re with you to help change that. Remember, progress is progress,
+			and every win is worth celebrating – no matter how small. You’ve got this!
 		</p>
 		<p>
-			<strong>Expand your network.</strong> Think outside of the box when you’re finding speakers. Look
-			online, consider other experts in the field, and ask people who they know and who would be interested
-			in speaking at your event.
+			<strong
+				><em> Here are some tips to help you when planning your next speaker program: </em></strong
+			>
 		</p>
 		<p>
-			<strong>Provide training, mentorship, and speaking opportunities to new voices.</strong>
-			We all start somewhere. Give people the space and resources to come forward and speak.
+			<strong>Evaluate your current speaker network.</strong> Is your network diverse? Do you have groups
+			of people to call on across multiple industries? If you don’t, why is that? How can you solve for
+			more diversity? Be aware of what stage you are at right now, and be intentional in your diversity
+			commitments.
 		</p>
 		<p>
-			Show your colleagues how you are adding value by clicking the “Share” button above. Send this
-			chart to your communications team. Or, download the chart to your device to access your event
-			data anytime, anywhere.
+			<strong>Expand your network.</strong> Think outside of the box when you’re finding speakers. Consider
+			other experts in the field. Put out a call to the community for speaker nominations. Ask other
+			speakers and attendees who they would like to hear from.
 		</p>
-		<p>Reference this chart for your next event, and commit to doing better!</p>
+		<p>
+			<strong>Provide training, mentorship, and speaking opportunities to new voices.</strong> We all
+			start somewhere. Give others the space and resources to come forward and speak. Bring your colleagues
+			into the conversation. Ensure new speakers feel supported when they take the stage.
+		</p>
+		<p>
+			<strong>Create a welcoming environment for speakers and attendees alike.</strong> Make it clear
+			across your website, social media channels, email campaigns, signage and all other communications
+			that your program is fully accessible and welcome to everyone.
+		</p>
+		<p>
+			Show your colleagues how you are adding value by emailing your wins. Download the chart to
+			save and access anytime, anywhere. It’s yours to keep and share how you want. Print it out to
+			bring to a meeting, or send your wins to your management and leadership teams.
+		</p>
+		<p>Reference this chart for your next speaker program, and commit to doing better!</p>
 	{/if}
 </div>
 

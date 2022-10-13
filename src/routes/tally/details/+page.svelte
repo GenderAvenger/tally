@@ -42,11 +42,10 @@
 
 <Logo version={LogoVersion.SUBMARK} />
 <div class="instructions">
-	<h1>Keep Moving Forward</h1>
+	<h1>Strengthen Speaker Programs</h1>
 	<p class="intro">
-		Meeting planners are on the front lines of diversity, equity and inclusion representation. Tell
-		us more about your speaking program! The opportunity is huge. We want to cheer you on as you
-		progress
+		You’ve got this! Tell us more about your program. We are cheering you on as you progress. We
+		can't wait to see your speaker lineup and celebrate your successes with you!
 	</p>
 </div>
 <form>
